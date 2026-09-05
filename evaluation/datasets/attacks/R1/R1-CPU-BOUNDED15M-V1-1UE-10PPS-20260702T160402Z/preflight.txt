@@ -1,0 +1,10 @@
+=== image ===
+kpimon_image=127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v1
+expected_image=127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v1
+=== ping ===
+  81705   81704 ping            ping -i 0.1 10.45.1.1
+=== stress-ng availability and no active stress ===
+/usr/bin/stress-ng
+=== E2 ===
+[{"inventoryName":"gnbd_001_001_00019b_0","globalNbId":{"plmnId":"00F110","nbId":"0000000000000110011011"},"connectionStatus":"CONNECTED"}]=== runtime metrics ===
+{"timestamp_utc":"2026-07-02T16:04:07.886879492Z","uptime_seconds":16159,"heartbeat_total":16159,"rmr_rx_total":202,"rmr_tx_total":0,"ric_indication_total":202,"work_units_total":202,"last_rmr_rx_unix_nano":1783008238552916097,"last_work_unix_nano":1783008238554394933,"rmr_tx_status":"no_normal_outbound_rmr_path"}

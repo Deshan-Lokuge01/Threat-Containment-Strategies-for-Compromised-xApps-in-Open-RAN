@@ -1,0 +1,51 @@
+{
+  "name": "__XAPP_NAME__",
+  "version": "__XAPP_VERSION__",
+  "provider": "__PROVIDER_ID__",
+  "containers": [
+    {
+      "name": "__XAPP_NAME__",
+      "image": {
+        "registry": "__IMAGE_REGISTRY__",
+        "name": "__IMAGE_NAME__",
+        "tag": "__IMAGE_TAG__",
+        "digest": "__IMAGE_DIGEST__",
+        "reference": "__IMAGE_REFERENCE__",
+        "immutable_reference": "__IMMUTABLE_IMAGE_REFERENCE__"
+      }
+    }
+  ],
+  "messaging": {
+    "ports": [
+      {
+        "name": "http_service",
+        "container": "__XAPP_NAME__",
+        "port": 8080,
+        "description": "HTTP API for health, profile, activity, RIC reachability, and metrics"
+      }
+    ]
+  },
+  "livenessProbe": {
+    "httpGet": {
+      "path": "/health",
+      "port": 8080
+    },
+    "initialDelaySeconds": 5,
+    "periodSeconds": 15
+  },
+  "readinessProbe": {
+    "httpGet": {
+      "path": "/health",
+      "port": 8080
+    },
+    "initialDelaySeconds": 5,
+    "periodSeconds": 15
+  },
+  "security": {
+    "serviceAccount": "__XAPP_NAME__",
+    "spiffeID": "spiffe://__TRUST_DOMAIN__/ns/__NAMESPACE__/sa/__XAPP_NAME__",
+    "requiresSVID": true,
+    "runAsNonRoot": true,
+    "allowPrivilegeEscalation": false
+  }
+}

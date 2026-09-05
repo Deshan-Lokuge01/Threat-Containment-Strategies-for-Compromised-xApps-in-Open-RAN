@@ -1,0 +1,6 @@
+ID=sha256:3e312124e6fce8e11a362e95023c786f9401507314fcf7fe3db06257e971e0f9
+Created=2026-05-31T10:23:16.092593517+05:30
+Entrypoint=null
+Cmd=["/bin/sh","-c","run-hw-python.py"]
+WorkingDir=
+User=

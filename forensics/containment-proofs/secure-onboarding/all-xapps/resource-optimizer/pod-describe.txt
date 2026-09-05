@@ -1,0 +1,113 @@
+Name:             resource-optimizer-76cd8c474d-qq2dz
+Namespace:        ricxapp
+Priority:         0
+Service Account:  resource-optimizer
+Node:             near-rt-ric/192.168.112.129
+Start Time:       Fri, 05 Jun 2026 22:19:57 +0530
+Labels:           app=resource-optimizer
+                  pod-template-hash=76cd8c474d
+                  version=1.0.0
+                  zt-xguard.io/provider=sp1
+                  zt-xguard.io/verified=true
+Annotations:      <none>
+Status:           Running
+SeccompProfile:   RuntimeDefault
+IP:               10.244.0.201
+IPs:
+  IP:           10.244.0.201
+Controlled By:  ReplicaSet/resource-optimizer-76cd8c474d
+Init Containers:
+  fetch-svid:
+    Container ID:  containerd://f52db2c7c186a392c71d3260b3701f9783916a35c4915fbffaa58f6b2c916f71
+    Image:         localhost:5000/spire-fetcher:1.0-nonroot
+    Image ID:      sha256:27bc2b1b240c4c264a23f1d4e535959f8515e4313a7f2ea94087386b6cad4d49
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      set -e
+      echo "Waiting for SPIRE socket..."
+      while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+      echo "Socket ready. Fetching SVID..."
+      /opt/spire/bin/spire-agent api fetch x509 \
+        -socketPath /var/run/spire/sockets/spire-agent.sock \
+        -write /svid-data
+      echo "SVID fetched successfully."
+      ls -l /svid-data || true
+      
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 05 Jun 2026 22:20:15 +0530
+      Finished:     Fri, 05 Jun 2026 22:20:16 +0530
+    Ready:          True
+    Restart Count:  2
+    Environment:    <none>
+    Mounts:
+      /svid-data from svid-data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-wjlz9 (ro)
+      /var/run/spire/sockets from spiffe-socket (ro)
+Containers:
+  resource-optimizer:
+    Container ID:   containerd://805e791a5302cde80f0f2f793e878bec4064bbb211489cf75cd5365cc2449946
+    Image:          localhost:5000/zt-resource-optimizer:1.0
+    Image ID:       sha256:0cb128357868e0834ba386745e7f95df3ae426f27896e24a721a373c21a10754
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Fri, 05 Jun 2026 22:20:17 +0530
+    Ready:          True
+    Restart Count:  0
+    Liveness:       http-get http://:http/health delay=10s timeout=1s period=15s #success=1 #failure=3
+    Readiness:      http-get http://:http/health delay=10s timeout=1s period=15s #success=1 #failure=3
+    Environment:
+      XAPP_PROFILE_PATH:  /etc/xapp-profile/profile.json
+      XAPP_PORT:          8080
+    Mounts:
+      /etc/svid from svid-data (ro)
+      /etc/xapp-profile from xapp-profile (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-wjlz9 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  spiffe-socket:
+    Type:              CSI (a Container Storage Interface (CSI) volume source)
+    Driver:            csi.spiffe.io
+    FSType:            
+    ReadOnly:          true
+    VolumeAttributes:  <none>
+  svid-data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  xapp-profile:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      resource-optimizer-profile
+    Optional:  false
+  kube-api-access-wjlz9:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                    From               Message
+  ----     ------     ----                   ----               -------
+  Normal   Scheduled  6m35s                  default-scheduler  Successfully assigned ricxapp/resource-optimizer-76cd8c474d-qq2dz to near-rt-ric
+  Warning  BackOff    6m31s                  kubelet            Back-off restarting failed container fetch-svid in pod resource-optimizer-76cd8c474d-qq2dz_ricxapp(66b1215d-0eb8-42a8-bfe8-1282ae15eac9)
+  Normal   Pulled     6m17s (x3 over 6m35s)  kubelet            Container image "localhost:5000/spire-fetcher:1.0-nonroot" already present on machine
+  Normal   Created    6m17s (x3 over 6m35s)  kubelet            Created container: fetch-svid
+  Normal   Started    6m17s (x3 over 6m34s)  kubelet            Started container fetch-svid
+  Normal   Pulled     6m15s                  kubelet            Container image "localhost:5000/zt-resource-optimizer:1.0" already present on machine
+  Normal   Created    6m15s                  kubelet            Created container: resource-optimizer
+  Normal   Started    6m15s                  kubelet            Started container resource-optimizer

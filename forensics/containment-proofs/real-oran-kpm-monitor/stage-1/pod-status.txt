@@ -1,0 +1,2 @@
+NAME                           READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+kpm-monitor-78df79475f-5vpzw   1/1     Running   0          9m44s   10.244.0.209   near-rt-ric   <none>           <none>

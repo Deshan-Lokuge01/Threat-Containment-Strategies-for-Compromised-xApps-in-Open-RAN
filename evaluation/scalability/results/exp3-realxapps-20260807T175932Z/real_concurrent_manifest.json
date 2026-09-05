@@ -1,0 +1,25 @@
+{
+  "design": {
+    "levels": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "repetitions": 3
+  },
+  "workloads": [
+    "ricxapp-hw-go",
+    "ricxapp-hw-python",
+    "ricxapp-kpimon-go",
+    "ricxapp-trafficxapp"
+  ],
+  "attack": "real /bin/sh syscall via kubectl exec; Falco path, not synthetic API",
+  "latency_origin": "client timestamp immediately before kubectl exec",
+  "observation": "200 ms polling plus independent pod-IP:4560 TCP and iptables checks",
+  "active_probe_execution": "one concurrent TCP connect attempt per target pod IP on RMR port 4560",
+  "post_enforcement_settle_seconds": 3.0,
+  "between_cell_reset": "Falcosidekick paused; target pods restored/recreated; evaluator restarted to clear per-trial memory; forwarding resumed. Reset is strictly outside every measured interval.",
+  "claim_boundary": "The four real O-RAN SC xApps (hw-go, hw-python, kpimon-go, trafficxapp) exercise the real Kubernetes/Falco/evaluator/responder containment path. Only kpimon-go is E2 control-loop active; the others are real deployed xApps without live E2 KPI traffic.",
+  "created_utc": "2026-08-07T18:07:31.453159+00:00"
+}

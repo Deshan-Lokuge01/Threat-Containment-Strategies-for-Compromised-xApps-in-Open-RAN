@@ -1,0 +1,51 @@
+{
+  "schema": "zt-xguard-evaluator-open-loop-manifest-v1",
+  "created_utc": "2026-08-07T09:21:06.634384+00:00",
+  "endpoint": "http://10.102.102.184:5000/csm/intent/evaluate",
+  "endpoint_semantics": "deployed evaluation/evidence path; response must require no containment",
+  "workload_model": "one high_cpu evaluation signal per logical xApp per second",
+  "claim_boundary": "Measures deployed evaluator and evidence-collection path. It does not measure Falco eBPF capture, resource-detector scoring, Kubernetes containment, Calico propagation or SPIRE renewal.",
+  "levels": [
+    25,
+    30,
+    35,
+    40
+  ],
+  "repetitions": 3,
+  "duration_s_per_cell": 20,
+  "deadline_ms_from_scheduled_arrival": 1000,
+  "execution_orders": [
+    [
+      25,
+      30,
+      35,
+      40
+    ],
+    [
+      40,
+      35,
+      30,
+      25
+    ],
+    [
+      35,
+      40,
+      30,
+      25
+    ]
+  ],
+  "signal": "high_cpu",
+  "expected_state": "SUSPICIOUS",
+  "expected_containment_required": false,
+  "pod": {
+    "pod": "zt-xguard-policy-engine-6479cd5984-d6pg6",
+    "uid": "a3baa61d-5ca2-4e1c-82f4-4e71d4f2ff19",
+    "ready": true,
+    "restart_count": 19,
+    "image": "docker.io/library/zt-xguard-policy-engine:laptop-observe-v1-20260724T201030Z",
+    "node": "near-rt-ric"
+  },
+  "python": "3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0]",
+  "platform": "Linux-6.17.0-29-generic-x86_64-with-glibc2.39",
+  "source_sha256": "38865be5771059d13f5629e3203232ffd52297c3dee443df98036de2d0dba24b"
+}

@@ -1,0 +1,125 @@
+apiVersion: v1
+data:
+  profile.json: |2-
+
+    {
+      "xapp": "qos-optimizer",
+      "role": "qos-optimization",
+      "controls": {
+        "expected_cpu_class": "medium",
+        "expected_memory_class": "medium",
+        "expected_ric_activity": true,
+        "expected_control_activity": true,
+        "expected_shell": false,
+        "expected_sensitive_file_access": false,
+        "expected_external_egress": false,
+        "heartbeat_period_sec": 5,
+        "workload_intensity": "medium",
+        "allowed_ric_services": [
+          "e2mgr",
+          "rtmgr",
+          "a1mediator",
+          "prometheus"
+        ],
+        "max_api_rate_per_min": 120
+      },
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "qos-optimizer",
+            "port": 8080,
+            "description": "HTTP REST API for xApp runtime status"
+          }
+        ]
+      },
+      "security_monitoring": {
+        "compromise_indicators": [
+          "unexpected_shell_spawn",
+          "sensitive_file_access",
+          "service_account_token_access",
+          "unexpected_external_egress",
+          "high_cpu_without_ric_activity",
+          "stale_heartbeat"
+        ],
+        "containment_actions": [
+          "label_as_quarantined",
+          "deny_all_network_policy",
+          "preserve_pod_for_forensics"
+        ]
+      },
+      "runtime_counters": {
+        "telemetry_samples": false,
+        "qos_decisions": true,
+        "traffic_reports": false,
+        "resource_recommendations": false,
+        "security_checks": false
+      }
+    }
+  xapp-descriptor.json: |2-
+
+    {
+      "name": "qos-optimizer",
+      "version": "1.0.0",
+      "provider": "sp1",
+      "containers": [
+        {
+          "name": "qos-optimizer",
+          "image": {
+            "registry": "localhost:5000",
+            "name": "zt-qos-optimizer",
+            "tag": "1.0",
+            "digest": "sha256:dab0c01ee0ae4eb7a092781d9d391647b222cadc7adea9fee6299415956c1b3c",
+            "reference": "localhost:5000/zt-qos-optimizer:1.0",
+            "immutable_reference": "localhost:5000/zt-qos-optimizer@sha256:dab0c01ee0ae4eb7a092781d9d391647b222cadc7adea9fee6299415956c1b3c"
+          }
+        }
+      ],
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "qos-optimizer",
+            "port": 8080,
+            "description": "HTTP API for health, profile, activity, RIC reachability, and metrics"
+          }
+        ]
+      },
+      "livenessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "readinessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "security": {
+        "serviceAccount": "qos-optimizer",
+        "spiffeID": "spiffe://example.org/ns/ricxapp/sa/qos-optimizer",
+        "requiresSVID": true,
+        "runAsNonRoot": true,
+        "allowPrivilegeEscalation": false
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: qos-optimizer
+    meta.helm.sh/release-namespace: ricxapp
+  creationTimestamp: "2026-06-05T16:49:33Z"
+  labels:
+    app: qos-optimizer
+    app.kubernetes.io/managed-by: Helm
+    zt-xguard.io/verified: "true"
+  name: qos-optimizer-profile
+  namespace: ricxapp
+  resourceVersion: "1027172"
+  uid: 64dcfc3d-15fb-478d-8d6c-f4e8cab1ab41

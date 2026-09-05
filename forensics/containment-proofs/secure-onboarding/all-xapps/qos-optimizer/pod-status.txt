@@ -1,0 +1,2 @@
+NAME                             READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+qos-optimizer-77877f44b8-snz8x   1/1     Running   0          6m58s   10.244.0.200   near-rt-ric   <none>           <none>

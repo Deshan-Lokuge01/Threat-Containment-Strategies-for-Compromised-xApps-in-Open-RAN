@@ -1,0 +1,12 @@
+TCP_FAIL service-ricplt-submgr-http.ricplt.svc.cluster.local:3800 -> ConnectionRefusedError(111, 'Connection refused')
+TCP_OK service-ricplt-submgr-rmr.ricplt.svc.cluster.local:4560
+TCP_OK service-ricplt-submgr-rmr.ricplt.svc.cluster.local:4561
+
+URL http://service-ricplt-submgr-http.ricplt.svc.cluster.local:3800
+HTTP_FAIL URLError(ConnectionRefusedError(111, 'Connection refused'))
+
+URL http://service-ricplt-submgr-http.ricplt.svc.cluster.local:3800/ric/v1/subscriptions
+HTTP_FAIL URLError(ConnectionRefusedError(111, 'Connection refused'))
+
+URL http://service-ricplt-submgr-http.ricplt.svc.cluster.local:3800/v1/subscriptions
+HTTP_FAIL URLError(ConnectionRefusedError(111, 'Connection refused'))

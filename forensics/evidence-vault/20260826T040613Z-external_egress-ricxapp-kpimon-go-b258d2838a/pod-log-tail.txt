@@ -1,0 +1,5 @@
+log_fetch_failed: (400)
+Reason: Bad Request
+HTTP response headers: HTTPHeaderDict({'Audit-Id': '50e1dcb4-3ad2-4587-a139-6a8492e995b1', 'Cache-Control': 'no-cache, private', 'Content-Type': 'application/json', 'Date': 'Wed, 26 Aug 2026 04:06:15 GMT', 'Content-Length': '242'})
+HTTP response body: {"kind":"Status","apiVersion":"v1","metadata":{},"status":"Failure","message":"a container name must be specified for pod ricxapp-kpimon-go-798c996fcb-v876z, choose one of: [fetch-svid kpimon-go renew-svid]","reason":"BadRequest","code":400}
+

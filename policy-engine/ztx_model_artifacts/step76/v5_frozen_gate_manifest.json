@@ -1,0 +1,74 @@
+{
+  "schema": "ztx-resource-detector-v5.0-duty-cycle-aware-gates",
+  "frozen_utc": "2026-07-03T10:28:20.550409+00:00",
+  "supersedes": [
+    "v3.3 (step61, leaky)",
+    "v3.4/v3.5 (step69/73, leaky/invented)",
+    "v4.0 (step75, leak-free but duty-cycle-blind)"
+  ],
+  "reason_for_new_version": "Step 75's windowed-mean gates were leak-free but could not distinguish a duty-cycled attack from an occasional benign burst of similar peak magnitude. v5.0 uses a rate-of-exceedance mechanism instead, which measures how often a metric is elevated rather than its smoothed average.",
+  "score_model": "unchanged from Step 54 (v3 directional one-sided MEWMA/T2 pressure score)",
+  "confirmation_rule": "unchanged from Step 55 (6-of-8 confirmed upper-control states)",
+  "gates": {
+    "cpu": {
+      "gate": "cpu_floor",
+      "direction": "upper",
+      "pooled_n": 5400,
+      "wilks_min_n": 2995,
+      "per_sample_floor": 56.638,
+      "derivation": "sample max of pooled N1+N2+N3 per-second raw values; nonparametric one-sided tolerance bound, 95% confidence that >= 99.9% of future clean per-second samples fall within bound (Wilks 1941), n=5400 >= 2995",
+      "window_l": 60,
+      "rate_r": 0.15
+    },
+    "m4": {
+      "gate": "m4_floor",
+      "direction": "upper",
+      "pooled_n": 5316,
+      "wilks_min_n": 2995,
+      "per_sample_floor": 15880.641,
+      "derivation": "sample max of pooled N1+N2+N3 per-second raw values; nonparametric one-sided tolerance bound, 95% confidence that >= 99.9% of future clean per-second samples fall within bound (Wilks 1941), n=5316 >= 2995",
+      "window_l": 60,
+      "rate_r": 0.05
+    },
+    "tx": {
+      "gate": "tx_floor",
+      "direction": "lower",
+      "pooled_n": 5400,
+      "wilks_min_n": 2995,
+      "per_sample_floor": 771.089,
+      "derivation": "sample min of pooled N1+N2+N3 per-second raw values; nonparametric one-sided tolerance bound, 95% confidence that >= 99.9% of future clean per-second samples fall within bound (Wilks 1941), n=5400 >= 2995",
+      "window_l": 60,
+      "rate_r": 0.05
+    }
+  },
+  "decision_gates": [
+    "cpu"
+  ],
+  "decision_logic": "SUSPICIOUS = confirmed_upper_6of8 AND cpu_gate_hit",
+  "m4_gate_excluded_reason": "m4_memory_growth_bytes_per_s spikes to values physically inconsistent with the concurrent m3_memory_working_set_bytes trajectory on BOTH benign (A5, 521167 bytes/s peak vs ~250KB/10s actual M3 change) and attack (R6, >1000000 bytes/s peak vs a few hundred KB/10s actual M3 change) data, with no quality/reset flag raised. Treated as an unreliable feature, not tuned around.",
+  "tx_gate_excluded_reason": "Contributes zero incremental TPR or latency on R1/R6 once the CPU gate is present, while adding ~2.8pp FPR on A5 (development). Retained in the manifest as a computed diagnostic column only.",
+  "public_states": [
+    "NORMAL",
+    "SUSPICIOUS",
+    "COMPROMISED"
+  ],
+  "compromise_policy": "COMPROMISED requires corroborating evidence outside this resource score.",
+  "phase1_blind_datasets": [
+    "N1",
+    "N2",
+    "N3"
+  ],
+  "phase1b_development_datasets": [
+    "A5",
+    "R1"
+  ],
+  "phase2_held_out_clean_datasets": [
+    "D4",
+    "N5"
+  ],
+  "phase2_held_out_attack_datasets": [
+    "R6"
+  ],
+  "still_requires_blind_confirmation": true,
+  "blind_confirmation_procedure": "scripts/step77_v5_final_blind_evaluation.py against fresh A5/R1 replicates"
+}

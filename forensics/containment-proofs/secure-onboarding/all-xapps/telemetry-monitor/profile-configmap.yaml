@@ -1,0 +1,123 @@
+apiVersion: v1
+data:
+  profile.json: |2-
+
+    {
+      "xapp": "telemetry-monitor",
+      "role": "telemetry-monitoring",
+      "controls": {
+        "expected_cpu_class": "low",
+        "expected_memory_class": "low",
+        "expected_ric_activity": true,
+        "expected_control_activity": false,
+        "expected_shell": false,
+        "expected_sensitive_file_access": false,
+        "expected_external_egress": false,
+        "heartbeat_period_sec": 5,
+        "workload_intensity": "low",
+        "allowed_ric_services": [
+          "e2mgr",
+          "prometheus"
+        ],
+        "max_api_rate_per_min": 90
+      },
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "telemetry-monitor",
+            "port": 8080,
+            "description": "HTTP REST API for xApp runtime status"
+          }
+        ]
+      },
+      "security_monitoring": {
+        "compromise_indicators": [
+          "unexpected_shell_spawn",
+          "sensitive_file_access",
+          "service_account_token_access",
+          "unexpected_external_egress",
+          "high_cpu_without_ric_activity",
+          "stale_heartbeat"
+        ],
+        "containment_actions": [
+          "label_as_quarantined",
+          "deny_all_network_policy",
+          "preserve_pod_for_forensics"
+        ]
+      },
+      "runtime_counters": {
+        "telemetry_samples": true,
+        "qos_decisions": false,
+        "traffic_reports": false,
+        "resource_recommendations": false,
+        "security_checks": false
+      }
+    }
+  xapp-descriptor.json: |2-
+
+    {
+      "name": "telemetry-monitor",
+      "version": "1.0.0",
+      "provider": "sp1",
+      "containers": [
+        {
+          "name": "telemetry-monitor",
+          "image": {
+            "registry": "localhost:5000",
+            "name": "zt-telemetry-monitor",
+            "tag": "1.0",
+            "digest": "sha256:84c1c9d0e19248d048a908edc5307f1f8d429fce238e5ecb175a8a1e32aa38eb",
+            "reference": "localhost:5000/zt-telemetry-monitor:1.0",
+            "immutable_reference": "localhost:5000/zt-telemetry-monitor@sha256:84c1c9d0e19248d048a908edc5307f1f8d429fce238e5ecb175a8a1e32aa38eb"
+          }
+        }
+      ],
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "telemetry-monitor",
+            "port": 8080,
+            "description": "HTTP API for health, profile, activity, RIC reachability, and metrics"
+          }
+        ]
+      },
+      "livenessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "readinessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "security": {
+        "serviceAccount": "telemetry-monitor",
+        "spiffeID": "spiffe://example.org/ns/ricxapp/sa/telemetry-monitor",
+        "requiresSVID": true,
+        "runAsNonRoot": true,
+        "allowPrivilegeEscalation": false
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: telemetry-monitor
+    meta.helm.sh/release-namespace: ricxapp
+  creationTimestamp: "2026-06-05T16:44:52Z"
+  labels:
+    app: telemetry-monitor
+    app.kubernetes.io/managed-by: Helm
+    zt-xguard.io/verified: "true"
+  name: telemetry-monitor-profile
+  namespace: ricxapp
+  resourceVersion: "1026603"
+  uid: 8bc9931d-720e-4783-a408-d7e5ac68de13

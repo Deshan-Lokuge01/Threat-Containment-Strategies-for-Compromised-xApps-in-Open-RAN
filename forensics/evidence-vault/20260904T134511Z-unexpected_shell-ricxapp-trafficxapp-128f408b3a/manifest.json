@@ -1,0 +1,67 @@
+{
+  "schema": "ztx-forensic-vault-v1",
+  "incident_id": "20260904T134511Z-unexpected_shell-ricxapp-trafficxapp-128f408b3a",
+  "captured_utc": "2026-09-04T13:45:13.794175+00:00",
+  "sealed_utc": "2026-09-04T13:45:23Z",
+  "captured_by": "ZT-XGuard policy-engine (automated containment)",
+  "asset": {
+    "xapp": "ricxapp-trafficxapp",
+    "pod": "ricxapp-trafficxapp-656f95dfd4-pn8sf",
+    "namespace": "ricxapp"
+  },
+  "trigger": {
+    "source": "falco_event",
+    "signal": "unexpected_shell",
+    "falco_rule": "ZTX xApp Unexpected Shell",
+    "priority": "Critical",
+    "rule_ids": [
+      "R-CRIT-01"
+    ],
+    "alert": "2026-09-04T13:45:11.371069576+0000: Critical ztx_signal=unexpected_shell rule_id=ZTX-A1 xapp shell spawned (user=root command=sh -c sleep 0.5 pod=ricxapp-trafficxapp-656f95dfd4-pn8sf ns=ricxapp container=trafficxapp image=127.0.0.1:80/trafficxapp) container_id=8100765e569e container_name=trafficxapp container_image_repository=127.0.0.1:80/trafficxapp container_image_tag=latest k8s_pod_name=ricxapp-trafficxapp-656f95dfd4-pn8sf k8s_ns_name=ricxapp"
+  },
+  "decision": {
+    "state": "ISOLATED",
+    "detection_state": "COMPROMISED",
+    "containment_required": true,
+    "containment_action": "SERVICE_ISOLATION_AND_IDENTITY_CONTAINMENT",
+    "isolation_timing": "IMMEDIATE",
+    "severity": "CRITICAL",
+    "score": 100,
+    "confidence": 0.98
+  },
+  "integrity": "sha256",
+  "artifacts": [
+    {
+      "name": "events.json",
+      "bytes": 22745,
+      "sha256": "2e4945713283aa95e072327438a5c9b93f37bf8d7c5d82dff7408d334343cf8b"
+    },
+    {
+      "name": "incident.json",
+      "bytes": 68249,
+      "sha256": "2010d25dd226d99092f620f86ef260d6c6f79df723ece527cf88f164da91400e"
+    },
+    {
+      "name": "pod-log-tail.txt",
+      "bytes": 543,
+      "sha256": "29d3d9f5a86ae3d09a5f075d373fd5b698f15f027478b9ba6b0040dccea7085a"
+    },
+    {
+      "name": "pod.json",
+      "bytes": 27147,
+      "sha256": "a1c43626d09f77d8293c38eddf00f550df811750126242bac5e6048a89762303"
+    }
+  ],
+  "chain_of_custody": [
+    {
+      "actor": "policy-engine.forensic-capture",
+      "action": "captured",
+      "utc": "2026-09-04T13:45:13.794175+00:00"
+    },
+    {
+      "actor": "policy-engine.vault-sealer",
+      "action": "sealed+hashed",
+      "utc": "2026-09-04T13:45:23Z"
+    }
+  ]
+}

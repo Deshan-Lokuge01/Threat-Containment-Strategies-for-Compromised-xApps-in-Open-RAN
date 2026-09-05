@@ -1,0 +1,37 @@
+===== AppMgr known xApps =====
+[]
+
+===== AppMgr deployable list endpoints =====
+
+### GET /ric/v1/xapps/list
+HTTP/1.1 501 Not Implemented
+Content-Type: application/json
+Date: Mon, 08 Jun 2026 12:16:10 GMT
+Content-Length: 58
+Connection: close
+
+"operation XappListAllXapps has not yet been implemented"
+
+### GET /ric/v1/xapps/list/all
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+Date: Mon, 08 Jun 2026 12:16:10 GMT
+Content-Length: 66
+Connection: close
+
+{"code":404,"message":"path /ric/v1/xapps/list/all was not found"}
+### GET /ric/v1/config
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 08 Jun 2026 12:16:10 GMT
+Content-Length: 3
+Connection: close
+
+[]
+
+### GET /ric/v1/health/ready
+HTTP/1.1 200 OK
+Date: Mon, 08 Jun 2026 12:16:10 GMT
+Content-Length: 0
+Connection: close
+

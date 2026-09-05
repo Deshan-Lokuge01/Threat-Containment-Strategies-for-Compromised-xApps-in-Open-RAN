@@ -1,0 +1,2 @@
+NAME          STATUS   ROLES           AGE   VERSION    INTERNAL-IP       EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+near-rt-ric   Ready    control-plane   9d    v1.33.12   192.168.112.129   <none>        Ubuntu 22.04.5 LTS   6.8.0-124-generic   containerd://2.2.4

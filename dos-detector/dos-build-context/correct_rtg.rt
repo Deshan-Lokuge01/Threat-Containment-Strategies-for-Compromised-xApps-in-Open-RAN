@@ -1,0 +1,10 @@
+newrt|start
+rte|0|service-ricplt-e2term-rmr.ricplt.svc.cluster.local:38000
+rte|2|service-ricplt-e2term-rmr.ricplt.svc.cluster.local:38000
+rte|89|service-ricplt-e2term-rmr.ricplt.svc.cluster.local:38000
+mse|12010|-1|service-ricplt-e2term-rmr.ricplt.svc.cluster.local:38000
+mse|12011|-1|service-ricplt-e2term-rmr.ricplt.svc.cluster.local:38000
+mse|12012|-1|service-ricplt-e2term-rmr.ricplt.svc.cluster.local:38000
+mse|12020|-1|service-ricplt-e2term-rmr.ricplt.svc.cluster.local:38000
+mse|12050|-1|service-ricplt-e2term-rmr.ricplt.svc.cluster.local:38000
+newrt|end

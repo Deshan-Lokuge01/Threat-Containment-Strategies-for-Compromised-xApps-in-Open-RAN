@@ -1,0 +1,5 @@
+log_fetch_failed: (400)
+Reason: Bad Request
+HTTP response headers: HTTPHeaderDict({'Audit-Id': '5f5ce40e-f680-4cd0-a0a2-5a3a64eb7513', 'Cache-Control': 'no-cache, private', 'Content-Type': 'application/json', 'Date': 'Wed, 26 Aug 2026 12:07:23 GMT', 'Content-Length': '234'})
+HTTP response body: {"kind":"Status","apiVersion":"v1","metadata":{},"status":"Failure","message":"a container name must be specified for pod ricxapp-hw-go-79c6d795d5-q82kz, choose one of: [fetch-svid hw-go renew-svid]","reason":"BadRequest","code":400}
+

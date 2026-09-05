@@ -1,0 +1,35 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: ztx-restrict-xapp-images
+  annotations:
+    policies.kyverno.io/title: Restrict xApp Images
+    policies.kyverno.io/category: ZT-XGuard
+    policies.kyverno.io/severity: medium
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: restrict-xapp-image-registry
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - ricxapp
+      validate:
+        message: "xApp containers must use approved local ZT-XGuard image repositories and must not use latest."
+        foreach:
+          - list: "request.object.spec.containers"
+            deny:
+              conditions:
+                any:
+                  - key: "{{ element.image }}"
+                    operator: AnyNotIn
+                    value:
+                      - "localhost:5000/zt-*"
+                      - "127.0.0.1:5000/zt-*"
+                  - key: "{{ element.image }}"
+                    operator: Equals
+                    value: "*:latest"

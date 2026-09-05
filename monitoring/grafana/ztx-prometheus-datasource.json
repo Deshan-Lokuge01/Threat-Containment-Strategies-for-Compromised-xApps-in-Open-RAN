@@ -1,0 +1,9 @@
+{
+  "name": "ZT-XGuard Prometheus",
+  "type": "prometheus",
+  "uid": "ztx-prometheus",
+  "url": "http://r4-infrastructure-prometheus-server.ricplt.svc.cluster.local:80",
+  "access": "proxy",
+  "isDefault": true,
+  "basicAuth": false
+}

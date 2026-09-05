@@ -1,0 +1,11 @@
+dataset=A2_CALDERA_T1499_R1_CPU
+run_id=A2-CALDERA-T1499-KPIMON-CPU-1UE-10PPS-20260630T095947Z
+role=caldera-orchestrated-attack-evaluation
+collector_return_code=0
+primary_data_ok=1
+attack_started=1
+stress_ng_running_at_end=0
+actuator_inactive_at_end=1
+scored_during_collection=0
+final_acceptance=1
+caldera_report_required=1

@@ -1,0 +1,4 @@
+service/kpm-monitor                       ClusterIP   10.106.73.207    <none>        8092/TCP,4560/TCP,4561/TCP   36m
+service/service-ricxapp-kpm-monitor-rmr   ClusterIP   10.100.208.237   <none>        8092/TCP,4560/TCP,4561/TCP   36m
+endpoints/kpm-monitor                       10.244.0.219:8092,10.244.0.219:4560,10.244.0.219:4561   36m
+endpoints/service-ricxapp-kpm-monitor-rmr   10.244.0.219:8092,10.244.0.219:4561,10.244.0.219:4560   36m

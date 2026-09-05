@@ -1,0 +1,23 @@
+{
+  "time": "2026-06-05T16:02:18Z",
+  "result": "ACCEPTED",
+  "provider": "sp1",
+  "xapp": "traffic-analyzer",
+  "version": "1.0.0",
+  "namespace": "ricxapp",
+  "spiffe_id": "spiffe://example.org/ns/ricxapp/sa/traffic-analyzer",
+  "image_reference": "localhost:5000/zt-traffic-analyzer:1.0",
+  "immutable_reference": "localhost:5000/zt-traffic-analyzer@sha256:6486a85f6129dc067c7f1c380fe5123eed755168fb4b08f418f52b229cf90ec5",
+  "digest": "sha256:6486a85f6129dc067c7f1c380fe5123eed755168fb4b08f418f52b229cf90ec5",
+  "chart_dir": "/home/near-ric/Desktop/FYP/zt-xguard/roles/smo/charts/verified/traffic-analyzer",
+  "chart_package": "/home/near-ric/Desktop/FYP/zt-xguard/roles/smo/charts/verified/packages/traffic-analyzer-1.0.0.tgz",
+  "verified_gates": [
+    "provider_trust_store",
+    "sha256_archive_integrity",
+    "gpg_descriptor_signature",
+    "descriptor_json_validation",
+    "registry_digest_match",
+    "cosign_image_signature",
+    "helm_chart_generation"
+  ]
+}

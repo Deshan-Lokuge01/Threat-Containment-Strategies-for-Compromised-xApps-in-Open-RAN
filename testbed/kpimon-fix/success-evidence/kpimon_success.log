@@ -1,0 +1,421 @@
+{"ts":1781030018733,"crit":"INFO","id":"kpimon","mdc":{"time":"2026-06-09T18:33:38"},"msg":"Using config file: /opt/config-file.yaml"}
+{"ts":1781030018734,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:38"},"msg":"Serving metrics on: url=/ric/v1/metrics namespace="}
+redis: got 7 elements in COMMAND reply, wanted 6
+{"ts":1781030018743,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:38"},"msg":"Register new counter with opts: { SDL Stored The total number of stored SDL transactions map[]}"}
+{"ts":1781030018743,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:38"},"msg":"Register new counter with opts: { SDL StoreError The total number of SDL store errors map[]}"}
+redis: got 7 elements in COMMAND reply, wanted 6
+{"ts":1781030033762,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"In new control"}
+{"ts":1781030033762,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"returning control"}
+c.Run(){"ts":1781030033762,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"In Run() ..."}
+1781030033762 8/RMR [INFO] ric message routing library on SI95 p=4560 mv=3 flg=00 id=a (a1be12a 4.9.0 built: Feb 14 2023)
+{"ts":1781030033764,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"new rmrClient with parameters: ProtPort=4560 MaxSize=2072 ThreadType=0 StatDesc=RMR LowLatency=false FastAck=false Policies=[]"}
+{"ts":1781030033764,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"Register new counter with opts: { RMR Transmitted The total number of transmited RMR messages map[]}"}
+{"ts":1781030033764,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"Register new counter with opts: { RMR TransmitError The total number of RMR transmission errors map[]}"}
+{"ts":1781030033764,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"Register new counter with opts: { RMR TransmitRetry The total number of transmit retries on failure map[]}"}
+{"ts":1781030033764,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"Register new counter with opts: { RMR Received The total number of received RMR messages map[]}"}
+{"ts":1781030033765,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"Register new counter with opts: { RMR ReceiveError The total number of RMR receive errors map[]}"}
+{"ts":1781030033765,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"Register new counter with opts: { RMR SendWithRetryRetry SendWithRetry service retries map[]}"}
+{"ts":1781030033765,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"Register new gauge with opts: { RMR Enqueued The total number of enqueued in RMR library map[]}"}
+{"ts":1781030033765,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"Register new gauge with opts: { RMR Dropped The total number of dropped in RMR library map[]}"}
+{"ts":1781030033765,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"IP address is not able to resolve Interface () route ip+net: invalid network interface name"}
+{"ts":1781030033765,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"Xapp started, listening on: :8080"}
+{"ts":1781030033769,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"Connection to database established!"}
+{"ts":1781030033770,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:53"},"msg":"rmrClient: Waiting for RMR to be ready ..."}
+{"ts":1781030034768,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:54"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030034770,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:54"},"msg":"rmrClient: RMR is ready after 1 seconds waiting..."}
+{"ts":1781030034770,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:54"},"msg":"In callback KPI monitor xApp ..."}
+{"ts":1781030034771,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:54"},"msg":"List for connected eNBs: []"}
+{"ts":1781030034772,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:54"},"msg":"List for connected gNBs: [gnbd_001_001_00019b_0]"}
+{"ts":1781030034772,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:54"},"msg":"Building ranCellKp for gnbd_001_001_00019b_0"}
+1781030034777 8/RMR [INFO] sends: ts=1781030034 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2term-rmr-alpha.ricplt:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030034777 8/RMR [INFO] sends: ts=1781030034 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+server =  00010080B7000005004E00020000002A00020000002D400601806F647530002C0080940000002B00808D480000F11000066C000000010000070800F110000000834004000000200100054DC80000020040059800000002000700E0061010B3E34084000300CC084FD20405C04100100800003800336000601504010140800034808149F033865886CDC1008000020200010680A09098200854DC800000697386589000404033251FF0024E1106FBF56C70EA00AC5B411400AB000110
+Decoded string: 00010080B7000005004E00020000002A00020000002D400601806F647530002C0080940000002B00808D480000F11000066C000000010000070800F110000000834004000000200100054DC80000020040059800000002000700E0061010B3E34084000300CC084FD20405C04100100800003800336000601504010140800034808149F033865886CDC1008000020200010680A09098200854DC800000697386589000404033251FF0024E1106FBF56C70EA00AC5B411400AB000110
+Hex values as a string: 
+F1AP
+[INFO] F1AP PDU decoded successfull rval.code = 0 
+<F1AP-PDU>
+    <initiatingMessage>
+        <procedureCode>1</procedureCode>
+        <criticality><reject/></criticality>
+        <value>
+            <F1SetupRequest>
+                <protocolIEs>
+                    <F1SetupRequestIEs>
+                        <id>78</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <TransactionID>0</TransactionID>
+                        </value>
+                    </F1SetupRequestIEs>
+                    <F1SetupRequestIEs>
+                        <id>42</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <GNB-DU-ID>0</GNB-DU-ID>
+                        </value>
+                    </F1SetupRequestIEs>
+                    <F1SetupRequestIEs>
+                        <id>45</id>
+                        <criticality><ignore/></criticality>
+                        <value>
+                            <GNB-DU-Name>odu0</GNB-DU-Name>
+                        </value>
+                    </F1SetupRequestIEs>
+                    <F1SetupRequestIEs>
+                        <id>44</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <GNB-DU-Served-Cells-List>
+                                <ProtocolIE-SingleContainer>
+                                    <id>43</id>
+                                    <criticality><reject/></criticality>
+                                    <value>
+                                        <GNB-DU-Served-Cells-Item>
+                                            <served-Cell-Information>
+                                                <nRCGI>
+                                                    <pLMN-Identity>00 F1 10</pLMN-Identity>
+                                                    <nRCellIdentity>
+                                                        000000000000011001101100000000000000
+                                                    </nRCellIdentity>
+                                                </nRCGI>
+                                                <nRPCI>1</nRPCI>
+                                                <fiveGS-TAC>00 00 07</fiveGS-TAC>
+                                                <servedPLMNs>
+                                                    <ServedPLMNs-Item>
+                                                        <pLMN-Identity>00 F1 10</pLMN-Identity>
+                                                        <iE-Extensions>
+                                                            <ServedPLMNs-ItemExtIEs>
+                                                                <id>131</id>
+                                                                <criticality><ignore/></criticality>
+                                                                <extensionValue>
+                                                                    <SliceSupportList>
+                                                                        <SliceSupportItem>
+                                                                            <sNSSAI>
+                                                                                <sST>01</sST>
+                                                                            </sNSSAI>
+                                                                        </SliceSupportItem>
+                                                                    </SliceSupportList>
+                                                                </extensionValue>
+                                                            </ServedPLMNs-ItemExtIEs>
+                                                        </iE-Extensions>
+                                                    </ServedPLMNs-Item>
+                                                </servedPLMNs>
+                                                <nR-Mode-Info>
+                                                    <fDD>
+                                                        <uL-NRFreqInfo>
+                                                            <nRARFCN>347592</nRARFCN>
+                                                            <freqBandListNr>
+                                                                <FreqBandNrItem>
+                                                                    <freqBandIndicatorNr>3</freqBandIndicatorNr>
+                                                                    <supportedSULBandList>
+                                                                    </supportedSULBandList>
+                                                                </FreqBandNrItem>
+                                                            </freqBandListNr>
+                                                        </uL-NRFreqInfo>
+                                                        <dL-NRFreqInfo>
+                                                            <nRARFCN>366592</nRARFCN>
+                                                            <freqBandListNr>
+                                                                <FreqBandNrItem>
+                                                                    <freqBandIndicatorNr>3</freqBandIndicatorNr>
+                                                                    <supportedSULBandList>
+                                                                    </supportedSULBandList>
+                                                                </FreqBandNrItem>
+                                                            </freqBandListNr>
+                                                        </dL-NRFreqInfo>
+                                                        <uL-Transmission-Bandwidth>
+                                                            <nRSCS><scs15/></nRSCS>
+                                                            <nRNRB><nrb106/></nRNRB>
+                                                        </uL-Transmission-Bandwidth>
+                                                        <dL-Transmission-Bandwidth>
+                                                            <nRSCS><scs15/></nRSCS>
+                                                            <nRNRB><nrb106/></nRNRB>
+                                                        </dL-Transmission-Bandwidth>
+                                                    </fDD>
+                                                </nR-Mode-Info>
+                                                <measurementTimingConfiguration>10 10 B3 E3 40 84</measurementTimingConfiguration>
+                                            </served-Cell-Information>
+                                            <gNB-DU-System-Information>
+                                                <mIB-message>00 CC 08</mIB-message>
+                                                <sIB1-message>
+                                                    D2 04 05 C0 41 00 10 08 00 00 38 00 33 60 00 60 
+                                                    15 04 01 01 40 80 00 34 80 81 49 F0 33 86 58 86 
+                                                    CD C1 00 80 00 02 02 00 01 06 80 A0 90 98 20 08 
+                                                    54 DC 80 00 00 69 73 86 58 90 00 40 40 33 25 1F 
+                                                    F0 02 4E 11 06 FB F5 6C 70 EA 00 AC 5B 41 14
+                                                </sIB1-message>
+                                            </gNB-DU-System-Information>
+                                        </GNB-DU-Served-Cells-Item>
+                                    </value>
+                                </ProtocolIE-SingleContainer>
+                            </GNB-DU-Served-Cells-List>
+                        </value>
+                    </F1SetupRequestIEs>
+                    <F1SetupRequestIEs>
+                        <id>171</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <RRC-Version>
+                                <latest-RRC-Version>
+                                    001
+                                </latest-RRC-Version>
+                            </RRC-Version>
+                        </value>
+                    </F1SetupRequestIEs>
+                </protocolIEs>
+            </F1SetupRequest>
+        </value>
+    </initiatingMessage>
+</F1AP-PDU>
+f1apSever Response: {Cellids:[] PlmnIds:[]}
+{"ts":1781030034936,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:54"},"msg":"[OCUDU-CELL] f1apServer cell IDs for gnbd_001_001_00019b_0: []"}
+{"ts":1781030034936,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:54"},"msg":"[OCUDU-CELL] f1apServer PLMN IDs for gnbd_001_001_00019b_0: []"}
+{"ts":1781030034936,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:54"},"msg":"[OCUDU-CELL] Using fallback cell/PLMN for gnbd_001_001_00019b_0: cell=00066c0000 plmn=00f110"}
+RMR is ready now ...
+{"ts":1781030038770,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:58"},"msg":"Application='kpimon-go' is now up and ready, continue with registration ..."}
+{"ts":1781030038770,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:58"},"msg":"getService: SERVICE_RICXAPP_KPIMON-GO_HTTP_PORT [tcp: 10.108.144.251:8080]"}
+{"ts":1781030038770,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:58"},"msg":"getService: SERVICE_RICXAPP_KPIMON-GO_RMR_PORT [tcp: 10.105.68.216:4560]"}
+{"ts":1781030038823,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:58"},"msg":"Post to 'http://service-ricplt-appmgr-http.ricplt:8080/ric/v1/register' done, status:201 Created"}
+{"ts":1781030038823,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:58"},"msg":"Registration done, proceeding with startup ..."}
+{"ts":1781030039937,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:59"},"msg":"App registration is done, ready to send subscription request."}
+{"ts":1781030039938,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:59"},"msg":"Before send subscription request to gnbd_001_001_00019b_0"}
+{"ts":1781030039938,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:59"},"msg":"Sending subscription request for MEID: gnbd_001_001_00019b_0"}
+{"ts":1781030039938,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:59"},"msg":"[OCUDU-CELL] Raw cells for gnbd_001_001_00019b_0: [00066c0000]"}
+{"ts":1781030039938,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:59"},"msg":"[OCUDU-CELL] Clean cells for gnbd_001_001_00019b_0: [00066c0000]"}
+Null pointer encountered for id_format1: measID at index 0
+Null pointer encountered for id_format1: measID at index 1
+Null pointer encountered for id_format1: measID at index 2
+Null pointer encountered for id_format1: measID at index 3
+Null pointer encountered for id_format1: measID at index 4
+Null pointer encountered for id_format1: measID at index 5
+Null pointer encountered for id_format1: measID at index 6
+Null pointer encountered for id_format1: measID at index 7
+Null pointer encountered for id_format1: measID at index 8
+Null pointer encountered for id_format1: measID at index 9
+Null pointer encountered for id_format1: measID at index 10
+Null pointer encountered for id_format1: measID at index 11
+Null pointer encountered for id_format1: measID at index 12
+Null pointer encountered for id_format1: measID at index 13
+Null pointer encountered for id_format1: measID at index 14
+Null pointer encountered for id_format3: measID at index 0
+Null pointer encountered for id_format3: measID at index 1
+Null pointer encountered for id_format3: measID at index 2
+Null pointer encountered for id_format3: measID at index 3
+Null pointer encountered for id_format3: measID at index 4
+Null pointer encountered for id_format3: measID at index 5
+Null pointer encountered for id_format3: measID at index 6
+Null pointer encountered for id_format3: measID at index 7
+Null pointer encountered for id_format3: measID at index 8
+Null pointer encountered for id_format3: measID at index 9
+Null pointer encountered for id_format3: measID at index 10
+Null pointer encountered for id_format3: measID at index 11
+Null pointer encountered for id_format3: measID at index 12
+Null pointer encountered for id_format3: measID at index 13
+successfully
+successfully
+{"ts":1781030039944,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:59"},"msg":"[OCUDU-CELL] Added Format1 cell-level action: actionID=1 cell=00066c0000 plmn=00f110 actionDefLen=356"}
+[OCUDU-CELL] ActionToBeSetup count = 1
+{"ts":1781030039944,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:59"},"msg":"[OCUDU-CELL] ActionToBeSetup count for gnbd_001_001_00019b_0 = 1"}
+{"ts":1781030039945,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:59"},"msg":"*****body: {\n \"ClientEndpoint\": {\n  \"HTTPPort\": 8080,\n  \"Host\": \"service-ricxapp-kpimon-go-http.ricxapp\",\n  \"RMRPort\": 4560\n },\n \"Meid\": \"gnbd_001_001_00019b_0\",\n \"RANFunctionID\": 2,\n \"SubscriptionDetails\": [\n  {\n   \"ActionToBeSetupList\": [\n    {\n     \"ActionDefinition\": [\n      0,\n      1,\n      1,\n      8,\n      0,\n      14,\n      0,\n      240,\n      68,\n      82,\n      66,\n      46,\n      65,\n      105,\n      114,\n      73,\n      102,\n      68,\n      101,\n      108,\n      97,\n      121,\n      85,\n      108,\n      1,\n      32,\n      0,\n      0,\n      0,\n      208,\n      68,\n      82,\n      66,\n      46,\n      82,\n      108,\n      99,\n      68,\n      101,\n      108,\n      97,\n      121,\n      85,\n      108,\n      1,\n      32,\n      0,\n      0,\n      1,\n      96,\n      68,\n      82,\n      66,\n      46,\n      82,\n      108,\n      99,\n      80,\n      97,\n      99,\n      107,\n      101,\n      116,\n      68,\n      114,\n      111,\n      112,\n      82,\n      97,\n      116,\n      101,\n      68,\n      108,\n      1,\n      32,\n      0,\n      0,\n      1,\n      0,\n      68,\n      82,\n      66,\n      46,\n      82,\n      108,\n      99,\n      83,\n      100,\n      117,\n      68,\n      101,\n      108,\n      97,\n      121,\n      68,\n      108,\n      1,\n      32,\n      0,\n      0,\n      1,\n      192,\n      68,\n      82,\n      66,\n      46,\n      82,\n      108,\n      99,\n      83,\n      100,\n      117,\n      84,\n      114,\n      97,\n      110,\n      115,\n      109,\n      105,\n      116,\n      116,\n      101,\n      100,\n      86,\n      111,\n      108,\n      117,\n      109,\n      101,\n      68,\n      76,\n      1,\n      32,\n      0,\n      0,\n      1,\n      192,\n      68,\n      82,\n      66,\n      46,\n      82,\n      108,\n      99,\n      83,\n      100,\n      117,\n      84,\n      114,\n      97,\n      110,\n      115,\n      109,\n      105,\n      116,\n      116,\n      101,\n      100,\n      86,\n      111,\n      108,\n      117,\n      109,\n      101,\n      85,\n      76,\n      1,\n      32,\n      0,\n      0,\n      0,\n      160,\n      68,\n      82,\n      66,\n      46,\n      85,\n      69,\n      84,\n      104,\n      112,\n      68,\n      108,\n      1,\n      32,\n      0,\n      0,\n      0,\n      160,\n      68,\n      82,\n      66,\n      46,\n      85,\n      69,\n      84,\n      104,\n      112,\n      85,\n      108,\n      1,\n      32,\n      0,\n      0,\n      1,\n      48,\n      82,\n      65,\n      67,\n      72,\n      46,\n      80,\n      114,\n      101,\n      97,\n      109,\n      98,\n      108,\n      101,\n      68,\n      101,\n      100,\n      67,\n      101,\n      108,\n      108,\n      1,\n      32,\n      0,\n      0,\n      0,\n      208,\n      82,\n      82,\n      85,\n      46,\n      80,\n      114,\n      98,\n      65,\n      118,\n      97,\n      105,\n      108,\n      68,\n      108,\n      1,\n      32,\n      0,\n      0,\n      0,\n      208,\n      82,\n      82,\n      85,\n      46,\n      80,\n      114,\n      98,\n      65,\n      118,\n      97,\n      105,\n      108,\n      85,\n      108,\n      1,\n      32,\n      0,\n      0,\n      0,\n      176,\n      82,\n      82,\n      85,\n      46,\n      80,\n      114,\n      98,\n      84,\n      111,\n      116,\n      68,\n      108,\n      1,\n      32,\n      0,\n      0,\n      0,\n      176,\n      82,\n      82,\n      85,\n      46,\n      80,\n      114,\n      98,\n      84,\n      111,\n      116,\n      85,\n      108,\n      1,\n      32,\n      0,\n      0,\n      0,\n      192,\n      82,\n      82,\n      85,\n      46,\n      80,\n      114,\n      98,\n      85,\n      115,\n      101,\n      100,\n      68,\n      108,\n      1,\n      32,\n      0,\n      0,\n      0,\n      192,\n      82,\n      82,\n      85,\n      46,\n      80,\n      114,\n      98,\n      85,\n      115,\n      101,\n      100,\n      85,\n      108,\n      1,\n      32,\n      0,\n      0,\n      64,\n      39,\n      15,\n      0,\n      0,\n      241,\n      16,\n      0,\n      6,\n      108,\n      0,\n      0\n     ],\n     \"ActionID\": 1,\n     \"ActionType\": \"report\",\n     \"SubsequentAction\": {\n      \"SubsequentActionType\": \"continue\",\n      \"TimeToWait\": \"w10ms\"\n     }\n    }\n   ],\n   \"EventTriggers\": [\n    8,\n    39,\n    15\n   ],\n   \"XappEventInstanceId\": 1\n  }\n ]\n}"}
+{"ts":1781030039957,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:59"},"msg":"Successfully subscription done (gnbd_001_001_00019b_0), subscriptrion id: 3EuYbZ8Uzx34idQIgrm8Nx3rNg6"}
+{"ts":1781030039957,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:59"},"msg":"After send subscription request to gnbd_001_001_00019b_0"}
+len of ranUeKpi=  1
+ranUeKpi map =  map[gnbd_001_001_00019b_0:[              DRB.AirIfDelayUl DRB.RlcDelayUl DRB.RlcPacketDropRateDl DRB.RlcSduDelayDl DRB.RlcSduTransmittedVolumeDL DRB.RlcSduTransmittedVolumeUL DRB.UEThpDl DRB.UEThpUl RRU.PrbAvailDl RRU.PrbAvailUl RRU.PrbTotDl RRU.PrbTotUl RRU.PrbUsedDl RRU.PrbUsedUl]]
+len of ranCellKpi=  1
+ranCellKpi map =  map[gnbd_001_001_00019b_0:[               DRB.AirIfDelayUl DRB.RlcDelayUl DRB.RlcPacketDropRateDl DRB.RlcSduDelayDl DRB.RlcSduTransmittedVolumeDL DRB.RlcSduTransmittedVolumeUL DRB.UEThpDl DRB.UEThpUl RACH.PreambleDedCell RRU.PrbAvailDl RRU.PrbAvailUl RRU.PrbTotDl RRU.PrbTotUl RRU.PrbUsedDl RRU.PrbUsedUl]]
+len of Glob_cell_Plmn=  1
+Glob_cell_Plmn map =  map[00066c0000:00f110]
+{"ts":1781030039957,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:33:59"},"msg":"End callback KPI monitor xApp ..."}
+{"ts":1781030048127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:34:08"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030049769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:34:09"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030060254,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:34:20"},"msg":"Message received: name=RIC_INDICATION meid=gnbd_001_001_00019b_0 subId=4 txid=   545478109239 len=430"}
+{"ts":1781030060254,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:34:20"},"msg":"Received message type: 12050"}
+ parsing for cell metrics
+ 
+ No of cell = 1
+ 
+ No of cell metrics = 15
+Wrong Data TypeWrong Data TypeWrong Data Typemap[DRB.AirIfDelayUl:10 DRB.RlcSduTransmittedVolumeDL:0 DRB.RlcSduTransmittedVolumeUL:0 DRB.UEThpDl:0 DRB.UEThpUl:0 RACH.PreambleDedCell:0 RRU.PrbAvailDl:106 RRU.PrbAvailUl:106 RRU.PrbTotDl:0 RRU.PrbTotUl:0 RRU.PrbUsedDl:0 RRU.PrbUsedUl:0]
+Constraints failed for encoding subscription request, SuccessConstraints failed for encoding subscription request, Success2026/06/09 18:34:20 RIC Indication message from {gnbd_001_001_00019b_0} received
+2026/06/09 18:34:20 Indication Header format = 1
+Parsing Cell Metric Done{"ts":1781030060814,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:34:20"},"msg":"Wrote Cell Metrics to InfluxDB"}
+{"ts":1781030063127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:34:23"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030064769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:34:24"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+1781030065822 8/RMR [INFO] sends: ts=1781030065 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2term-rmr-alpha.ricplt:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030065822 8/RMR [INFO] sends: ts=1781030065 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+{"ts":1781030078127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:34:38"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030079769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:34:39"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030093127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:34:53"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030094769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:34:54"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+1781030096173 8/RMR [INFO] sends: ts=1781030096 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=10.106.73.114:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030096173 8/RMR [INFO] sends: ts=1781030096 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricxapp-hw-go-rmr.ricxapp:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030096173 8/RMR [INFO] sends: ts=1781030096 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2term-rmr-alpha.ricplt:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030096173 8/RMR [INFO] sends: ts=1781030096 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-submgr-rmr.ricplt:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030096173 8/RMR [INFO] sends: ts=1781030096 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030096173 8/RMR [INFO] sends: ts=1781030096 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+{"ts":1781030108127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:35:08"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030109769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:35:09"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030113305,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:35:13"},"msg":"Message received: name=RIC_INDICATION meid=gnbd_001_001_00019b_0 subId=4 txid=   545478109245 len=430"}
+{"ts":1781030113305,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:35:13"},"msg":"Received message type: 12050"}
+2026/06/09 18:35:13 RIC Indication message from {gnbd_001_001_00019b_0} received
+2026/06/09 18:35:13 Indication Header format = 1
+ parsing for cell metrics
+ 
+ No of cell = 1
+ 
+ No of cell metrics = 15
+Wrong Data TypeWrong Data TypeWrong Data Typemap[DRB.AirIfDelayUl:10 DRB.RlcSduTransmittedVolumeDL:0 DRB.RlcSduTransmittedVolumeUL:0 DRB.UEThpDl:0 DRB.UEThpUl:0 RACH.PreambleDedCell:0 RRU.PrbAvailDl:106 RRU.PrbAvailUl:106 RRU.PrbTotDl:0 RRU.PrbTotUl:0 RRU.PrbUsedDl:0 RRU.PrbUsedUl:0]
+Parsing Cell Metric Done{"ts":1781030113340,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:35:13"},"msg":"Wrote Cell Metrics to InfluxDB"}
+{"ts":1781030123128,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:35:23"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030124769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:35:24"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+1781030127211 8/RMR [INFO] sends: ts=1781030127 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=10.106.73.114:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030127212 8/RMR [INFO] sends: ts=1781030127 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricxapp-hw-go-rmr.ricxapp:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030127212 8/RMR [INFO] sends: ts=1781030127 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2term-rmr-alpha.ricplt:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030127212 8/RMR [INFO] sends: ts=1781030127 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-submgr-rmr.ricplt:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030127212 8/RMR [INFO] sends: ts=1781030127 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030127212 8/RMR [INFO] sends: ts=1781030127 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+{"ts":1781030138127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:35:38"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030139771,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:35:39"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030153128,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:35:53"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030154769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:35:54"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+1781030158155 8/RMR [INFO] sends: ts=1781030158 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=10.106.73.114:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030158155 8/RMR [INFO] sends: ts=1781030158 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricxapp-hw-go-rmr.ricxapp:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030158155 8/RMR [INFO] sends: ts=1781030158 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2term-rmr-alpha.ricplt:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030158155 8/RMR [INFO] sends: ts=1781030158 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-submgr-rmr.ricplt:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030158155 8/RMR [INFO] sends: ts=1781030158 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030158155 8/RMR [INFO] sends: ts=1781030158 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+{"ts":1781030167845,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:36:07"},"msg":"Message received: name=RIC_INDICATION meid=gnbd_001_001_00019b_0 subId=4 txid=   545478109253 len=430"}
+{"ts":1781030167845,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:36:07"},"msg":"Received message type: 12050"}
+2026/06/09 18:36:07 RIC Indication message from {gnbd_001_001_00019b_0} received
+2026/06/09 18:36:07 Indication Header format = 1
+ parsing for cell metrics
+ 
+ No of cell = 1
+ 
+ No of cell metrics = 15
+Wrong Data TypeWrong Data TypeWrong Data Typemap[DRB.AirIfDelayUl:10 DRB.RlcSduTransmittedVolumeDL:0 DRB.RlcSduTransmittedVolumeUL:0 DRB.UEThpDl:0 DRB.UEThpUl:0 RACH.PreambleDedCell:0 RRU.PrbAvailDl:106 RRU.PrbAvailUl:106 RRU.PrbTotDl:0 RRU.PrbTotUl:0 RRU.PrbUsedDl:0 RRU.PrbUsedUl:0]
+Parsing Cell Metric Done{"ts":1781030167893,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:36:07"},"msg":"Wrote Cell Metrics to InfluxDB"}
+{"ts":1781030168126,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:36:08"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030169770,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:36:09"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030183128,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:36:23"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030184769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:36:24"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+1781030189161 8/RMR [INFO] sends: ts=1781030189 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=10.106.73.114:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030189161 8/RMR [INFO] sends: ts=1781030189 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricxapp-hw-go-rmr.ricxapp:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030189161 8/RMR [INFO] sends: ts=1781030189 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2term-rmr-alpha.ricplt:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030189161 8/RMR [INFO] sends: ts=1781030189 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-submgr-rmr.ricplt:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030189161 8/RMR [INFO] sends: ts=1781030189 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030189161 8/RMR [INFO] sends: ts=1781030189 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+{"ts":1781030198127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:36:38"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030199769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:36:39"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030213127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:36:53"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030214770,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:36:54"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+1781030220173 8/RMR [INFO] sends: ts=1781030220 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=10.106.73.114:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030220173 8/RMR [INFO] sends: ts=1781030220 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricxapp-hw-go-rmr.ricxapp:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030220173 8/RMR [INFO] sends: ts=1781030220 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2term-rmr-alpha.ricplt:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030220173 8/RMR [INFO] sends: ts=1781030220 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-submgr-rmr.ricplt:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030220173 8/RMR [INFO] sends: ts=1781030220 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030220173 8/RMR [INFO] sends: ts=1781030220 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+{"ts":1781030226096,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:37:06"},"msg":"Message received: name=RIC_INDICATION meid=gnbd_001_001_00019b_0 subId=4 txid=   545478109261 len=430"}
+{"ts":1781030226096,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:37:06"},"msg":"Received message type: 12050"}
+2026/06/09 18:37:06 RIC Indication message from {gnbd_001_001_00019b_0} received
+ parsing for cell metrics
+ 
+ No of cell = 1
+ 
+ No of cell metrics = 15
+Wrong Data TypeWrong Data TypeWrong Data Typemap[DRB.AirIfDelayUl:10 DRB.RlcSduTransmittedVolumeDL:0 DRB.RlcSduTransmittedVolumeUL:0 DRB.UEThpDl:0 DRB.UEThpUl:0 RACH.PreambleDedCell:0 RRU.PrbAvailDl:106 RRU.PrbAvailUl:106 RRU.PrbTotDl:0 RRU.PrbTotUl:0 RRU.PrbUsedDl:0 RRU.PrbUsedUl:0]
+2026/06/09 18:37:06 Indication Header format = 1
+Parsing Cell Metric Done{"ts":1781030226113,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:37:06"},"msg":"Wrote Cell Metrics to InfluxDB"}
+{"ts":1781030228127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:37:08"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030229771,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:37:09"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030243128,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:37:23"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030244770,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:37:24"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+1781030251180 8/RMR [INFO] sends: ts=1781030251 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=10.106.73.114:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030251180 8/RMR [INFO] sends: ts=1781030251 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricxapp-hw-go-rmr.ricxapp:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030251180 8/RMR [INFO] sends: ts=1781030251 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2term-rmr-alpha.ricplt:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030251180 8/RMR [INFO] sends: ts=1781030251 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-submgr-rmr.ricplt:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030251180 8/RMR [INFO] sends: ts=1781030251 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030251180 8/RMR [INFO] sends: ts=1781030251 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+{"ts":1781030258127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:37:38"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030259770,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:37:39"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030273128,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:37:53"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030274769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:37:54"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+1781030282183 8/RMR [INFO] sends: ts=1781030282 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=10.106.73.114:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030282183 8/RMR [INFO] sends: ts=1781030282 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricxapp-hw-go-rmr.ricxapp:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030282183 8/RMR [INFO] sends: ts=1781030282 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2term-rmr-alpha.ricplt:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030282183 8/RMR [INFO] sends: ts=1781030282 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-submgr-rmr.ricplt:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030282183 8/RMR [INFO] sends: ts=1781030282 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030282183 8/RMR [INFO] sends: ts=1781030282 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+{"ts":1781030284112,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:38:04"},"msg":"Message received: name=RIC_INDICATION meid=gnbd_001_001_00019b_0 subId=4 txid=   545478109270 len=430"}
+{"ts":1781030284113,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:38:04"},"msg":"Received message type: 12050"}
+2026/06/09 18:38:04 RIC Indication message from {gnbd_001_001_00019b_0} received
+2026/06/09 18:38:04 Indication Header format = 1
+ parsing for cell metrics
+ 
+ No of cell = 1
+ 
+ No of cell metrics = 15
+Wrong Data TypeWrong Data TypeWrong Data Typemap[DRB.AirIfDelayUl:10 DRB.RlcSduTransmittedVolumeDL:0 DRB.RlcSduTransmittedVolumeUL:0 DRB.UEThpDl:0 DRB.UEThpUl:0 RACH.PreambleDedCell:0 RRU.PrbAvailDl:106 RRU.PrbAvailUl:106 RRU.PrbTotDl:0 RRU.PrbTotUl:0 RRU.PrbUsedDl:0 RRU.PrbUsedUl:0]
+Parsing Cell Metric Done{"ts":1781030284125,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:38:04"},"msg":"Wrote Cell Metrics to InfluxDB"}
+{"ts":1781030288128,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:38:08"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030289771,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:38:09"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030303128,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:38:23"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030304769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:38:24"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+1781030313197 8/RMR [INFO] sends: ts=1781030313 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=10.106.73.114:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030313197 8/RMR [INFO] sends: ts=1781030313 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricxapp-hw-go-rmr.ricxapp:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030313197 8/RMR [INFO] sends: ts=1781030313 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2term-rmr-alpha.ricplt:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030313197 8/RMR [INFO] sends: ts=1781030313 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-submgr-rmr.ricplt:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030313197 8/RMR [INFO] sends: ts=1781030313 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030313197 8/RMR [INFO] sends: ts=1781030313 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+{"ts":1781030318127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:38:38"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030319770,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:38:39"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030333129,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:38:53"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030334769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:38:54"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+1781030344187 8/RMR [INFO] sends: ts=1781030344 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=10.106.73.114:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030344187 8/RMR [INFO] sends: ts=1781030344 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricxapp-hw-go-rmr.ricxapp:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030344187 8/RMR [INFO] sends: ts=1781030344 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2term-rmr-alpha.ricplt:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030344187 8/RMR [INFO] sends: ts=1781030344 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-submgr-rmr.ricplt:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030344187 8/RMR [INFO] sends: ts=1781030344 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1781030344187 8/RMR [INFO] sends: ts=1781030344 src=service-ricxapp-kpimon-go-rmr.ricxapp:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+{"ts":1781030348127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:39:08"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030349769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:39:09"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030363128,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:39:23"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030364082,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:39:24"},"msg":"Message received: name=RIC_INDICATION meid=gnbd_001_001_00019b_0 subId=4 txid=   545478109281 len=430"}
+{"ts":1781030364082,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:39:24"},"msg":"Received message type: 12050"}
+2026/06/09 18:39:24 RIC Indication message from {gnbd_001_001_00019b_0} received
+2026/06/09 18:39:24 Indication Header format = 1
+ parsing for cell metrics
+ 
+ No of cell = 1
+ 
+ No of cell metrics = 15
+Wrong Data TypeWrong Data TypeWrong Data Typemap[DRB.AirIfDelayUl:10 DRB.RlcSduTransmittedVolumeDL:0 DRB.RlcSduTransmittedVolumeUL:0 DRB.UEThpDl:0 DRB.UEThpUl:0 RACH.PreambleDedCell:0 RRU.PrbAvailDl:106 RRU.PrbAvailUl:106 RRU.PrbTotDl:0 RRU.PrbTotUl:0 RRU.PrbUsedDl:0 RRU.PrbUsedUl:0]
+Parsing Cell Metric Done{"ts":1781030364093,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:39:24"},"msg":"Wrote Cell Metrics to InfluxDB"}
+{"ts":1781030364770,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:39:24"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030378127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:39:38"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030379771,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:39:39"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030393127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:39:53"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030394770,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:39:54"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030408127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:40:08"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030409770,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:40:09"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030423127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:40:23"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030424769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:40:24"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030438127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:40:38"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030439770,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:40:39"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030444121,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:40:44"},"msg":"Message received: name=RIC_INDICATION meid=gnbd_001_001_00019b_0 subId=4 txid=   545478109292 len=430"}
+{"ts":1781030444121,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:40:44"},"msg":"Received message type: 12050"}
+2026/06/09 18:40:44 RIC Indication message from {gnbd_001_001_00019b_0} received
+ parsing for cell metrics
+2026/06/09 18:40:44 Indication Header format = 1
+ 
+ No of cell = 1
+ 
+ No of cell metrics = 15
+Wrong Data TypeWrong Data TypeWrong Data Typemap[DRB.AirIfDelayUl:10 DRB.RlcSduTransmittedVolumeDL:0 DRB.RlcSduTransmittedVolumeUL:0 DRB.UEThpDl:0 DRB.UEThpUl:0 RACH.PreambleDedCell:0 RRU.PrbAvailDl:106 RRU.PrbAvailUl:106 RRU.PrbTotDl:0 RRU.PrbTotUl:0 RRU.PrbUsedDl:0 RRU.PrbUsedUl:0]
+Parsing Cell Metric Done{"ts":1781030444131,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:40:44"},"msg":"Wrote Cell Metrics to InfluxDB"}
+{"ts":1781030453127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:40:53"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030454769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:40:54"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030468128,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:41:08"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030469770,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:41:09"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}
+{"ts":1781030483127,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:41:23"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+{"ts":1781030484769,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-09T18:41:24"},"msg":"restapi: method=GET url=/ric/v1/health/ready"}

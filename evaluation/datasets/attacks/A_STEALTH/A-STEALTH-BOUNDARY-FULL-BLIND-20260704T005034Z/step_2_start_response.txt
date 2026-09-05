@@ -1,0 +1,3 @@
+1390
+root        1390  0.0  0.0  50212  6412 ?        SL   01:15   0:00 stress-ng --cpu 1 --cpu-load 28 --timeout 900s --metrics-brief
+root        1395  0.0  0.0  50212  2064 ?        R    01:15   0:00 stress-ng-cpu

@@ -1,0 +1,20 @@
+---- qos-optimizer-56d96965cf-gxp9g ----
+total 0
+srwxrwxrwx 1 root root 0 May 30 08:38 spire-agent.sock
+SPIFFE SOCKET OK
+---- resource-optimizer-6b4996ff4b-xgdcz ----
+total 0
+srwxrwxrwx 1 root root 0 May 30 08:38 spire-agent.sock
+SPIFFE SOCKET OK
+---- security-observer-55674689c9-jgd26 ----
+total 0
+srwxrwxrwx 1 root root 0 May 30 08:38 spire-agent.sock
+SPIFFE SOCKET OK
+---- telemetry-monitor-75bcb6d888-j2p5j ----
+total 0
+srwxrwxrwx 1 root root 0 May 30 08:38 spire-agent.sock
+SPIFFE SOCKET OK
+---- traffic-analyzer-6756f48b94-d428r ----
+total 0
+srwxrwxrwx 1 root root 0 May 30 08:38 spire-agent.sock
+SPIFFE SOCKET OK

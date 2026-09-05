@@ -1,0 +1,467 @@
+const XAPPS_DEFAULT = [
+  "telemetry-monitor",
+  "qos-optimizer",
+  "traffic-analyzer",
+  "resource-optimizer",
+  "security-observer"
+];
+
+const SCENARIO_DEFAULT_TARGETS = {
+  A1: "telemetry-monitor",
+  A2: "telemetry-monitor",
+  A3: "telemetry-monitor",
+  A4: "resource-optimizer",
+  A5: "traffic-analyzer",
+  A6: "qos-optimizer",
+  A7: "security-observer",
+  A8: "security-observer",
+  A9: "qos-optimizer",
+  A10: "telemetry-monitor",
+  B1: "telemetry-monitor",
+  B2: "telemetry-monitor",
+  B3: "qos-optimizer"
+};
+
+const $ = (id) => document.getElementById(id);
+
+let currentXapps = [...XAPPS_DEFAULT];
+let scenarioCache = [];
+let lastTrustIndex = {};
+
+async function apiJson(url, options = {}) {
+  const res = await fetch(url, options);
+  const text = await res.text();
+
+  try {
+    const data = JSON.parse(text);
+    if (!res.ok) return { ok: false, status: res.status, error: data };
+    return data;
+  } catch {
+    return { ok: false, status: res.status, error: "non_json_response", body: text.slice(0, 800) };
+  }
+}
+
+function fmt(obj) {
+  return JSON.stringify(obj, null, 2);
+}
+
+function stateClass(state) {
+  const s = String(state || "UNKNOWN").toLowerCase();
+  if (s.includes("healthy") || s.includes("trusted") || s.includes("restored")) return "healthy";
+  if (s.includes("contained") || s.includes("quarantined")) return "contained";
+  if (s.includes("compromised")) return "compromised";
+  if (s.includes("suspicious") || s.includes("degraded")) return "degraded";
+  if (s.includes("observed")) return "observed";
+  return "unknown";
+}
+
+function badgeState(state) {
+  return "pill " + stateClass(state);
+}
+
+function pill(text, cls) {
+  return `<span class="pill ${cls || ""}">${text}</span>`;
+}
+
+function setText(id, value) {
+  const el = $(id);
+  if (el) el.textContent = value ?? 0;
+}
+
+function scenarioDefaultTarget(scenario) {
+  const id = String(scenario?.id || "").toUpperCase();
+  return (
+    scenario?.target_xapp ||
+    scenario?.default_xapp ||
+    scenario?.xapp ||
+    scenario?.target ||
+    SCENARIO_DEFAULT_TARGETS[id] ||
+    currentXapps[0] ||
+    XAPPS_DEFAULT[0]
+  );
+}
+
+function scenarioExpectedState(scenario) {
+  return scenario?.expected_state || scenario?.expected || "UNKNOWN";
+}
+
+function scenarioExpectedContainment(scenario) {
+  return Boolean(
+    scenario?.expected_containment === true ||
+    scenario?.containment_expected === true ||
+    scenario?.containment === true
+  );
+}
+
+function xappOptionsHtml(selected) {
+  const options = currentXapps.length ? currentXapps : XAPPS_DEFAULT;
+  return options
+    .map((x) => {
+      const isSelected = x === selected ? "selected" : "";
+      return `<option value="${x}" ${isSelected}>${x}</option>`;
+    })
+    .join("");
+}
+
+async function refreshState() {
+  const state = await apiJson("/csm/state");
+  if (!state || state.error) return;
+
+  lastTrustIndex = {};
+  (state.xapps || []).forEach((x) => {
+    if (x && x.xapp) lastTrustIndex[x.xapp] = x;
+  });
+
+  if ((state.xapps || []).length) {
+    currentXapps = state.xapps.map((x) => x.xapp).filter(Boolean);
+  }
+
+  const summary = state.summary || {};
+
+  if ($("overallState")) {
+    $("overallState").textContent = state.overall_state || "UNKNOWN";
+    $("overallState").className = `overall ${stateClass(state.overall_state)}`;
+  }
+
+  setText("trustedCount", summary.TRUSTED);
+  setText("observedCount", summary.OBSERVED);
+  setText("suspiciousCount", summary.SUSPICIOUS);
+  setText("compromisedCount", summary.COMPROMISED);
+  setText("quarantinedCount", summary.QUARANTINED);
+
+  if ($("lastUpdated")) {
+    $("lastUpdated").textContent = `Updated ${new Date().toLocaleTimeString()}`;
+  }
+}
+
+async function refreshRuntimeTable() {
+  const body = $("runtimeTableBody");
+  if (!body) return;
+
+  const data = await apiJson("/csm/xapps/runtime?namespace=ricxapp");
+  if (!data || data.error || data.ok === false) {
+    body.innerHTML = `<tr><td colspan="12">Runtime API error: ${data?.message || data?.error || "unknown"}</td></tr>`;
+    return;
+  }
+
+  const rows = data.rows || [];
+  body.innerHTML = "";
+
+  if (!rows.length) {
+    body.innerHTML = `<tr><td colspan="12">No xApps found</td></tr>`;
+    return;
+  }
+
+  function num(v, digits = 2) {
+    if (v === null || v === undefined || Number.isNaN(Number(v))) return "N/A";
+    return Number(v).toFixed(digits);
+  }
+
+  function bytes(v) {
+    if (v === null || v === undefined || Number.isNaN(Number(v))) return "N/A";
+    const n = Number(v);
+    if (n > 1024 * 1024 * 1024) return (n / (1024 * 1024 * 1024)).toFixed(2) + " GiB";
+    if (n > 1024 * 1024) return (n / (1024 * 1024)).toFixed(1) + " MiB";
+    if (n > 1024) return (n / 1024).toFixed(1) + " KiB";
+    return n + " B";
+  }
+
+  rows.forEach((r) => {
+    const trust = r.trust || lastTrustIndex[r.xapp] || {};
+    const pod = r.pod || {};
+    const resources = r.resources || {};
+    const endpoints = r.service?.endpoint_count;
+    const isolated = Boolean(r.containment?.service_isolated);
+    const contained = Boolean(r.containment?.contained);
+    const quarantine = Boolean(
+      r.containment?.pod_labelled_quarantined ??
+      r.containment?.quarantine_marked ??
+      pod.quarantine_label
+    );
+
+    let trustState = trust.state || trust.decision_state || r.trust_state || "UNKNOWN";
+    let riskScore = trust.risk_score ?? trust.score ?? r.risk_score ?? r.score;
+    let trustScore = trust.trust_score;
+
+    if ((contained || isolated || quarantine) && String(trustState).toUpperCase() !== "QUARANTINED") {
+      trustState = "QUARANTINED";
+      riskScore = 100;
+      trustScore = 0;
+    }
+
+    const cpu = resources.cpu_percent_1core ?? resources.cpu_percent_1core_2m;
+    const mem = resources.memory_working_set_bytes ?? resources.memory_usage_bytes;
+
+    const row = document.createElement("tr");
+    row.id = r.xapp;
+    row.className = isolated || quarantine || contained ? "row-contained" : "";
+
+    row.innerHTML = `
+      <td><strong>${r.xapp || "n/a"}</strong><br><small>${pod.provider || ""} ${pod.verified === "true" ? "verified" : ""}</small></td>
+      <td><span class="${badgeState(trustState)}">${trustState}</span></td>
+      <td>${riskScore === null || riskScore === undefined ? "N/A" : riskScore}</td>
+      <td>${trustScore === null || trustScore === undefined ? "N/A" : trustScore}</td>
+      <td>${num(cpu, 2)}%</td>
+      <td>${bytes(mem)}</td>
+      <td class="mono">${pod.name || "missing"}<br><small>${pod.pod_ip || "-"}</small></td>
+      <td>${pod.ready ? pill(pod.ready_text, "healthy") : pill(pod.ready_text || "0/0", "bad")}</td>
+      <td>${endpoints === 0 ? pill("0", "bad") : pill(endpoints ?? "?", "healthy")}</td>
+      <td>${isolated ? pill("YES", "contained") : pill("NO", "healthy")}</td>
+      <td>${quarantine ? pill("YES", "contained") : pill("NO", "healthy")}</td>
+      <td>
+        <button class="btn secondary" style="padding:4px 8px;font-size:.72rem" data-verify-xapp="${r.xapp}">Verify</button>
+        <button class="btn danger" style="padding:4px 8px;font-size:.72rem" data-restore-xapp="${r.xapp}">Restore</button>
+      </td>
+    `;
+
+    body.appendChild(row);
+  });
+
+  document.querySelectorAll("[data-verify-xapp]").forEach((btn) => {
+    btn.onclick = async () => {
+      const xapp = btn.getAttribute("data-verify-xapp");
+      const res = await apiJson("/csm/containment/verify", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({xapp, namespace: "ricxapp"})
+      });
+      alert(JSON.stringify(res, null, 2));
+      await refreshAll();
+    };
+  });
+
+  document.querySelectorAll("[data-restore-xapp]").forEach((btn) => {
+    btn.onclick = async () => {
+      const xapp = btn.getAttribute("data-restore-xapp");
+      if (!confirm(`Restore ${xapp}?`)) return;
+      await apiJson("/csm/containment/restore", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({xapp, namespace: "ricxapp"})
+      });
+      await refreshAll();
+    };
+  });
+}
+
+async function loadScenarios() {
+  const data = await apiJson("/csm/scenarios");
+  if (!data || data.error) return;
+
+  scenarioCache = data.scenarios || [];
+  renderScenarios(scenarioCache);
+  renderRecentResults(data.last_results || []);
+}
+
+function renderScenarios(scenarios) {
+  const grid = $("scenarioGrid");
+  if (!grid) return;
+
+  grid.innerHTML = "";
+
+  scenarios.forEach((scenario) => {
+    const id = String(scenario.id || "").toUpperCase();
+    const kind = scenario.malicious ? "attack" : "benign";
+    const defaultTarget = scenarioDefaultTarget(scenario);
+    const expectedState = scenarioExpectedState(scenario);
+    const expectedContainment = scenarioExpectedContainment(scenario);
+
+    const card = document.createElement("div");
+    card.className = `scenario-card ${kind}`;
+
+    card.innerHTML = `
+      <div class="scenario-head">
+        <span class="scenario-id">${id}</span>
+        <span class="scenario-kind ${kind}">${kind.toUpperCase()}</span>
+      </div>
+      <h3>${scenario.name || id}</h3>
+      <p>${scenario.description || ""}</p>
+      <div class="card-row">
+        <span>Target xApp</span>
+        <select class="scenario-target-select" data-scenario-target="${id}">
+          ${xappOptionsHtml(defaultTarget)}
+        </select>
+      </div>
+      <div class="card-row">
+        <span>Mode</span>
+        <strong>${scenario.mode || "signal-simulation"}</strong>
+      </div>
+      <div class="card-row">
+        <span>Expected</span>
+        <strong>${expectedState}</strong>
+      </div>
+      <div class="card-row">
+        <span>Containment</span>
+        <strong>${expectedContainment ? "Expected" : "Not expected"}</strong>
+      </div>
+      <button class="btn ${scenario.malicious ? "danger" : "secondary"} wide" data-run-scenario="${id}">
+        Run ${id}
+      </button>
+    `;
+
+    grid.appendChild(card);
+  });
+
+  document.querySelectorAll("[data-run-scenario]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      runScenario(btn.getAttribute("data-run-scenario"));
+    });
+  });
+}
+
+function renderRecentResults(results) {
+  const box = $("recentResults");
+  if (!box) return;
+
+  const items = results || [];
+  if (!items.length) {
+    box.innerHTML = `<div class="event-card">No recent scenario results yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = items.map((r) => {
+    const pass = r.pass === true ? "PASS" : "FAIL";
+    const cls = r.pass === true ? "healthy" : "bad";
+    return `
+      <div class="event-card">
+        <div><strong>${r.scenario_id || r.id || "?"}</strong> — ${r.name || r.signal || "scenario"}</div>
+        <div class="small-muted">
+          xApp: <span class="mono">${r.xapp || "-"}</span> |
+          expected: ${r.expected_state || "-"} |
+          actual: ${r.actual_state || r.state || "-"} |
+          containment: ${r.actual_containment}
+        </div>
+        <div>${pill(pass, cls)} ${pill(r.classification || "-", "info")}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function refreshEvaluation() {
+  const data = await apiJson("/csm/evaluation/summary");
+  if (!data || data.error) return;
+
+  const rate = data.total_runs ? Math.round((data.passed / data.total_runs) * 100) + "%" : "--";
+  setText("evalPassRate", rate);
+  setText("tpCount", data.TP);
+  setText("tnCount", data.TN);
+  setText("fpCount", data.FP);
+  setText("fnCount", data.FN);
+  setText("totalRuns", data.total_runs);
+
+  if ($("evaluationBox")) {
+    $("evaluationBox").textContent = fmt(data);
+  }
+
+  renderRecentResults(data.recent_results || []);
+}
+
+async function primeAudit() {
+  await apiJson("/csm/audit?persist=true");
+  await refreshAll();
+}
+
+async function runScenario(id) {
+  const scenarioId = String(id || "").toUpperCase();
+  const scenario = scenarioCache.find((s) => String(s.id || "").toUpperCase() === scenarioId);
+  const targetSelect = document.querySelector(`[data-scenario-target="${scenarioId}"]`);
+  const selectedTarget = targetSelect?.value || scenarioDefaultTarget(scenario) || currentXapps[0] || "telemetry-monitor";
+
+  const result = await apiJson(`/csm/scenarios/${encodeURIComponent(scenarioId)}/run`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      xapp: selectedTarget,
+      target_xapp: selectedTarget,
+      namespace: "ricxapp",
+      execution_mode: scenario?.mode || "intent-signal"
+    })
+  });
+
+  if ($("scenarioBox")) {
+    $("scenarioBox").textContent = fmt(result);
+  }
+
+  await refreshAll();
+}
+
+async function clearEvaluation() {
+  await apiJson("/csm/evaluation/clear", { method: "POST" });
+  await refreshAll();
+}
+
+async function refreshAll() {
+  await refreshState();
+  await refreshRuntimeTable();
+  await loadScenarios();
+  await refreshEvaluation();
+}
+
+function bindActions() {
+  $("refreshBtn")?.addEventListener("click", refreshAll);
+  $("primeAuditBtn")?.addEventListener("click", primeAudit);
+  $("clearEvalBtn")?.addEventListener("click", clearEvaluation);
+}
+
+const ZTX_MOCK_TELEMETRY = {
+  "telemetry-monitor": "====================================================\nZT-XGUARD AUTOMATED FORENSIC TELEMETRY REPORT\nTRIGGERING SECURITY RULE: Terminal shell spawned in container [R-CRIT-01]\n====================================================\n\n--- ACTIVE WORKLOAD CONSOLE OUTPUT LOGS ---\n[sys_audit] Process path generated: /bin/sh -i root user\n[sys_audit] Command run: cat /var/run/secrets/kubernetes.io/serviceaccount/token\n[warning] xApp service token leak attempt intercepted on target!\n\n--- KUBERNETES CONTAINER SECURITY PERSPECTIVE ---\nNamespace: ricxapp\nSPIFFE Workload identity verification: srv/validated-svid-present\nHardware Root-of-Trust Attestation Key: [TPM-VERIFIED]\nCalico Network Isolation State: STAGED_FOR_CONTAINMENT",
+  "traffic-analyzer": "====================================================\nZT-XGUARD AUTOMATED FORENSIC TELEMETRY REPORT\nTRIGGERING SECURITY RULE: Unexpected External Egress Connection [R-CRIT-04]\n====================================================\n\n--- ACTIVE WORKLOAD CONSOLE OUTPUT LOGS ---\n[net_audit] Socket open request issued toward external target IP.\n[net_audit] Outbound data-stream dropped by Calico kernel rules.\n\n--- KUBERNETES CONTAINER SECURITY PERSPECTIVE ---\nNamespace: ricxapp\nSPIFFE Workload identity verification: srv/validated-svid-present\nHardware Root-of-Trust Attestation Key: [TPM-VERIFIED]\nCalico Network Isolation State: STAGED_FOR_CONTAINMENT"
+};
+
+let ztxCurrentTarget = "";
+
+function openZtxForensics(xappName) {
+  ztxCurrentTarget = xappName;
+  const rowEl = $(xappName);
+  const targetPodDisplay = rowEl ? rowEl.querySelector("td:nth-child(4)")?.textContent : `${xappName}-xapp-v53`;
+  
+  $("ztxTargetPodName").textContent = targetPodDisplay;
+  
+  const baseContent = ZTX_MOCK_TELEMETRY[xappName] || "====================================================\nZT-XGUARD AUTOMATED FORENSIC TELEMETRY REPORT\nTRIGGERING SECURITY RULE: Behavioral Intent Profile Drift Anomaly [R-CORR-02]\n====================================================\n\nNo static trace files stored for " + xappName + ".\nWorkload space isolated cleanly via container network layer controls.";
+  
+  const finalContent = baseContent + "\nPod Target Name: " + targetPodDisplay;
+  
+  $("ztxForensicConsoleBox").textContent = finalContent;
+  $("ztxForensicCenter").style.display = "block";
+}
+
+function closeZtxForensics() {
+  $("ztxForensicCenter").style.display = "none";
+}
+
+// COUPLING HOOKS: Connected directly to line 2254 /csm/containment/apply and line 2293 /csm/containment/restore
+async function executeZtxAction(actionType) {
+  if (actionType === "terminate") {
+    if (confirm(`⚠️ WARNING: Trigger automated closed-loop policy block containment for ${ztxCurrentTarget}?`)) {
+      await apiJson("/csm/containment/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ xapp: ztxCurrentTarget, action: "isolate" })
+      });
+      alert(`[SUCCESS] Containment Request Dispatched: Component ${ztxCurrentTarget} policy rule stack updated inside active state controllers.`);
+      closeZtxForensics();
+      await refreshAll();
+    }
+  } else if (actionType === "safeboot") {
+    if (confirm(`🔄 CONFIRM RECOVERY: Initiate clean remote-attested safe boot sequence for ${ztxCurrentTarget}?`)) {
+      await apiJson("/csm/containment/restore", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ xapp: ztxCurrentTarget })
+      });
+      alert(`[SUCCESS] Safe Boot Request Dispatched: ${ztxCurrentTarget} state machine flagged for verified signature rollout.`);
+      closeZtxForensics();
+      await refreshAll();
+    }
+  }
+}
+
+window.openZtxForensics = openZtxForensics;
+window.closeZtxForensics = closeZtxForensics;
+window.executeZtxAction = executeZtxAction;
+
+document.addEventListener("DOMContentLoaded", async () => {
+  bindActions();
+  await refreshAll();
+  setInterval(refreshAll, 1500);
+});

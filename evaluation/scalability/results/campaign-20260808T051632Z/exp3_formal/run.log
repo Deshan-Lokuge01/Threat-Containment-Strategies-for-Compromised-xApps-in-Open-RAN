@@ -1,0 +1,316 @@
+[Exp3] trial=1 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=1 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=01/20 | round=1 | K=3 | targets=hw-go|hw-python|kpimon-go | PASS | T_all=7312.776ms skew=0.421ms | nontargets_ok=True | invalid=0
+[Exp3] trial=2 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=2 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=47s
+[Exp3] valid=02/20 | round=1 | K=4 | targets=hw-go|hw-python|kpimon-go|trafficxapp | PASS | T_all=9516.396ms skew=1.147ms | nontargets_ok=True | invalid=0
+[Exp3] trial=3 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=3 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=03/20 | round=1 | K=2 | targets=hw-go|hw-python | PASS | T_all=4532.379ms skew=0.092ms | nontargets_ok=True | invalid=0
+[Exp3] trial=4 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=4 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=47s
+[Exp3] valid=04/20 | round=1 | K=1 | targets=hw-go | PASS | T_all=2093.099ms skew=0.0ms | nontargets_ok=True | invalid=0
+[Exp3] trial=5 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=5 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=47s
+[Exp3] valid=05/20 | round=2 | K=3 | targets=hw-go|hw-python|trafficxapp | PASS | T_all=7092.756ms skew=0.484ms | nontargets_ok=True | invalid=0
+[Exp3] trial=6 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=6 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=06/20 | round=2 | K=2 | targets=hw-go|kpimon-go | PASS | T_all=4544.531ms skew=0.036ms | nontargets_ok=True | invalid=0
+[Exp3] trial=7 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=7 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=46s
+[Exp3] valid=07/20 | round=2 | K=4 | targets=hw-go|hw-python|kpimon-go|trafficxapp | PASS | T_all=9921.913ms skew=0.438ms | nontargets_ok=True | invalid=0
+[Exp3] trial=8 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=8 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=48s
+[Exp3] valid=08/20 | round=2 | K=1 | targets=hw-python | PASS | T_all=2237.251ms skew=0.0ms | nontargets_ok=True | invalid=0
+[Exp3] trial=9 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=9 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=09/20 | round=3 | K=4 | targets=hw-go|hw-python|kpimon-go|trafficxapp | PASS | T_all=10186.321ms skew=2.009ms | nontargets_ok=True | invalid=0
+[Exp3] trial=10 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=10 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=47s
+[Exp3] valid=10/20 | round=3 | K=1 | targets=kpimon-go | PASS | T_all=3071.303ms skew=0.0ms | nontargets_ok=True | invalid=0
+[Exp3] trial=11 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=11 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=46s
+[Exp3] trial=11 | RESET | waiting app-ready reach={'ricxapp-hw-go': True, 'ricxapp-hw-python': True, 'ricxapp-kpimon-go': False, 'ricxapp-trafficxapp': True} | elapsed=47s
+[Exp3] valid=11/20 | round=3 | K=3 | targets=hw-go|kpimon-go|trafficxapp | PASS | T_all=6237.088ms skew=0.962ms | nontargets_ok=True | invalid=0
+[Exp3] trial=12 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=12 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=12/20 | round=3 | K=2 | targets=hw-go|trafficxapp | PASS | T_all=3774.057ms skew=0.234ms | nontargets_ok=True | invalid=0
+[Exp3] trial=13 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=13 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=13/20 | round=4 | K=2 | targets=hw-python|kpimon-go | PASS | T_all=4353.238ms skew=0.262ms | nontargets_ok=True | invalid=0
+[Exp3] trial=14 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=14 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] trial=14 | RESET | waiting app-ready reach={'ricxapp-hw-go': False, 'ricxapp-hw-python': True, 'ricxapp-kpimon-go': True, 'ricxapp-trafficxapp': True} | elapsed=46s
+[Exp3] valid=14/20 | round=4 | K=3 | targets=hw-python|kpimon-go|trafficxapp | PASS | T_all=6990.904ms skew=0.359ms | nontargets_ok=True | invalid=0
+[Exp3] trial=15 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=15 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=15/20 | round=4 | K=1 | targets=trafficxapp | PASS | T_all=1833.849ms skew=0.0ms | nontargets_ok=True | invalid=0
+[Exp3] trial=16 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=16 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=16/20 | round=4 | K=4 | targets=hw-go|hw-python|kpimon-go|trafficxapp | PASS | T_all=8593.381ms skew=0.387ms | nontargets_ok=True | invalid=0
+[Exp3] trial=17 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=17 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=17/20 | round=5 | K=3 | targets=hw-go|hw-python|kpimon-go | PASS | T_all=7364.899ms skew=0.376ms | nontargets_ok=True | invalid=0
+[Exp3] trial=18 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=18 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=18/20 | round=5 | K=1 | targets=hw-go | PASS | T_all=2440.638ms skew=0.0ms | nontargets_ok=True | invalid=0
+[Exp3] trial=19 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=19 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=19/20 | round=5 | K=2 | targets=hw-python|trafficxapp | PASS | T_all=4055.078ms skew=0.099ms | nontargets_ok=True | invalid=0
+[Exp3] trial=20 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=20 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=46s
+[Exp3] valid=20/20 | round=5 | K=4 | targets=hw-go|hw-python|kpimon-go|trafficxapp | PASS | T_all=8277.407ms skew=0.469ms | nontargets_ok=True | invalid=0
+[Exp3] trial=21 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=21 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=44s
+[Exp3] valid=21/20 | round=6 | K=1 | targets=hw-python | FAIL | T_all=2255.13ms skew=0.0ms | nontargets_ok=False | invalid=0
+[Exp3] trial=22 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=22 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=46s
+[Exp3] valid=22/20 | round=6 | K=2 | targets=kpimon-go|trafficxapp | PASS | T_all=4194.215ms skew=0.1ms | nontargets_ok=True | invalid=0
+[Exp3] trial=23 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=23 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=45s
+[Exp3] valid=23/20 | round=6 | K=3 | targets=hw-go|hw-python|trafficxapp | PASS | T_all=5717.437ms skew=0.17ms | nontargets_ok=True | invalid=0
+[Exp3] trial=24 | RESET | restart evaluator (clear CSM_STATE); Falco/Falcosidekick stay enabled | elapsed=0s
+[Exp3] trial=24 | RESET | recreate only unhealthy pods (startup shells now exempted) | elapsed=46s
+[Exp3] valid=24/20 | round=6 | K=4 | targets=hw-go|hw-python|kpimon-go|trafficxapp | PASS | T_all=9423.271ms skew=0.567ms | nontargets_ok=True | invalid=0
+{
+  "schema": "zt-xguard-exp3-summary-v1",
+  "note": "n small; report median/IQR/min/max, no p95/p99",
+  "levels": {
+    "1": {
+      "valid_trials": 6,
+      "successes": 5,
+      "success_pct": 83.3,
+      "wilson95_secondary": [
+        0.4365,
+        0.9699
+      ],
+      "T_detect_all": {
+        "n": 0,
+        "median": null,
+        "iqr": null,
+        "min": null,
+        "max": null
+      },
+      "T_identity_all": {
+        "n": 6,
+        "median": 1876.984,
+        "iqr": 215.464,
+        "min": 1495.686,
+        "max": 2723.823
+      },
+      "T_policy_all": {
+        "n": 6,
+        "median": 901.406,
+        "iqr": 156.416,
+        "min": 698.038,
+        "max": 1123.484
+      },
+      "T_service_all": {
+        "n": 6,
+        "median": 901.406,
+        "iqr": 156.416,
+        "min": 698.038,
+        "max": 1123.484
+      },
+      "T_nodefilter_all": {
+        "n": 6,
+        "median": 2080.452,
+        "iqr": 238.831,
+        "min": 1697.388,
+        "max": 2900.116
+      },
+      "T_all_isolated": {
+        "n": 6,
+        "median": 2246.191,
+        "iqr": 265.124,
+        "min": 1833.849,
+        "max": 3071.303
+      },
+      "launch_skew_ms": {
+        "n": 6,
+        "median": 0.0,
+        "iqr": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    },
+    "2": {
+      "valid_trials": 6,
+      "successes": 6,
+      "success_pct": 100.0,
+      "wilson95_secondary": [
+        0.6097,
+        1.0
+      ],
+      "T_detect_all": {
+        "n": 0,
+        "median": null,
+        "iqr": null,
+        "min": null,
+        "max": null
+      },
+      "T_identity_all": {
+        "n": 6,
+        "median": 3883.015,
+        "iqr": 480.653,
+        "min": 3471.246,
+        "max": 4224.392
+      },
+      "T_policy_all": {
+        "n": 6,
+        "median": 2691.428,
+        "iqr": 290.422,
+        "min": 2415.99,
+        "max": 3100.972
+      },
+      "T_service_all": {
+        "n": 6,
+        "median": 2691.428,
+        "iqr": 290.422,
+        "min": 2415.99,
+        "max": 3100.972
+      },
+      "T_nodefilter_all": {
+        "n": 6,
+        "median": 4113.212,
+        "iqr": 309.002,
+        "min": 3644.713,
+        "max": 4406.021
+      },
+      "T_all_isolated": {
+        "n": 6,
+        "median": 4273.727,
+        "iqr": 397.731,
+        "min": 3774.057,
+        "max": 4544.531
+      },
+      "launch_skew_ms": {
+        "n": 6,
+        "median": 0.1,
+        "iqr": 0.107,
+        "min": 0.036,
+        "max": 0.262
+      }
+    },
+    "3": {
+      "valid_trials": 6,
+      "successes": 6,
+      "success_pct": 100.0,
+      "wilson95_secondary": [
+        0.6097,
+        1.0
+      ],
+      "T_detect_all": {
+        "n": 0,
+        "median": null,
+        "iqr": null,
+        "min": null,
+        "max": null
+      },
+      "T_identity_all": {
+        "n": 6,
+        "median": 6371.205,
+        "iqr": 747.848,
+        "min": 5406.639,
+        "max": 6942.838
+      },
+      "T_policy_all": {
+        "n": 6,
+        "median": 4800.083,
+        "iqr": 274.128,
+        "min": 4509.836,
+        "max": 5183.978
+      },
+      "T_service_all": {
+        "n": 6,
+        "median": 4862.729,
+        "iqr": 502.539,
+        "min": 4548.329,
+        "max": 6113.715
+      },
+      "T_nodefilter_all": {
+        "n": 6,
+        "median": 6883.053,
+        "iqr": 782.458,
+        "min": 5554.314,
+        "max": 7214.801
+      },
+      "T_all_isolated": {
+        "n": 6,
+        "median": 7041.83,
+        "iqr": 832.229,
+        "min": 5717.437,
+        "max": 7364.899
+      },
+      "launch_skew_ms": {
+        "n": 6,
+        "median": 0.398,
+        "iqr": 0.105,
+        "min": 0.17,
+        "max": 0.962
+      }
+    },
+    "4": {
+      "valid_trials": 6,
+      "successes": 6,
+      "success_pct": 100.0,
+      "wilson95_secondary": [
+        0.6097,
+        1.0
+      ],
+      "T_detect_all": {
+        "n": 0,
+        "median": null,
+        "iqr": null,
+        "min": null,
+        "max": null
+      },
+      "T_identity_all": {
+        "n": 6,
+        "median": 9085.597,
+        "iqr": 1262.73,
+        "min": 7828.786,
+        "max": 9680.607
+      },
+      "T_policy_all": {
+        "n": 6,
+        "median": 7859.519,
+        "iqr": 1323.836,
+        "min": 6613.233,
+        "max": 8544.234
+      },
+      "T_service_all": {
+        "n": 6,
+        "median": 7992.064,
+        "iqr": 731.539,
+        "min": 6905.732,
+        "max": 8544.234
+      },
+      "T_nodefilter_all": {
+        "n": 6,
+        "median": 9325.914,
+        "iqr": 1029.883,
+        "min": 8132.397,
+        "max": 10031.824
+      },
+      "T_all_isolated": {
+        "n": 6,
+        "median": 9469.834,
+        "iqr": 1019.68,
+        "min": 8277.407,
+        "max": 10186.321
+      },
+      "launch_skew_ms": {
+        "n": 6,
+        "median": 0.518,
+        "iqr": 0.556,
+        "min": 0.387,
+        "max": 2.009
+      }
+    }
+  },
+  "total_valid_trials": 24,
+  "total_successes": 23,
+  "invalid_trials": [],
+  "generated_utc": "2026-08-08T08:40:04.471989+00:00"
+}

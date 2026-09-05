@@ -1,0 +1,5 @@
+log_fetch_failed: (400)
+Reason: Bad Request
+HTTP response headers: HTTPHeaderDict({'Audit-Id': 'e7064942-0ad4-4800-9ce0-f7f3a8cdf6be', 'Cache-Control': 'no-cache, private', 'Content-Type': 'application/json', 'Date': 'Fri, 28 Aug 2026 09:56:52 GMT', 'Content-Length': '246'})
+HTTP response body: {"kind":"Status","apiVersion":"v1","metadata":{},"status":"Failure","message":"a container name must be specified for pod ricxapp-trafficxapp-656f95dfd4-vn647, choose one of: [fetch-svid trafficxapp renew-svid]","reason":"BadRequest","code":400}
+

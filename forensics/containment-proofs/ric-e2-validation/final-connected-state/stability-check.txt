@@ -1,0 +1,21 @@
+===== 5-minute E2 stability check =====
+
+Check 1 at Sat  6 Jun 00:27:05 +0530 2026
+{
+  "inventoryName": "gnbd_001_001_00019b_0",
+  "globalNbId": {
+    "plmnId": "00F110",
+    "nbId": "0000000000000110011011"
+  },
+  "connectionStatus": "CONNECTED"
+}
+
+Check 2 at Sat  6 Jun 00:27:35 +0530 2026
+{
+  "inventoryName": "gnbd_001_001_00019b_0",
+  "globalNbId": {
+    "plmnId": "00F110",
+    "nbId": "0000000000000110011011"
+  },
+  "connectionStatus": "CONNECTED"
+}

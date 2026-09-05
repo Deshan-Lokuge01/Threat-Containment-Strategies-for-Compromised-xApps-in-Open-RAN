@@ -1,0 +1,1 @@
+{"active":true,"scenario":"T1499_COMPOSITE_RESOURCE_EXHAUSTION_PILOT_60S","pid":45,"duration_seconds":60,"cpu_workers":1,"cpu_load_percent":20,"vm_workers":0,"vm_bytes":"0","hdd_workers":1,"hdd_bytes":"16M","started_utc":"2026-07-02T09:31:53Z"}

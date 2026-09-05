@@ -1,0 +1,33 @@
+xapp_onboarder/repo_manager/repo_manager.py:102:            response = self.retry_session.post(self.repo_url +'/api/charts', headers=headers, data=fileContent, timeout=settings.HTTP_TIME_OUT)
+xapp_onboarder/repo_manager/repo_manager.py:115:            response = self.retry_session.delete(self.repo_url +'/api/charts/' + xapp.chart_name
+xapp_onboarder/repo_manager/repo_manager.py:128:        request_path = self.repo_url+'/api/charts'
+xapp_onboarder/server/server.py:37:        self.api_bp = Blueprint('api', __name__, url_prefix='/api/v1')
+xapp_onboarder/server/server.py:47:        log.info('>>>>> Starting development xapp_onboarder at http://{}/api/v1/ <<<<<'.format(self.app.config['SERVER_NAME']))
+xapp_onboarder/xapp-onboarder-api.yaml:22:- url: /api/v1
+xapp_onboarder/xapp-onboarder-api.yaml:36:      operationId: get_charts_list
+xapp_onboarder/xapp-onboarder-api.yaml:56:      operationId: get_version_list
+xapp_onboarder/xapp-onboarder-api.yaml:82:      operationId: get_charts_fetcher
+xapp_onboarder/xapp-onboarder-api.yaml:114:      operationId: get_values_yaml_fetcher
+xapp_onboarder/xapp-onboarder-api.yaml:145:      operationId: get_health_check
+xapp_onboarder/xapp-onboarder-api.yaml:165:      operationId: post_onboardx_apps
+xapp_onboarder/xapp-onboarder-api.yaml:199:      operationId: post_onboardx_apps_download
+xapp_onboarder/xapp-onboarder-api.yaml:311:        config-file.json_url:
+xapp_onboarder/xapp-onboarder-api.yaml:314:        controls-schema.json_url:
+xapp_onboarder/api/endpoints/charts_ep.py:28:@ns.route('')
+xapp_onboarder/api/endpoints/charts_ep.py:41:@ns.route('/xapp/<string:xapp_chart_name>')
+xapp_onboarder/api/endpoints/charts_ep.py:53:@ns.route('/xapp/<string:xapp_chart_name>/ver/<string:version>')
+xapp_onboarder/api/endpoints/charts_ep.py:76:@ns.route('/xapp/<string:xapp_chart_name>/ver/<string:version>/values.yaml')
+xapp_onboarder/api/endpoints/health_check_ep.py:28:@ns.route('')
+xapp_onboarder/api/endpoints/onboard_ep.py:29:@ns.route('')
+xapp_onboarder/api/endpoints/onboard_ep.py:56:@ns.route('/download')
+xapp_onboarder/api/onboard.py:106:    if controls_schema_url:
+xapp_onboarder/xapp-onboarder-api.yaml:22:- url: /api/v1
+xapp_onboarder/xapp-onboarder-api.yaml:36:      operationId: get_charts_list
+xapp_onboarder/xapp-onboarder-api.yaml:56:      operationId: get_version_list
+xapp_onboarder/xapp-onboarder-api.yaml:82:      operationId: get_charts_fetcher
+xapp_onboarder/xapp-onboarder-api.yaml:114:      operationId: get_values_yaml_fetcher
+xapp_onboarder/xapp-onboarder-api.yaml:145:      operationId: get_health_check
+xapp_onboarder/xapp-onboarder-api.yaml:165:      operationId: post_onboardx_apps
+xapp_onboarder/xapp-onboarder-api.yaml:199:      operationId: post_onboardx_apps_download
+xapp_onboarder/xapp-onboarder-api.yaml:311:        config-file.json_url:
+xapp_onboarder/xapp-onboarder-api.yaml:314:        controls-schema.json_url:

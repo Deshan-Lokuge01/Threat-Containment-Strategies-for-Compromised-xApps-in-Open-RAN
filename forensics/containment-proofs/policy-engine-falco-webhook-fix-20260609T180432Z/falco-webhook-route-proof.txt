@@ -1,0 +1,17 @@
+2317-    return jsonify({"count": len(data), "incidents": data})
+2318-
+2319-
+2320-@APP.route("/falco-webhook", methods=["POST"])
+2321:def falco_webhook() -> Any:
+2322-    # Backward-compatible Falcosidekick endpoint.
+2323-    # This now uses the event-driven CSM path and does not run the slow
+2324-    # full xApp audit before containment.
+2325-    alert = request.get_json(force=True, silent=True) or {}
+2326-    body, status = ztx_normalize_result(csm_process_falco_event(alert))
+2327-    return jsonify(body), status
+2328-
+2329-
+2330-# -----------------------------
+2331-# Background scanner
+2332-# -----------------------------
+2333-

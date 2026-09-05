@@ -1,0 +1,13 @@
+{
+  "endpoint_errors": 0,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/attacks/A4B/A4B-DIRECT-T1499-COMPOSITE-BOUNDED60-1UE-10PPS-20260702T092646Z/raw_metrics.csv",
+  "profile": "ATTACK_DIRECT_T1499_COMPOSITE_BOUNDED60_1UE_10PPS",
+  "resource_counter_resets": 0,
+  "rows_written": 1260,
+  "run_id": "A4B-DIRECT-T1499-COMPOSITE-BOUNDED60-1UE-10PPS-20260702T092646Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 1260,
+  "timing_errors": 0
+}

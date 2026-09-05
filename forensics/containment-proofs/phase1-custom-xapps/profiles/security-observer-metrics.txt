@@ -1,0 +1,19 @@
+# HELP xapp_work_units_processed Total legitimate work units processed
+# TYPE xapp_work_units_processed counter
+xapp_work_units_processed{xapp="security-observer",role="security-observation"} 840
+
+# HELP xapp_ric_activity_counter Simulated or real RIC activity counter
+# TYPE xapp_ric_activity_counter counter
+xapp_ric_activity_counter{xapp="security-observer",role="security-observation"} 0
+
+# HELP xapp_control_action_counter Simulated control action counter
+# TYPE xapp_control_action_counter counter
+xapp_control_action_counter{xapp="security-observer",role="security-observation"} 0
+
+# HELP xapp_heartbeat_age_seconds Seconds since last heartbeat
+# TYPE xapp_heartbeat_age_seconds gauge
+xapp_heartbeat_age_seconds{xapp="security-observer",role="security-observation"} 3.86
+
+# HELP xapp_errors_total Total internal xApp errors
+# TYPE xapp_errors_total counter
+xapp_errors_total{xapp="security-observer",role="security-observation"} 0

@@ -1,0 +1,1 @@
+RTMGR_POD=deployment-ricplt-rtmgr-698c7cb758-4cbkj

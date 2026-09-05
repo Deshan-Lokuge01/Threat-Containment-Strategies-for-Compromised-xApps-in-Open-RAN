@@ -1,0 +1,5 @@
+Defaulted container "container-ricplt-appmgr" out of: container-ricplt-appmgr, container-ricplt-appmgr-copy-tiller-secret (init)
+cp: cannot stat '/opt/ric/certificates/*': No such file or directory
+2026/06/08 10:32:49 Using config file: /opt/ric/config/appmgr.yaml
+redis: got 7 elements in COMMAND reply, wanted 6
+2026/06/08 10:32:49 Serving app manager at http://[::]:8080

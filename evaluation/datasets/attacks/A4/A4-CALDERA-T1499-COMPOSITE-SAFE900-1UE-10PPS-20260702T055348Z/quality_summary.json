@@ -1,0 +1,32 @@
+{
+  "dataset": "A4_CALDERA_T1499_COMPOSITE_SAFE900",
+  "endpoint_errors": 61,
+  "expected_rows": 2100,
+  "resource_counter_resets": 0,
+  "rows": 2100,
+  "runtime_counter_resets": 0,
+  "sample_interval_seconds": {
+    "maximum": 7.958229,
+    "mean": 1.0000008742857143,
+    "p95": 1.02895015,
+    "p99": 1.4874322799999502
+  },
+  "sample_lag_ms": {
+    "maximum": 7025.584,
+    "mean": 88.59311619047618,
+    "p95": 161.20749999999953,
+    "p99": 2796.230689999975
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 59,
+    "metrics_endpoint": 45,
+    "metrics_endpoint;memory_slope_warmup": 6,
+    "ok": 1906,
+    "timing": 61,
+    "timing;memory_slope_warmup": 13,
+    "timing;metrics_endpoint": 8,
+    "timing;metrics_endpoint;memory_slope_warmup": 2
+  },
+  "schema": "ztx-step52a-attack-quality-v1",
+  "timing_errors": 84
+}

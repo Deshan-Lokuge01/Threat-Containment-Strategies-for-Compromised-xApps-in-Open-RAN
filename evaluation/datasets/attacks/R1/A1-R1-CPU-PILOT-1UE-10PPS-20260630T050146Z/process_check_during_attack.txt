@@ -1,0 +1,5 @@
+root           7  0.0  0.0   1192   708 ?        S    04:52   0:00 /opt/ztx/ztx-kpimon-actuator-c
+root           8  0.0  0.1 1084488 13148 ?       Sl   04:52   0:00 ./f1apServer
+root           9  0.1  0.2 1995944 28960 ?       Sl   04:52   0:01 ./kpimon
+root          83  0.0  0.0  50208  6452 ?        SL   05:07   0:00 stress-ng --cpu 1 --cpu-load 20 --timeout 60s --metrics-brief
+root          84  0.0  0.0  50208  2188 ?        R    05:07   0:00 stress-ng-cpu

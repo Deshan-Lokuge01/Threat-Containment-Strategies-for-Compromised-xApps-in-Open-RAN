@@ -1,0 +1,1 @@
+ACCEPTED_BODY=evidence/rtmgr-xapp-registration-correct/20260608_184625/body-c-xapps-string.json

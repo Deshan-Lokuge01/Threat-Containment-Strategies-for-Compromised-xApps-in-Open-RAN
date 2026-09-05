@@ -1,0 +1,12 @@
+{
+  "csv": "evidence/runtime-evaluation/20260609T181720Z/results.csv",
+  "f1": 0.4,
+  "fn": 0,
+  "fp": 3,
+  "precision": 0.25,
+  "recall": 1.0,
+  "rows": 4,
+  "run_id": "20260609T181720Z",
+  "tn": 0,
+  "tp": 1
+}

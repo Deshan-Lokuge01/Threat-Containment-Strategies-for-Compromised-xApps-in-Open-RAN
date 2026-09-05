@@ -1,0 +1,67 @@
+{
+  "schema": "ztx-forensic-vault-v1",
+  "incident_id": "20260827T063708Z-serviceaccount_token_access-ricxapp-kpimon-go-35a3f8c442",
+  "captured_utc": "2026-08-27T06:37:11.310038+00:00",
+  "sealed_utc": "2026-08-27T06:37:31Z",
+  "captured_by": "ZT-XGuard policy-engine (automated containment)",
+  "asset": {
+    "xapp": "ricxapp-kpimon-go",
+    "pod": "ricxapp-kpimon-go-7dd99f6c78-r4zbk",
+    "namespace": "ricxapp"
+  },
+  "trigger": {
+    "source": "falco_event",
+    "signal": "serviceaccount_token_access",
+    "falco_rule": "ZTX xApp ServiceAccount Token Access",
+    "priority": "Critical",
+    "rule_ids": [
+      "ZTX-LM-01"
+    ],
+    "alert": "2026-08-27T06:37:08.494948319+0000: Critical ztx_signal=serviceaccount_token_access rule_id=ZTX-A3 xapp serviceaccount token access (user=root file=/var/run/secrets/kubernetes.io/serviceaccount/token command=cat /var/run/secrets/kubernetes.io/serviceaccount/token pod=ricxapp-kpimon-go-7dd99f6c78-r4zbk ns=ricxapp container=kpimon-go) container_id=b36e989b880c container_name=kpimon-go container_image_repository=127.0.0.1:80/kpimon-ocudu-cell container_image_tag=ztx-experiment-v1 k8s_pod_name=ricxapp-kpimon-go-7dd99f6c78-r4zbk k8s_ns_name=ricxapp"
+  },
+  "decision": {
+    "state": "ISOLATED",
+    "detection_state": "COMPROMISED",
+    "containment_required": true,
+    "containment_action": "SERVICE_ISOLATION_AND_LATERAL_MOVEMENT_CONTAINMENT",
+    "isolation_timing": "IMMEDIATE",
+    "severity": "CRITICAL",
+    "score": 100,
+    "confidence": 0.97
+  },
+  "integrity": "sha256",
+  "artifacts": [
+    {
+      "name": "events.json",
+      "bytes": 20727,
+      "sha256": "7786e1b09b11c0740d5d7e9a2c1b6b0ad1c8ff6ada9d30e1e2cb0693c4a50d5e"
+    },
+    {
+      "name": "incident.json",
+      "bytes": 77222,
+      "sha256": "a2305496ddbb7e9ab06f13004cc78ec8b76ed19543e879038a1f0eca5574d0d7"
+    },
+    {
+      "name": "pod-log-tail.txt",
+      "bytes": 539,
+      "sha256": "fb78b954bf1940e11fefc93ac1ba5da3db3a62a08f24082064dd00daddde949b"
+    },
+    {
+      "name": "pod.json",
+      "bytes": 32213,
+      "sha256": "75abcf4db1814f1439a35cd054227e85d2903337f761cd4236d209078654ad2e"
+    }
+  ],
+  "chain_of_custody": [
+    {
+      "actor": "policy-engine.forensic-capture",
+      "action": "captured",
+      "utc": "2026-08-27T06:37:11.310038+00:00"
+    },
+    {
+      "actor": "policy-engine.vault-sealer",
+      "action": "sealed+hashed",
+      "utc": "2026-08-27T06:37:31Z"
+    }
+  ]
+}

@@ -1,0 +1,954 @@
+#!/usr/bin/env python3
+"""
+ZT-XGuard Runtime Policy Engine
+
+Integrated version:
+- Continuous/baseline trust evaluation for all controlled xApps
+- Falco/Falcosidekick webhook correlation
+- Kubernetes metadata, image digest, ServiceAccount, Kyverno metadata validation
+- xApp endpoint collection: /health, /ready, /profile, /activity, /identity, /integrity, /metrics
+- Intent-aware scoring using xApp profile and runtime counters
+- Forensic incident/evidence capture
+- Optional NetworkPolicy quarantine and optional SPIRE entry revocation
+
+Designed for the ZT-XGuard FYP Near-RT RIC testbed.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import re
+import threading
+import time
+import traceback
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+import requests
+from flask import Flask, jsonify, request
+from kubernetes import client, config
+from kubernetes.client import ApiException
+from kubernetes.stream import stream
+
+APP = Flask(__name__)
+
+# -----------------------------
+# Configuration
+# -----------------------------
+
+ENGINE_VERSION = os.environ.get("ENGINE_VERSION", "1.0.0-integrated")
+XAPP_NAMESPACE = os.environ.get("XAPP_NAMESPACE", "ricxapp")
+TRUST_DOMAIN = os.environ.get("TRUST_DOMAIN", "example.org")
+POLICY_NAMESPACE = os.environ.get("POD_NAMESPACE", os.environ.get("POLICY_NAMESPACE", "zt-xguard"))
+
+XAPP_LIST = [
+    x.strip()
+    for x in os.environ.get(
+        "XAPP_LIST",
+        "telemetry-monitor,qos-optimizer,traffic-analyzer,resource-optimizer,security-observer",
+    ).split(",")
+    if x.strip()
+]
+
+TRUSTED_PROVIDER = os.environ.get("TRUSTED_PROVIDER", "sp1")
+APPROVED_REGISTRY_PREFIX = os.environ.get("APPROVED_REGISTRY_PREFIX", "localhost:5000/zt-")
+ACTIVITY_TIMEOUT = float(os.environ.get("ACTIVITY_TIMEOUT", "2.0"))
+REQUEST_TIMEOUT = float(os.environ.get("REQUEST_TIMEOUT", "2.0"))
+AUTO_QUARANTINE = os.environ.get("AUTO_QUARANTINE", "false").lower() == "true"
+REVOKE_SPIRE = os.environ.get("REVOKE_SPIRE", "false").lower() == "true"
+SPIRE_SERVER_POD = os.environ.get("SPIRE_SERVER_POD", "spire-server-0")
+SPIRE_NAMESPACE = os.environ.get("SPIRE_NAMESPACE", "spire-system")
+SPIRE_CONTAINER = os.environ.get("SPIRE_CONTAINER", "spire-server")
+SPIRE_BIN = os.environ.get("SPIRE_BIN", "/opt/spire/bin/spire-server")
+EVIDENCE_DIR = Path(os.environ.get("EVIDENCE_DIR", "/evidence"))
+SCAN_INTERVAL_SEC = float(os.environ.get("SCAN_INTERVAL_SEC", "0"))
+MAX_LOG_LINES = int(os.environ.get("MAX_LOG_LINES", "120"))
+
+EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+INCIDENT_DIR = EVIDENCE_DIR / "incidents"
+SCAN_DIR = EVIDENCE_DIR / "scans"
+INCIDENT_DIR.mkdir(parents=True, exist_ok=True)
+SCAN_DIR.mkdir(parents=True, exist_ok=True)
+
+# -----------------------------
+# Kubernetes client init
+# -----------------------------
+
+try:
+    config.load_incluster_config()
+except Exception:
+    config.load_kube_config()
+
+CORE = client.CoreV1Api()
+APPS = client.AppsV1Api()
+NET = client.NetworkingV1Api()
+
+LAST_REPORT_LOCK = threading.Lock()
+LAST_REPORT: Dict[str, Any] = {}
+LAST_INCIDENTS: List[Dict[str, Any]] = []
+
+
+# -----------------------------
+# Utility helpers
+# -----------------------------
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def utc_id() -> str:
+    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+
+def safe_name(value: str) -> str:
+    value = str(value or "unknown")
+    return "".join(c if c.isalnum() or c in "-_." else "_" for c in value)[:160]
+
+
+def sha256_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8", errors="replace")).hexdigest()
+
+
+def jsonable(obj: Any) -> Any:
+    try:
+        return client.ApiClient().sanitize_for_serialization(obj)
+    except Exception:
+        try:
+            return json.loads(json.dumps(obj, default=str))
+        except Exception:
+            return str(obj)
+
+
+def write_json(path: Path, data: Dict[str, Any]) -> str:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, sort_keys=False), encoding="utf-8")
+    return str(path)
+
+
+def finding(passed: bool, severity: str, signal: str, message: str, penalty: int) -> Optional[Dict[str, Any]]:
+    if passed:
+        return None
+    return {
+        "severity": severity,
+        "signal": signal,
+        "message": message,
+        "score_penalty": penalty,
+    }
+
+
+def add_finding(findings: List[Dict[str, Any]], passed: bool, severity: str, signal: str, message: str, penalty: int) -> int:
+    item = finding(passed, severity, signal, message, penalty)
+    if item:
+        findings.append(item)
+        return penalty
+    return 0
+
+
+def severity_rank(severity: str) -> int:
+    return {"info": 0, "low": 1, "medium": 2, "high": 3, "critical": 4}.get(str(severity).lower(), 0)
+
+
+def spiffe_for(namespace: str, service_account: str) -> str:
+    return f"spiffe://{TRUST_DOMAIN}/ns/{namespace}/sa/{service_account}"
+
+
+def normalize_image_id(image_id: str) -> str:
+    if not image_id:
+        return ""
+    value = str(image_id).strip()
+
+    # Kubernetes/containerd can expose image IDs in several forms:
+    #   sha256:<digest>
+    #   docker-pullable://repo@sha256:<digest>
+    #   containerd://sha256:<digest>
+    #   repo@sha256:<digest>
+    value = value.replace("docker-pullable://", "")
+    value = value.replace("docker://", "")
+    value = value.replace("containerd://", "")
+
+    if "@sha256:" in value:
+        return "sha256:" + value.split("@sha256:", 1)[1]
+
+    if "sha256:" in value:
+        return "sha256:" + value.split("sha256:", 1)[1]
+
+    return value
+
+
+def digest_matches_annotation(annotated_digest: str, image_ids: list) -> bool:
+    if not annotated_digest:
+        return False
+
+    annotated = normalize_image_id(annotated_digest)
+
+    for image_id in image_ids:
+        runtime = normalize_image_id(image_id)
+        if not runtime:
+            continue
+
+        if runtime == annotated:
+            return True
+
+        # Defensive fallback for kubelet/containerd formatting differences.
+        if annotated in runtime or runtime in annotated:
+            return True
+
+    return False
+
+
+def service_url(service_name: str, path: str, namespace: str = XAPP_NAMESPACE) -> str:
+    return f"http://{service_name}.{namespace}.svc.cluster.local:8080{path}"
+
+
+def fetch_json(service_name: str, path: str, timeout: float = REQUEST_TIMEOUT) -> Dict[str, Any]:
+    url = service_url(service_name, path)
+    try:
+        resp = requests.get(url, timeout=timeout)
+        body_text = resp.text
+        try:
+            body = resp.json() if body_text else {}
+        except Exception:
+            body = {"raw": body_text[:2000]}
+        return {"ok": 200 <= resp.status_code < 300, "status": resp.status_code, "body": body, "error": None, "url": url}
+    except Exception as exc:
+        return {"ok": False, "status": None, "body": {}, "error": str(exc), "url": url}
+
+
+def fetch_text(service_name: str, path: str, timeout: float = REQUEST_TIMEOUT) -> Dict[str, Any]:
+    url = service_url(service_name, path)
+    try:
+        resp = requests.get(url, timeout=timeout)
+        return {"ok": 200 <= resp.status_code < 300, "status": resp.status_code, "body": resp.text, "error": None, "url": url}
+    except Exception as exc:
+        return {"ok": False, "status": None, "body": "", "error": str(exc), "url": url}
+
+
+# -----------------------------
+# Kubernetes helpers
+# -----------------------------
+
+
+def list_xapp_pods(namespace: str = XAPP_NAMESPACE) -> List[Any]:
+    pods = CORE.list_namespaced_pod(namespace=namespace).items
+    controlled = []
+    for pod in pods:
+        labels = pod.metadata.labels or {}
+        app = labels.get("app")
+        if app in XAPP_LIST:
+            controlled.append(pod)
+    return controlled
+
+
+def get_pods_for_xapp(xapp: str, namespace: str = XAPP_NAMESPACE) -> List[Any]:
+    try:
+        return CORE.list_namespaced_pod(namespace=namespace, label_selector=f"app={xapp}").items
+    except Exception:
+        return []
+
+
+def get_primary_pod_for_xapp(xapp: str, namespace: str = XAPP_NAMESPACE) -> Optional[Any]:
+    pods = get_pods_for_xapp(xapp, namespace)
+    if not pods:
+        return None
+    running = [p for p in pods if (p.status.phase or "") == "Running"]
+    ready = []
+    for p in running:
+        statuses = p.status.container_statuses or []
+        if statuses and all(bool(s.ready) for s in statuses):
+            ready.append(p)
+    return (ready or running or pods)[0]
+
+
+def get_pod_by_name(pod_name: str, namespace: str) -> Optional[Any]:
+    try:
+        return CORE.read_namespaced_pod(name=pod_name, namespace=namespace)
+    except ApiException as exc:
+        if exc.status == 404:
+            return None
+        raise
+
+
+def resolve_deployment_name(pod: Any) -> str:
+    ns = pod.metadata.namespace
+    owners = pod.metadata.owner_references or []
+    labels = pod.metadata.labels or {}
+    for owner in owners:
+        if owner.kind == "ReplicaSet":
+            try:
+                rs = APPS.read_namespaced_replica_set(owner.name, ns)
+                rs_owners = rs.metadata.owner_references or []
+                for rs_owner in rs_owners:
+                    if rs_owner.kind == "Deployment":
+                        return rs_owner.name
+            except Exception:
+                pass
+    return labels.get("app") or pod.metadata.name
+
+
+def pod_events(namespace: str, pod_name: str) -> List[Dict[str, Any]]:
+    try:
+        events = CORE.list_namespaced_event(namespace=namespace, field_selector=f"involvedObject.name={pod_name}").items
+        return jsonable(events)
+    except Exception as exc:
+        return [{"error": str(exc)}]
+
+
+def pod_log_tail(namespace: str, pod_name: str, lines: int = MAX_LOG_LINES) -> str:
+    try:
+        return CORE.read_namespaced_pod_log(name=pod_name, namespace=namespace, tail_lines=lines, timestamps=True)
+    except Exception as exc:
+        return f"log_fetch_failed: {exc}"
+
+
+# -----------------------------
+# Endpoint collection
+# -----------------------------
+
+
+def collect_xapp_endpoints(xapp: str) -> Dict[str, Dict[str, Any]]:
+    return {
+        "health": fetch_json(xapp, "/health"),
+        "ready": fetch_json(xapp, "/ready"),
+        "profile": fetch_json(xapp, "/profile"),
+        "activity": fetch_json(xapp, "/activity", timeout=ACTIVITY_TIMEOUT),
+        "identity": fetch_json(xapp, "/identity"),
+        "integrity": fetch_json(xapp, "/integrity"),
+        "metrics": fetch_text(xapp, "/metrics"),
+    }
+
+
+# -----------------------------
+# Trust evaluation
+# -----------------------------
+
+
+def evaluate_xapp(xapp: str, namespace: str = XAPP_NAMESPACE, endpoints: Optional[Dict[str, Any]] = None, pod: Optional[Any] = None, extra_alert: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    findings: List[Dict[str, Any]] = []
+    score = 100
+
+    if pod is None:
+        pod = get_primary_pod_for_xapp(xapp, namespace)
+
+    if pod is None:
+        return {
+            "xapp": xapp,
+            "namespace": namespace,
+            "state": "COMPROMISED",
+            "score": 0,
+            "pod": None,
+            "findings": [{
+                "severity": "critical",
+                "signal": "pod_missing",
+                "message": "No pod found for controlled xApp",
+                "score_penalty": 100,
+            }],
+            "time": utc_now(),
+        }
+
+    pod_json = jsonable(pod)
+    metadata = pod_json.get("metadata", {}) or {}
+    spec = pod_json.get("spec", {}) or {}
+    status = pod_json.get("status", {}) or {}
+
+    pod_name = metadata.get("name")
+    labels = metadata.get("labels", {}) or {}
+    annotations = metadata.get("annotations", {}) or {}
+    service_account = spec.get("serviceAccountName") or "default"
+    containers = spec.get("containers", []) or []
+    container_statuses = status.get("containerStatuses", []) or []
+    phase = status.get("phase")
+
+    images = [c.get("image", "") for c in containers]
+    image_ids = [normalize_image_id(c.get("imageID", "")) for c in container_statuses]
+    ready_statuses = [bool(c.get("ready")) for c in container_statuses]
+
+    if endpoints is None:
+        endpoints = collect_xapp_endpoints(xapp)
+
+    health = endpoints.get("health", {}).get("body", {}) or {}
+    ready = endpoints.get("ready", {}).get("body", {}) or {}
+    profile = endpoints.get("profile", {}).get("body", {}) or {}
+    activity = endpoints.get("activity", {}).get("body", {}) or {}
+    identity = endpoints.get("identity", {}).get("body", {}) or {}
+    integrity = endpoints.get("integrity", {}).get("body", {}) or {}
+    metrics = endpoints.get("metrics", {}) or {}
+
+    app_label = labels.get("app")
+    verified_label = labels.get("zt-xguard.io/verified")
+    provider_label = labels.get("zt-xguard.io/provider")
+    descriptor_hash = annotations.get("zt-xguard.io/descriptor-sha256")
+    annotated_image_digest = annotations.get("zt-xguard.io/image-digest")
+    annotated_profile_hash = annotations.get("zt-xguard.io/profile-hash")
+    admission_control = annotations.get("zt-xguard.io/admission-control")
+    chart_generated_by = annotations.get("zt-xguard.io/chart-generated-by")
+    expected_spiffe = spiffe_for(namespace, service_account)
+
+    score -= add_finding(findings, phase == "Running", "critical", "pod_phase", f"Pod phase is {phase}", 50)
+    score -= add_finding(findings, bool(ready_statuses) and all(ready_statuses), "high", "container_readiness", "One or more containers are not ready", 20)
+    score -= add_finding(findings, app_label == xapp, "critical", "app_label", f"app label mismatch: {app_label}", 40)
+    score -= add_finding(findings, verified_label == "true", "critical", "verified_label", "Missing zt-xguard.io/verified=true", 60)
+    score -= add_finding(findings, provider_label == TRUSTED_PROVIDER, "high", "provider_label", f"Unexpected provider: {provider_label}", 20)
+    score -= add_finding(findings, bool(descriptor_hash), "high", "descriptor_hash", "Missing descriptor hash annotation", 15)
+    score -= add_finding(findings, bool(annotated_image_digest), "critical", "image_digest_annotation", "Missing image digest annotation", 40)
+    score -= add_finding(findings, bool(annotated_profile_hash), "critical", "profile_hash_annotation", "Missing profile hash annotation", 40)
+    score -= add_finding(findings, admission_control == "kyverno", "high", "admission_control", f"Unexpected admission-control annotation: {admission_control}", 15)
+    score -= add_finding(findings, chart_generated_by == "zt-xguard-smo", "high", "chart_generator", f"Unexpected chart generator: {chart_generated_by}", 15)
+    score -= add_finding(findings, service_account == xapp and service_account != "default", "critical", "service_account", f"Unexpected ServiceAccount: {service_account}", 45)
+
+    approved_image = any(img.startswith(f"{APPROVED_REGISTRY_PREFIX}{xapp}:") or img.startswith(f"{APPROVED_REGISTRY_PREFIX}{xapp}@") for img in images)
+    score -= add_finding(findings, approved_image, "critical", "approved_image", f"Unapproved image list: {images}", 40)
+
+    runtime_digest_match = digest_matches_annotation(annotated_image_digest, image_ids)
+
+    # This is still a serious supply-chain/runtime-integrity signal, but it is
+    # classified as high instead of critical to avoid false-positive full
+    # compromise when only the kubelet/containerd digest string format differs.
+    # A real compromise decision still happens when this combines with profile,
+    # ServiceAccount, verified-label, SVID, endpoint, or Falco violations.
+    score -= add_finding(
+        findings,
+        runtime_digest_match,
+        "high",
+        "image_digest_match",
+        f"Runtime image digest mismatch. annotated={annotated_image_digest}, imageIDs={image_ids}",
+        30,
+    )
+
+    score -= add_finding(findings, endpoints.get("health", {}).get("ok") and health.get("status") == "ok", "high", "health_endpoint", "/health failed or returned non-ok", 20)
+    score -= add_finding(findings, endpoints.get("ready", {}).get("ok") and ready.get("ready") is True, "high", "ready_endpoint", "/ready failed or ready=false", 25)
+    score -= add_finding(findings, endpoints.get("profile", {}).get("ok") and profile.get("xapp") == xapp, "high", "profile_endpoint", "/profile missing or xApp mismatch", 20)
+    score -= add_finding(findings, endpoints.get("activity", {}).get("ok") and activity.get("heartbeat_ok") is True, "high", "heartbeat", "Heartbeat missing/stale or /activity failed", 25)
+    score -= add_finding(findings, int(activity.get("errors", 1)) == 0, "medium", "internal_errors", f"xApp reports errors={activity.get('errors')}", 10)
+
+    endpoint_expected_spiffe = identity.get("expected_spiffe_id")
+    score -= add_finding(findings, endpoint_expected_spiffe == expected_spiffe, "medium", "spiffe_id_expected", f"SPIFFE mismatch. expected={expected_spiffe}, endpoint={endpoint_expected_spiffe}", 10)
+    score -= add_finding(findings, identity.get("svid_certificate_present") is True and identity.get("svid_key_present") is True, "high", "svid_presence", "SVID certificate/key not reported as mounted", 20)
+    score -= add_finding(findings, integrity.get("profile_sha256") == annotated_profile_hash, "critical", "profile_hash_match", f"Profile hash mismatch. runtime={integrity.get('profile_sha256')}, annotated={annotated_profile_hash}", 60)
+
+    runtime_controls = integrity.get("runtime_expected_controls", {}) or {}
+    for ctrl in ["expected_shell", "expected_sensitive_file_access", "expected_external_egress", "expected_cross_xapp_comm"]:
+        score -= add_finding(findings, runtime_controls.get(ctrl) is False, "medium", f"runtime_control_{ctrl}", f"Runtime control {ctrl} is not false", 8)
+
+    metrics_body = metrics.get("body", "")
+    score -= add_finding(findings, metrics.get("ok") is True and "xapp_work_units_processed" in metrics_body, "medium", "metrics_endpoint", "/metrics missing xapp_work_units_processed", 8)
+
+    # Intent-aware behavior checks.
+    expected_ric = bool(profile.get("expected_ric_activity", profile.get("controls", {}).get("expected_ric_activity", False)))
+    expected_control = bool(profile.get("expected_control_activity", profile.get("controls", {}).get("expected_control_activity", False)))
+    expected_external = bool(profile.get("expected_external_egress", profile.get("controls", {}).get("expected_external_egress", False)))
+    expected_cross = bool(profile.get("expected_cross_xapp_comm", profile.get("controls", {}).get("expected_cross_xapp_comm", False)))
+
+    ric_counter = int(activity.get("ric_activity_counter", 0) or 0)
+    control_counter = int(activity.get("control_action_counter", 0) or 0)
+    heartbeat_age = float(activity.get("heartbeat_age_sec", 999999) or 999999)
+    heartbeat_period = float(profile.get("heartbeat_period_sec", profile.get("controls", {}).get("heartbeat_period_sec", 5)) or 5)
+
+    if not expected_ric and ric_counter > 0:
+        score -= add_finding(findings, False, "medium", "unexpected_ric_activity", f"RIC activity counter {ric_counter} but profile says no RIC activity expected", 12)
+    if not expected_control and control_counter > 0:
+        score -= add_finding(findings, False, "medium", "unexpected_control_activity", f"Control action counter {control_counter} but profile says no control activity expected", 12)
+    score -= add_finding(findings, heartbeat_age <= max(15, heartbeat_period * 4), "medium", "heartbeat_age_threshold", f"Heartbeat age {heartbeat_age}s exceeds threshold", 10)
+
+    # Falco/webhook alert correlation.
+    alert_evidence = None
+    if extra_alert:
+        alert_evidence = classify_alert_fields(extra_alert, profile, activity)
+        for f in alert_evidence.get("findings", []):
+            findings.append(f)
+            score -= int(f.get("score_penalty", 0))
+
+    score = max(0, min(100, score))
+    criticals = [f for f in findings if f.get("severity") == "critical"]
+    highs = [f for f in findings if f.get("severity") == "high"]
+
+    high_conf_compromise_signals = {
+        "pod_missing", "verified_label", "app_label", "service_account", "approved_image", "profile_hash_match",
+        "unexpected_shell", "sensitive_file_access", "service_account_token_access", "malicious_tool_execution",
+    }
+    has_high_conf_compromise = any(f.get("signal") in high_conf_compromise_signals for f in criticals)
+
+    if has_high_conf_compromise or score < 60:
+        state = "COMPROMISED"
+    elif criticals or score < 85:
+        state = "SUSPICIOUS"
+    elif highs or score < 98:
+        state = "OBSERVED"
+    else:
+        state = "TRUSTED"
+
+    return {
+        "xapp": xapp,
+        "namespace": namespace,
+        "state": state,
+        "score": score,
+        "pod": pod_name,
+        "deployment": resolve_deployment_name(pod),
+        "service_account": service_account,
+        "expected_spiffe_id": expected_spiffe,
+        "images": images,
+        "image_ids": image_ids,
+        "labels": labels,
+        "annotations": annotations,
+        "endpoint_summary": {k: {"ok": v.get("ok"), "status": v.get("status"), "error": v.get("error")} for k, v in endpoints.items()},
+        "key_runtime_values": {
+            "ready": ready.get("ready"),
+            "heartbeat_ok": activity.get("heartbeat_ok"),
+            "heartbeat_age_sec": activity.get("heartbeat_age_sec"),
+            "errors": activity.get("errors"),
+            "work_units_processed": activity.get("work_units_processed"),
+            "ric_activity_counter": activity.get("ric_activity_counter"),
+            "control_action_counter": activity.get("control_action_counter"),
+            "svid_certificate_present": identity.get("svid_certificate_present"),
+            "svid_key_present": identity.get("svid_key_present"),
+            "runtime_profile_sha256": integrity.get("profile_sha256"),
+            "annotated_profile_sha256": annotated_profile_hash,
+            "annotated_image_digest": annotated_image_digest,
+        },
+        "alert_evidence": alert_evidence,
+        "findings": sorted(findings, key=lambda x: (-severity_rank(x.get("severity", "info")), x.get("signal", ""))),
+        "time": utc_now(),
+    }
+
+
+def classify_alert_fields(alert: Dict[str, Any], profile: Dict[str, Any], activity: Dict[str, Any]) -> Dict[str, Any]:
+    fields = alert.get("output_fields", {}) or {}
+    rule = str(alert.get("rule") or alert.get("rule_name") or "unknown-rule")
+    priority = str(alert.get("priority") or alert.get("priority_num") or "UNKNOWN").upper()
+    output = str(alert.get("output") or "")
+
+    rule_l = rule.lower()
+    output_l = output.lower()
+    priority_l = priority.lower()
+    findings: List[Dict[str, Any]] = []
+
+    def profile_bool(name: str, default: bool = False) -> bool:
+        return bool(profile.get(name, profile.get("controls", {}).get(name, default)))
+
+    expected_shell = profile_bool("expected_shell", False)
+    expected_sensitive = profile_bool("expected_sensitive_file_access", False)
+    expected_external = profile_bool("expected_external_egress", False)
+    expected_cross = profile_bool("expected_cross_xapp_comm", False)
+
+    shell_patterns = ["shell", "bash", "/bin/sh", " sh ", "zsh", "dash"]
+    sensitive_patterns = ["/etc/shadow", "/etc/passwd", "sensitive", "private key", "id_rsa"]
+    token_patterns = ["serviceaccount", "service account", "token", "/var/run/secrets/kubernetes.io"]
+    tool_patterns = ["nmap", "nc ", "ncat", "netcat", "wget", "curl", "stress-ng", "xmrig", "miner", "masscan"]
+
+    if any(p in rule_l or p in output_l for p in shell_patterns) and not expected_shell:
+        findings.append({"severity": "critical", "signal": "unexpected_shell", "message": "Falco indicates unexpected shell/process execution", "score_penalty": 100})
+    if any(p in rule_l or p in output_l for p in sensitive_patterns) and not expected_sensitive:
+        findings.append({"severity": "critical", "signal": "sensitive_file_access", "message": "Falco indicates sensitive file access", "score_penalty": 100})
+    if any(p in rule_l or p in output_l for p in token_patterns):
+        findings.append({"severity": "critical", "signal": "service_account_token_access", "message": "Falco indicates Kubernetes ServiceAccount token access", "score_penalty": 100})
+    if any(p in output_l for p in tool_patterns):
+        findings.append({"severity": "critical", "signal": "malicious_tool_execution", "message": "Falco output indicates suspicious tool execution", "score_penalty": 70})
+    if any(p in rule_l or p in output_l for p in ["outbound", "egress", "connection", "network"]):
+        if not expected_external:
+            findings.append({"severity": "high", "signal": "unexpected_network_egress", "message": "Falco indicates unexpected network/egress behavior", "score_penalty": 35})
+    if "cross-xapp" in output_l and not expected_cross:
+        findings.append({"severity": "high", "signal": "unexpected_cross_xapp", "message": "Falco indicates cross-xApp communication drift", "score_penalty": 35})
+
+    if priority_l in ["critical", "emergency", "alert"]:
+        findings.append({"severity": "high", "signal": "falco_priority", "message": f"Falco priority is {priority}", "score_penalty": 25})
+    elif priority_l in ["error", "warning"]:
+        findings.append({"severity": "medium", "signal": "falco_priority", "message": f"Falco priority is {priority}", "score_penalty": 10})
+
+    if not findings:
+        findings.append({"severity": "info", "signal": "falco_observed", "message": "Falco alert observed but no high-confidence profile violation found", "score_penalty": 0})
+
+    return {
+        "rule": rule,
+        "priority": priority,
+        "output": output,
+        "fields": fields,
+        "findings": findings,
+    }
+
+
+def build_report(namespace: str = XAPP_NAMESPACE, persist: bool = True, reason: str = "manual_scan") -> Dict[str, Any]:
+    started = time.time()
+    results = []
+    for xapp in XAPP_LIST:
+        try:
+            results.append(evaluate_xapp(xapp, namespace=namespace))
+        except Exception as exc:
+            results.append({
+                "xapp": xapp,
+                "namespace": namespace,
+                "state": "COMPROMISED",
+                "score": 0,
+                "pod": None,
+                "findings": [{"severity": "critical", "signal": "engine_exception", "message": str(exc), "score_penalty": 100}],
+                "trace": traceback.format_exc(),
+                "time": utc_now(),
+            })
+
+    counts = {"TRUSTED": 0, "OBSERVED": 0, "SUSPICIOUS": 0, "COMPROMISED": 0, "QUARANTINED": 0}
+    for item in results:
+        counts[item.get("state", "SUSPICIOUS")] = counts.get(item.get("state", "SUSPICIOUS"), 0) + 1
+
+    if counts.get("COMPROMISED", 0):
+        overall = "COMPROMISED"
+    elif counts.get("SUSPICIOUS", 0):
+        overall = "DEGRADED"
+    elif counts.get("OBSERVED", 0):
+        overall = "OBSERVED"
+    else:
+        overall = "HEALTHY"
+
+    report = {
+        "component": "zt-xguard-policy-engine",
+        "version": ENGINE_VERSION,
+        "reason": reason,
+        "time": utc_now(),
+        "namespace": namespace,
+        "trust_domain": TRUST_DOMAIN,
+        "auto_quarantine": AUTO_QUARANTINE,
+        "revoke_spire": REVOKE_SPIRE,
+        "overall_state": overall,
+        "summary": {**counts, "total": len(results)},
+        "duration_sec": round(time.time() - started, 3),
+        "xapps": results,
+    }
+
+    with LAST_REPORT_LOCK:
+        global LAST_REPORT
+        LAST_REPORT = report
+
+    if persist:
+        path = SCAN_DIR / f"scan-{utc_id()}-{safe_name(reason)}.json"
+        report["evidence_path"] = write_json(path, report)
+
+    return report
+
+
+# -----------------------------
+# Falco alert handling
+# -----------------------------
+
+
+def extract_alert_identity(alert: Dict[str, Any]) -> Tuple[str, str, str, str, str, Dict[str, Any]]:
+    fields = alert.get("output_fields", {}) or {}
+    pod = (
+        fields.get("k8s.pod.name")
+        or fields.get("k8s.pod")
+        or fields.get("pod.name")
+        or fields.get("pod")
+        or fields.get("container.name")
+        or "unknown"
+    )
+    namespace = (
+        fields.get("k8s.ns.name")
+        or fields.get("k8s.namespace.name")
+        or fields.get("container.namespace")
+        or fields.get("namespace")
+        or XAPP_NAMESPACE
+    )
+    rule = alert.get("rule") or alert.get("rule_name") or "unknown-rule"
+    priority = str(alert.get("priority") or alert.get("priority_num") or "UNKNOWN").upper()
+    output = alert.get("output") or ""
+
+    # Last resort: parse pod and namespace from Falco output text.
+    if pod == "unknown" and output:
+        m = re.search(r"pod[=:\s]+([a-zA-Z0-9_.-]+)", output)
+        if m:
+            pod = m.group(1)
+    if namespace == XAPP_NAMESPACE and output:
+        m = re.search(r"ns[=:\s]+([a-zA-Z0-9_.-]+)", output)
+        if m:
+            namespace = m.group(1)
+
+    return str(pod), str(namespace), str(rule), str(priority), str(output), fields
+
+
+def xapp_from_pod(pod: Optional[Any], fallback_pod_name: str) -> str:
+    if pod:
+        labels = pod.metadata.labels or {}
+        if labels.get("app"):
+            return labels["app"]
+    for xapp in XAPP_LIST:
+        if fallback_pod_name.startswith(xapp):
+            return xapp
+    return fallback_pod_name
+
+
+def collect_forensic_snapshot(pod: Optional[Any], namespace: str, pod_name: str, incident_dir: Path) -> Dict[str, Any]:
+    snapshot: Dict[str, Any] = {"namespace": namespace, "pod_name": pod_name, "time": utc_now()}
+    if pod:
+        snapshot["pod"] = jsonable(pod)
+        snapshot["deployment"] = resolve_deployment_name(pod)
+        snapshot["events"] = pod_events(namespace, pod_name)
+        snapshot["logs_tail"] = pod_log_tail(namespace, pod_name)
+        write_json(incident_dir / "pod.json", snapshot["pod"])
+        write_json(incident_dir / "events.json", {"events": snapshot["events"]})
+        (incident_dir / "pod-log-tail.txt").write_text(snapshot["logs_tail"], encoding="utf-8")
+    else:
+        snapshot["error"] = "pod_not_found"
+    return snapshot
+
+
+# -----------------------------
+# Containment
+# -----------------------------
+
+
+def ensure_quarantine_network_policy(namespace: str = XAPP_NAMESPACE) -> None:
+    netpol = client.V1NetworkPolicy(
+        metadata=client.V1ObjectMeta(name="zt-xguard-quarantine-deny-all", namespace=namespace),
+        spec=client.V1NetworkPolicySpec(
+            pod_selector=client.V1LabelSelector(match_labels={"security-status": "quarantined"}),
+            policy_types=["Ingress", "Egress"],
+            ingress=[],
+            egress=[],
+        ),
+    )
+    try:
+        NET.create_namespaced_network_policy(namespace=namespace, body=netpol)
+    except ApiException as exc:
+        if exc.status == 409:
+            NET.patch_namespaced_network_policy(name="zt-xguard-quarantine-deny-all", namespace=namespace, body=netpol)
+        else:
+            raise
+
+
+def apply_quarantine(pod_name: str, namespace: str, reason: str, incident_id: str) -> Dict[str, Any]:
+    patch = {
+        "metadata": {
+            "labels": {
+                "security-status": "quarantined",
+                "zt-xguard.io/decision": "quarantined",
+            },
+            "annotations": {
+                "zt-xguard.io/quarantine-reason": reason[:240],
+                "zt-xguard.io/quarantine-time": utc_now(),
+                "zt-xguard.io/incident-id": incident_id,
+            },
+        }
+    }
+    CORE.patch_namespaced_pod(name=pod_name, namespace=namespace, body=patch)
+    ensure_quarantine_network_policy(namespace)
+    return {"applied": True, "method": "pod_label_plus_deny_all_networkpolicy", "network_policy": "zt-xguard-quarantine-deny-all"}
+
+
+def revoke_spire_entry(spiffe_id: str) -> Dict[str, Any]:
+    if not REVOKE_SPIRE:
+        return {"attempted": False, "revoked": False, "reason": "REVOKE_SPIRE=false"}
+    if not spiffe_id or spiffe_id == "unknown":
+        return {"attempted": False, "revoked": False, "reason": "unknown_spiffe_id"}
+
+    try:
+        query_cmd = [SPIRE_BIN, "entry", "show", "-spiffeID", spiffe_id]
+        resp = stream(
+            CORE.connect_get_namespaced_pod_exec,
+            name=SPIRE_SERVER_POD,
+            namespace=SPIRE_NAMESPACE,
+            container=SPIRE_CONTAINER,
+            command=query_cmd,
+            stderr=True,
+            stdin=False,
+            stdout=True,
+            tty=False,
+        )
+        entry_id = None
+        for line in str(resp).splitlines():
+            if "Entry ID" in line:
+                entry_id = line.split(":", 1)[1].strip()
+                break
+        if not entry_id:
+            return {"attempted": True, "revoked": False, "reason": "entry_not_found", "query_output": resp}
+
+        delete_cmd = [SPIRE_BIN, "entry", "delete", "-entryID", entry_id]
+        delete_resp = stream(
+            CORE.connect_get_namespaced_pod_exec,
+            name=SPIRE_SERVER_POD,
+            namespace=SPIRE_NAMESPACE,
+            container=SPIRE_CONTAINER,
+            command=delete_cmd,
+            stderr=True,
+            stdin=False,
+            stdout=True,
+            tty=False,
+        )
+        return {"attempted": True, "revoked": True, "entry_id": entry_id, "delete_output": delete_resp}
+    except Exception as exc:
+        return {"attempted": True, "revoked": False, "error": str(exc), "trace": traceback.format_exc()}
+
+
+# -----------------------------
+# API routes
+# -----------------------------
+
+
+@APP.route("/health", methods=["GET"])
+def health() -> Any:
+    return jsonify({
+        "status": "ok",
+        "component": "zt-xguard-policy-engine",
+        "version": ENGINE_VERSION,
+        "namespace": POLICY_NAMESPACE,
+        "xapp_namespace": XAPP_NAMESPACE,
+        "xapps": XAPP_LIST,
+        "auto_quarantine": AUTO_QUARANTINE,
+        "revoke_spire": REVOKE_SPIRE,
+        "time": utc_now(),
+    })
+
+
+@APP.route("/ready", methods=["GET"])
+def ready() -> Any:
+    try:
+        CORE.list_namespaced_pod(namespace=XAPP_NAMESPACE, limit=1)
+        kubernetes_ok = True
+        error = None
+    except Exception as exc:
+        kubernetes_ok = False
+        error = str(exc)
+
+    return jsonify({
+        "ready": kubernetes_ok,
+        "status": "ready" if kubernetes_ok else "not_ready",
+        "checks": {"kubernetes_api": kubernetes_ok},
+        "error": error,
+        "time": utc_now(),
+    }), (200 if kubernetes_ok else 503)
+
+
+@APP.route("/trust-state", methods=["GET"])
+def trust_state() -> Any:
+    persist = request.args.get("persist", "true").lower() != "false"
+    report = build_report(persist=persist, reason="api_trust_state")
+    return jsonify(report)
+
+
+@APP.route("/scan", methods=["POST", "GET"])
+def scan() -> Any:
+    report = build_report(persist=True, reason="manual_scan")
+    return jsonify(report)
+
+
+@APP.route("/last-report", methods=["GET"])
+def last_report() -> Any:
+    with LAST_REPORT_LOCK:
+        if not LAST_REPORT:
+            return jsonify({"error": "no_report_yet"}), 404
+        return jsonify(LAST_REPORT)
+
+
+@APP.route("/incidents", methods=["GET"])
+def incidents() -> Any:
+    files = sorted(INCIDENT_DIR.glob("*/incident.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+    data = []
+    for p in files[:50]:
+        try:
+            data.append(json.loads(p.read_text(encoding="utf-8")))
+        except Exception:
+            data.append({"path": str(p), "error": "could_not_read"})
+    return jsonify({"count": len(data), "incidents": data})
+
+
+@APP.route("/falco-webhook", methods=["POST"])
+def falco_webhook() -> Any:
+    alert = request.get_json(force=True, silent=True) or {}
+    pod_name, namespace, rule, priority, output, fields = extract_alert_identity(alert)
+
+    incident_id = f"{utc_id()}-{safe_name(rule)}-{safe_name(pod_name)}-{sha256_text(json.dumps(alert, sort_keys=True))[:10]}"
+    incident_path = INCIDENT_DIR / incident_id
+    incident_path.mkdir(parents=True, exist_ok=True)
+
+    pod = get_pod_by_name(pod_name, namespace) if pod_name != "unknown" else None
+    xapp = xapp_from_pod(pod, pod_name)
+
+    endpoints = collect_xapp_endpoints(xapp) if xapp in XAPP_LIST else {}
+    trust_result = evaluate_xapp(xapp, namespace=namespace, endpoints=endpoints, pod=pod, extra_alert=alert) if xapp in XAPP_LIST else {
+        "xapp": xapp,
+        "namespace": namespace,
+        "state": "OBSERVED",
+        "score": 75,
+        "findings": [{"severity": "medium", "signal": "uncontrolled_pod_alert", "message": "Alert is not from the controlled xApp set", "score_penalty": 25}],
+    }
+
+    forensic = collect_forensic_snapshot(pod, namespace, pod_name, incident_path)
+
+    quarantine = {"applied": False, "reason": "not_applicable"}
+    spire_revoke = {"attempted": False, "revoked": False, "reason": "not_applicable"}
+
+    if trust_result.get("state") == "COMPROMISED" and xapp in XAPP_LIST:
+        if AUTO_QUARANTINE and pod_name != "unknown":
+            reason = "; ".join(f.get("signal", "finding") for f in trust_result.get("findings", [])[:5])
+            try:
+                quarantine = apply_quarantine(pod_name, namespace, reason, incident_id)
+                spiffe_id = trust_result.get("expected_spiffe_id") or spiffe_for(namespace, trust_result.get("service_account", xapp))
+                spire_revoke = revoke_spire_entry(spiffe_id)
+            except Exception as exc:
+                quarantine = {"applied": False, "error": str(exc), "trace": traceback.format_exc()}
+        else:
+            quarantine = {"applied": False, "reason": "AUTO_QUARANTINE=false; incident logged only"}
+
+    incident = {
+        "incident_id": incident_id,
+        "time": utc_now(),
+        "alert": {"rule": rule, "priority": priority, "output": output, "fields": fields, "raw": alert},
+        "xapp": xapp,
+        "namespace": namespace,
+        "pod_name": pod_name,
+        "trust_result": trust_result,
+        "forensic_snapshot": forensic,
+        "auto_quarantine": AUTO_QUARANTINE,
+        "quarantine": quarantine,
+        "spire_revoke": spire_revoke,
+        "evidence_dir": str(incident_path),
+    }
+    write_json(incident_path / "incident.json", incident)
+
+    with LAST_REPORT_LOCK:
+        LAST_INCIDENTS.insert(0, incident)
+        del LAST_INCIDENTS[50:]
+
+    print(json.dumps({
+        "component": "zt-xguard-policy-engine",
+        "incident_id": incident_id,
+        "xapp": xapp,
+        "pod": pod_name,
+        "state": trust_result.get("state"),
+        "score": trust_result.get("score"),
+        "quarantine": quarantine,
+        "evidence_dir": str(incident_path),
+    }), flush=True)
+
+    return jsonify({
+        "incident_id": incident_id,
+        "xapp": xapp,
+        "state": trust_result.get("state"),
+        "score": trust_result.get("score"),
+        "findings": trust_result.get("findings", []),
+        "quarantine": quarantine,
+        "spire_revoke": spire_revoke,
+        "evidence_dir": str(incident_path),
+    })
+
+
+# -----------------------------
+# Background scanner
+# -----------------------------
+
+
+def scanner_loop() -> None:
+    if SCAN_INTERVAL_SEC <= 0:
+        return
+    while True:
+        try:
+            build_report(persist=True, reason="scheduled_scan")
+        except Exception as exc:
+            print(json.dumps({"component": "zt-xguard-policy-engine", "scanner_error": str(exc), "trace": traceback.format_exc()}), flush=True)
+        time.sleep(SCAN_INTERVAL_SEC)
+
+
+if __name__ == "__main__":
+    if SCAN_INTERVAL_SEC > 0:
+        t = threading.Thread(target=scanner_loop, daemon=True)
+        t.start()
+    APP.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")))

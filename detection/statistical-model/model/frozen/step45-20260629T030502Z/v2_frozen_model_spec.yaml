@@ -1,0 +1,42 @@
+schema: ztx-resource-detector-v2-corrective-freeze
+frozen_utc: '2026-06-29T03:05:05.812756+00:00'
+reason_for_new_version: Step44H_N4_clean_validation_failed_due_to_absolute_M3_baseline_shift
+fitting_datasets:
+- N1
+- N2
+calibration_dataset: N3
+excluded_from_fit_and_selection:
+- N4
+features:
+- M1_log1p
+- M4_identity
+- M5_log1p
+- M6_log1p
+removed_feature: M3_run_pod_centered
+removed_feature_reason: absolute pod/run memory baseline is non-stationary across
+  clean runs; M4 retains memory-growth dynamics
+selected_candidate:
+  dataset_id: N3
+  window_seconds: 8
+  half_life_seconds: 3
+  lambda_value: 0.206299
+  score_available_after_seconds: 27
+  warning_quantile: 0.975
+  upper_quantile: 0.995
+  warning_limit: 12.858651313374208
+  upper_limit: 25.58879353054043
+  warning_false_positive_rate: 0.02521489971346705
+  upper_false_positive_rate: 0.005157593123209169
+  persistent_upper_false_positive_rate: 0.0
+  horizon_states: 16
+  required_count: 12
+  persistent_episode_count: 0
+  p99: 18.608695915515877
+  maximum: 37.80523496348883
+public_states:
+- NORMAL
+- SUSPICIOUS
+- COMPROMISED
+compromise_policy: COMPROMISED requires corroborating evidence; resource score alone
+  produces SUSPICIOUS at most.
+n4_use: post_hoc_diagnostic_only_not_untouched_final_validation_for_v2

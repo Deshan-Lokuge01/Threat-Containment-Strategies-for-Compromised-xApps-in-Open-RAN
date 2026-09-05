@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-ricxapp-kpimon-go-rmr
+  namespace: ricxapp
+  labels:
+    app: kpm-monitor
+    zt-xguard.io/compat-route: "kpimon-go"
+spec:
+  type: ClusterIP
+  selector:
+    app: kpm-monitor
+  ports:
+    - name: http
+      port: 8092
+      targetPort: 8092
+      protocol: TCP
+    - name: rmr-data
+      port: 4560
+      targetPort: 4560
+      protocol: TCP
+    - name: rmr-route
+      port: 4561
+      targetPort: 4560
+      protocol: TCP

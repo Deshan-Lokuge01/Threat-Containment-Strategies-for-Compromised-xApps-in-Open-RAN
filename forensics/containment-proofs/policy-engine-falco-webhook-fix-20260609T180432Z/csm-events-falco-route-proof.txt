@@ -1,0 +1,13 @@
+2168-    })
+2169-
+2170-
+2171-@APP.route("/csm/events/falco", methods=["POST"])
+2172:def csm_events_falco() -> Any:
+2173-    alert = request.get_json(force=True, silent=True) or {}
+2174-    body, status = ztx_normalize_result(csm_process_falco_event(alert))
+2175-    return jsonify(body), status
+2176-
+2177-
+2178-
+2179-@APP.route("/csm/containment/apply", methods=["POST"])
+2180-def csm_containment_apply() -> Any:

@@ -1,0 +1,80 @@
+[+] Beacon (HTTP): ALIVE
+[-] Failed to perform HTTP request: Post "http://192.168.8.142:8888/beacon": dial tcp 192.168.8.142:8888: connect: connection refused
+[-] beacon: DEAD
+[-] Failed to perform HTTP request: Post "http://192.168.8.142:8888/beacon": dial tcp 192.168.8.142:8888: connect: connection refused
+[-] beacon: DEAD
+[!] Reached beacon failure threshold. Attempting to switch to new peer proxy method.
+[*] All available peer proxy receivers have been tried. Retrying them.
+[-] Verifying proxy channel HTTP
+[*] Attempting to set channel HTTP
+Beacon API=/beacon
+[*] Set communication channel to HTTP
+[*] Updated agent's destination address to proxy peer address: http://192.168.8.142:8888
+[*] Valid peer proxy receivers used so far: 
+	HTTP : http://192.168.8.142:8888
+[*] Valid peer proxy receivers left to try out: 
+[-] Failed to perform HTTP request: Post "http://192.168.8.142:8888/beacon": dial tcp 192.168.8.142:8888: connect: connection refused
+[-] beacon: DEAD
+[-] Failed to perform HTTP request: Post "http://192.168.8.142:8888/beacon": dial tcp 192.168.8.142:8888: connect: connection refused
+[-] beacon: DEAD
+[-] Failed to perform HTTP request: Post "http://192.168.8.142:8888/beacon": dial tcp 192.168.8.142:8888: connect: connection refused
+[-] beacon: DEAD
+[!] Reached beacon failure threshold. Attempting to switch to new peer proxy method.
+[*] All available peer proxy receivers have been tried. Retrying them.
+[-] Verifying proxy channel HTTP
+[*] Attempting to set channel HTTP
+Beacon API=/beacon
+[*] Set communication channel to HTTP
+[*] Updated agent's destination address to proxy peer address: http://192.168.8.142:8888
+[*] Valid peer proxy receivers used so far: 
+	HTTP : http://192.168.8.142:8888
+[*] Valid peer proxy receivers left to try out: 
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction cfbfe903-b635-4330-acf8-fa4ff6b77646
+[*] Submitting results for link cfbfe903-b635-4330-acf8-fa4ff6b77646 via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction 9cb3132b-007f-410c-a7e1-0747c7d8393b
+[*] Submitting results for link 9cb3132b-007f-410c-a7e1-0747c7d8393b via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction dfb7eb5a-da83-4499-826a-74bea1864b06
+[+] Beacon (HTTP): ALIVE
+[*] Submitting results for link dfb7eb5a-da83-4499-826a-74bea1864b06 via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction b32608df-3388-4574-b3b8-cac93c51e8b2
+[*] Submitting results for link b32608df-3388-4574-b3b8-cac93c51e8b2 via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE

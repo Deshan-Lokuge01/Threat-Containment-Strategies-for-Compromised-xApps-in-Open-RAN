@@ -1,0 +1,36 @@
+{
+  "caldera": {
+    "adversary": "ZT-XGuard T1499 KPIMON CPU Resource Exhaustion Pilot V2",
+    "agent_pod": "caldera-agent-6d6c6c886f-nbhqj"
+  },
+  "dataset": "A3_CALDERA_T1499_R1_CPU_NOMON",
+  "duration_seconds": 1800,
+  "end_unix_ns": 1782818545101296197,
+  "end_utc": "2026-06-30T11:22:25Z",
+  "environment": {
+    "hostname": "near-rt-ric",
+    "platform": "Linux-6.17.0-29-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3"
+  },
+  "pre_attack_prompt_seconds": 300,
+  "role": "caldera-orchestrated-attack-evaluation-no-monitor-traffic",
+  "run_id": "A3-CALDERA-T1499-KPIMON-CPU-NOMON-1UE-10PPS-20260630T105215Z",
+  "schema": "ztx-step50c-caldera-attack-run-metadata-v1",
+  "scored_during_collection": 0,
+  "start_unix_ns": 1782816742851651609,
+  "start_utc": "2026-06-30T10:52:22Z",
+  "status": "collected_report_pending",
+  "target": {
+    "cgroup": "/sys/fs/cgroup/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pode85eebb9_e353_4c10_8b57_c27201e05279.slice/cri-containerd-3fd958246bc029c3367c51e71149ac130135ff579fcc80a3de033ea3a0a276d9.scope",
+    "container_id": "3fd958246bc029c3367c51e71149ac130135ff579fcc80a3de033ea3a0a276d9",
+    "host_pid": 206844,
+    "pod": "ricxapp-kpimon-go-7bf6985688-fj8q4",
+    "pod_ip": "10.244.0.112",
+    "pod_uid": "e85eebb9-e353-4c10-8b57-c27201e05279"
+  },
+  "workload": {
+    "destination": "10.45.1.1",
+    "ping_pps": 10,
+    "ue_count": 1
+  }
+}

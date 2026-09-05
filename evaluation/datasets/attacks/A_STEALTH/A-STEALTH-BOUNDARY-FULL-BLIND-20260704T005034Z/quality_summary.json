@@ -1,0 +1,26 @@
+{
+  "dataset": "A_STEALTH_BOUNDARY_BLIND",
+  "collector_return_code": 0,
+  "rows": 4800,
+  "expected_rows": 4800,
+  "endpoint_errors": 0,
+  "timing_errors": 0,
+  "kpimon_restart_delta": 0,
+  "sample_interval_seconds": {
+    "mean": 0.9999995503229839,
+    "maximum": 1.2113879999997152,
+    "p95": 1.002764999999772,
+    "p99": 1.0071793999998453
+  },
+  "sample_lag_ms": {
+    "mean": 2.6869720833333335,
+    "maximum": 213.751,
+    "p95": 4.8953500000000005,
+    "p99": 9.684930000000042
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 28,
+    "ok": 4772
+  },
+  "final_collection_acceptance": 1
+}

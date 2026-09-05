@@ -1,0 +1,3 @@
+root           7  0.0  0.0 1229300 4472 ?        Sl   03:31   0:00 /opt/ztx/ztx-kpimon-actuator
+root           8  0.0  0.1 1084744 13032 ?       Sl   03:31   0:00 ./f1apServer
+root           9  0.1  0.2 1922468 27376 ?       Sl   03:31   0:00 ./kpimon

@@ -1,0 +1,5 @@
+{
+  "allowed_ric_services": ["prometheus"],
+  "allowed_peers": [],
+  "expected_external_egress": false
+}

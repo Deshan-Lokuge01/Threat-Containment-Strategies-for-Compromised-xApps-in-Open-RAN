@@ -1,0 +1,178 @@
+1780911262955 1/RMR [INFO] ric message routing library on SI95 p=4560 mv=3 flg=00 id=a (f447e29 4.9.4 built: Dec 13 2023)
+{"ts":1780911262956,"crit":"INFO","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T09:34:22"},"msg":"new rmrClient with parameters: ProtPort=4560 MaxSize=8192 ThreadType=0 StatDesc=RMR LowLatency=false FastAck=false Policies=[]"}
+{"ts":1780911262956,"crit":"INFO","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T09:34:22"},"msg":"IP address is not able to resolve Interface () route ip+net: invalid network interface name"}
+{"ts":1780911262957,"crit":"INFO","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T09:34:22"},"msg":"rmrClient: RMR is ready after 0 seconds waiting..."}
+{"ts":1780911262959,"crit":"INFO","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T09:34:22"},"msg":"Serving subscriptions on 0.0.0.0:8088\n"}
+RMR is ready now ...
+{"ts":1780911282959,"crit":"INFO","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T09:34:42"},"msg":"getService: SERVICE_RICXAPP_SUBMGR_RMR_PORT []"}
+{"ts":1780911282959,"crit":"WARNING","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T09:34:42"},"msg":"Couldn't resolve service endpoints: httpEp= rmrEp="}
+1780911294882 1/RMR [INFO] sends: ts=1780911294 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911294882 1/RMR [INFO] sends: ts=1780911294 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911294882 1/RMR [INFO] sends: ts=1780911294 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+CRESTSubscriptionRequest
+  SubscriptionID = ''
+  ClientEndpoint.RMRPort = 4560
+  Meid = gnbd_001_001_00019b_0
+  E2SubscriptionDirectives = nil
+  RANFunctionID = 2
+  SubscriptionDetail.XappEventInstanceID = 1234
+  SubscriptionDetail.EventTriggers = [8 3 231]
+  SubscriptionDetail.ActionToBeSetup.ActionID = 1
+  SubscriptionDetail.ActionToBeSetup.ActionType = report
+  SubscriptionDetail.ActionToBeSetup.ActionDefinition = [0 1 1 0 0 1 0 160 68 82 66 46 85 69 84 104 112 85 108 1 32 0 0 0 160 68 82 66 46 85 69 84 104 112 68 108 1 32 0 0 64 3 231]
+  SubscriptionDetail.ActionToBeSetup.SubsequentAction.SubsequentActionType = continue
+  SubscriptionDetail.ActionToBeSetup..SubsequentAction.TimeToWait = w10ms
+{"ts":1780911312187,"crit":"ERROR","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T09:35:12"},"msg":"CREATE routeinfo(1/[10.107.17.73:4560]) failed with error: [POST /handles/xapp-subscription-handle][400] provideXappSubscriptionHandleBadRequest "}
+{"ts":1780911312187,"crit":"ERROR","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T09:35:12"},"msg":"XAPP-SubReq Assign error: transxapp(trans(0/meid(RanName=gnbd_001_001_00019b_0))/transkey(10.107.17.73:4560/3Eqg3GjeZCafZp1NuhaH80QjLUy)/0) err(RTMGR route create failure)"}
+1780911325885 1/RMR [INFO] sends: ts=1780911325 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911325885 1/RMR [INFO] sends: ts=1780911325 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911325885 1/RMR [INFO] sends: ts=1780911325 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911356889 1/RMR [INFO] sends: ts=1780911356 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911356889 1/RMR [INFO] sends: ts=1780911356 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911356889 1/RMR [INFO] sends: ts=1780911356 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911387885 1/RMR [INFO] sends: ts=1780911387 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911387885 1/RMR [INFO] sends: ts=1780911387 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911387885 1/RMR [INFO] sends: ts=1780911387 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911418889 1/RMR [INFO] sends: ts=1780911418 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911418889 1/RMR [INFO] sends: ts=1780911418 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911418889 1/RMR [INFO] sends: ts=1780911418 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911449887 1/RMR [INFO] sends: ts=1780911449 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911449887 1/RMR [INFO] sends: ts=1780911449 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911449887 1/RMR [INFO] sends: ts=1780911449 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911480891 1/RMR [INFO] sends: ts=1780911480 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911480891 1/RMR [INFO] sends: ts=1780911480 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911480891 1/RMR [INFO] sends: ts=1780911480 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911511895 1/RMR [INFO] sends: ts=1780911511 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911511895 1/RMR [INFO] sends: ts=1780911511 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911511895 1/RMR [INFO] sends: ts=1780911511 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911542893 1/RMR [INFO] sends: ts=1780911542 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911542893 1/RMR [INFO] sends: ts=1780911542 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911542893 1/RMR [INFO] sends: ts=1780911542 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911573897 1/RMR [INFO] sends: ts=1780911573 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911573897 1/RMR [INFO] sends: ts=1780911573 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911573897 1/RMR [INFO] sends: ts=1780911573 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911874902 1/RMR [INFO] sends: ts=1780911874 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911874902 1/RMR [INFO] sends: ts=1780911874 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780911874902 1/RMR [INFO] sends: ts=1780911874 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780912175907 1/RMR [INFO] sends: ts=1780912175 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780912175907 1/RMR [INFO] sends: ts=1780912175 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780912175907 1/RMR [INFO] sends: ts=1780912175 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780912476922 1/RMR [INFO] sends: ts=1780912476 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780912476922 1/RMR [INFO] sends: ts=1780912476 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780912476922 1/RMR [INFO] sends: ts=1780912476 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780912777926 1/RMR [INFO] sends: ts=1780912777 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780912777926 1/RMR [INFO] sends: ts=1780912777 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780912777926 1/RMR [INFO] sends: ts=1780912777 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913078933 1/RMR [INFO] sends: ts=1780913078 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913078933 1/RMR [INFO] sends: ts=1780913078 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913078933 1/RMR [INFO] sends: ts=1780913078 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913379945 1/RMR [INFO] sends: ts=1780913379 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913379945 1/RMR [INFO] sends: ts=1780913379 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913379945 1/RMR [INFO] sends: ts=1780913379 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913680955 1/RMR [INFO] sends: ts=1780913680 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913680955 1/RMR [INFO] sends: ts=1780913680 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913680955 1/RMR [INFO] sends: ts=1780913680 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913981965 1/RMR [INFO] sends: ts=1780913981 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913981965 1/RMR [INFO] sends: ts=1780913981 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780913981965 1/RMR [INFO] sends: ts=1780913981 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780914282972 1/RMR [INFO] sends: ts=1780914282 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780914282972 1/RMR [INFO] sends: ts=1780914282 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780914282972 1/RMR [INFO] sends: ts=1780914282 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780914583978 1/RMR [INFO] sends: ts=1780914583 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780914583978 1/RMR [INFO] sends: ts=1780914583 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780914583978 1/RMR [INFO] sends: ts=1780914583 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780914884989 1/RMR [INFO] sends: ts=1780914884 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780914884989 1/RMR [INFO] sends: ts=1780914884 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780914884989 1/RMR [INFO] sends: ts=1780914884 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780915185994 1/RMR [INFO] sends: ts=1780915185 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780915185994 1/RMR [INFO] sends: ts=1780915185 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780915185994 1/RMR [INFO] sends: ts=1780915185 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780915486002 1/RMR [INFO] sends: ts=1780915486 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780915486002 1/RMR [INFO] sends: ts=1780915486 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780915486002 1/RMR [INFO] sends: ts=1780915486 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780915787013 1/RMR [INFO] sends: ts=1780915787 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780915787013 1/RMR [INFO] sends: ts=1780915787 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780915787013 1/RMR [INFO] sends: ts=1780915787 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916088019 1/RMR [INFO] sends: ts=1780916088 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916088019 1/RMR [INFO] sends: ts=1780916088 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916088019 1/RMR [INFO] sends: ts=1780916088 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916389032 1/RMR [INFO] sends: ts=1780916389 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916389032 1/RMR [INFO] sends: ts=1780916389 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916389032 1/RMR [INFO] sends: ts=1780916389 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916690041 1/RMR [INFO] sends: ts=1780916690 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916690041 1/RMR [INFO] sends: ts=1780916690 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916690041 1/RMR [INFO] sends: ts=1780916690 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916991048 1/RMR [INFO] sends: ts=1780916991 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916991048 1/RMR [INFO] sends: ts=1780916991 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780916991048 1/RMR [INFO] sends: ts=1780916991 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780917292058 1/RMR [INFO] sends: ts=1780917292 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780917292058 1/RMR [INFO] sends: ts=1780917292 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780917292058 1/RMR [INFO] sends: ts=1780917292 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780917593065 1/RMR [INFO] sends: ts=1780917593 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780917593065 1/RMR [INFO] sends: ts=1780917593 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780917593065 1/RMR [INFO] sends: ts=1780917593 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780917894073 1/RMR [INFO] sends: ts=1780917894 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780917894073 1/RMR [INFO] sends: ts=1780917894 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780917894073 1/RMR [INFO] sends: ts=1780917894 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780918195086 1/RMR [INFO] sends: ts=1780918195 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780918195086 1/RMR [INFO] sends: ts=1780918195 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780918195086 1/RMR [INFO] sends: ts=1780918195 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780918496093 1/RMR [INFO] sends: ts=1780918496 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780918496093 1/RMR [INFO] sends: ts=1780918496 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780918496093 1/RMR [INFO] sends: ts=1780918496 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780918797100 1/RMR [INFO] sends: ts=1780918797 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780918797100 1/RMR [INFO] sends: ts=1780918797 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780918797100 1/RMR [INFO] sends: ts=1780918797 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780919098112 1/RMR [INFO] sends: ts=1780919098 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780919098112 1/RMR [INFO] sends: ts=1780919098 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780919098112 1/RMR [INFO] sends: ts=1780919098 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780919399116 1/RMR [INFO] sends: ts=1780919399 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780919399116 1/RMR [INFO] sends: ts=1780919399 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780919399116 1/RMR [INFO] sends: ts=1780919399 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780919700128 1/RMR [INFO] sends: ts=1780919700 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780919700128 1/RMR [INFO] sends: ts=1780919700 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780919700128 1/RMR [INFO] sends: ts=1780919700 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920001134 1/RMR [INFO] sends: ts=1780920001 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920001134 1/RMR [INFO] sends: ts=1780920001 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920001134 1/RMR [INFO] sends: ts=1780920001 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920302139 1/RMR [INFO] sends: ts=1780920302 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920302139 1/RMR [INFO] sends: ts=1780920302 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920302139 1/RMR [INFO] sends: ts=1780920302 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920603153 1/RMR [INFO] sends: ts=1780920603 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920603153 1/RMR [INFO] sends: ts=1780920603 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920603153 1/RMR [INFO] sends: ts=1780920603 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920904160 1/RMR [INFO] sends: ts=1780920904 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920904160 1/RMR [INFO] sends: ts=1780920904 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780920904160 1/RMR [INFO] sends: ts=1780920904 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780921205167 1/RMR [INFO] sends: ts=1780921205 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780921205167 1/RMR [INFO] sends: ts=1780921205 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780921205167 1/RMR [INFO] sends: ts=1780921205 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780921506178 1/RMR [INFO] sends: ts=1780921506 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780921506178 1/RMR [INFO] sends: ts=1780921506 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780921506178 1/RMR [INFO] sends: ts=1780921506 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780921807182 1/RMR [INFO] sends: ts=1780921807 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780921807182 1/RMR [INFO] sends: ts=1780921807 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780921807182 1/RMR [INFO] sends: ts=1780921807 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+CRESTSubscriptionRequest
+  SubscriptionID = ''
+  ClientEndpoint.Host = kpm-monitor.ricxapp
+  ClientEndpoint.RMRPort = 4560
+  Meid = gnbd_001_001_00019b_0
+  E2SubscriptionDirectives = nil
+  RANFunctionID = 2
+  SubscriptionDetail.XappEventInstanceID = 1234
+  SubscriptionDetail.EventTriggers = [8 3 231]
+  SubscriptionDetail.ActionToBeSetup.ActionID = 1
+  SubscriptionDetail.ActionToBeSetup.ActionType = report
+  SubscriptionDetail.ActionToBeSetup.ActionDefinition = [0 1 1 0 0 1 0 160 68 82 66 46 85 69 84 104 112 85 108 1 32 0 0 0 160 68 82 66 46 85 69 84 104 112 68 108 1 32 0 0 64 3 231]
+  SubscriptionDetail.ActionToBeSetup.SubsequentAction.SubsequentActionType = continue
+  SubscriptionDetail.ActionToBeSetup..SubsequentAction.TimeToWait = w10ms
+{"ts":1780921975717,"crit":"ERROR","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T12:32:55"},"msg":"CREATE routeinfo(2/[kpm-monitor.ricxapp:4560]) failed with error: [POST /handles/xapp-subscription-handle][400] provideXappSubscriptionHandleBadRequest "}
+{"ts":1780921975717,"crit":"ERROR","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T12:32:55"},"msg":"XAPP-SubReq Assign error: transxapp(trans(1/meid(RanName=gnbd_001_001_00019b_0))/transkey(kpm-monitor.ricxapp:4560/3Er1fHyiRA3IqOfuryXWF7yH0sb)/0) err(RTMGR route create failure)"}
+{"ts":1780921975719,"crit":"ERROR","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T12:32:55"},"msg":"Post \"http://kpm-monitor.ricxapp:8092/ric/v1/subscriptions/response\": dial tcp 10.106.73.207:8092: connect: connection refused"}
+1780922108194 1/RMR [INFO] sends: ts=1780922108 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780922108194 1/RMR [INFO] sends: ts=1780922108 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780922108194 1/RMR [INFO] sends: ts=1780922108 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780922409199 1/RMR [INFO] sends: ts=1780922409 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780922409199 1/RMR [INFO] sends: ts=1780922409 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780922409199 1/RMR [INFO] sends: ts=1780922409 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)

@@ -1,0 +1,7 @@
+{
+  "time": "2026-06-05T15:34:44Z",
+  "provider": "sp1",
+  "payload": "traffic-analyzer-descriptor.tar.gz",
+  "result": "REJECTED",
+  "reason": "Registry digest does not match descriptor digest"
+}

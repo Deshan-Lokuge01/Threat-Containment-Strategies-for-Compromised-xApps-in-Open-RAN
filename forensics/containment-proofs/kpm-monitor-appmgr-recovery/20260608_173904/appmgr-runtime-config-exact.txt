@@ -1,0 +1,174 @@
+APP_POD=deployment-ricplt-appmgr-79cff89dd5-nmgp9
+
+===== AppMgr pod mounted files likely config paths =====
+PWD=/opt/xAppManager
+/opt/ric/config/appmgr.yaml
+
+===== AppMgr runtime appmgr.yaml candidates =====
+### /opt/ric/config/appmgr.yaml
+"local":
+  # Port on which the xapp-manager REST services are provided
+  "host": ":8080"
+"helm":
+  # Remote helm repo URL. UPDATE this as required.
+  "repo": "\"http://service-ricplt-xapp-onboarder-http:8080\""
+
+  # Repo name referred within the xapp-manager
+  "repo-name": "helm-repo"
+
+  # Tiller service details in the cluster. UPDATE this as required.
+  "tiller-service": service-tiller-ricxapp
+  "tiller-namespace": ricinfra
+  "tiller-port": "44134"
+  # helm username and password files
+  "helm-username-file": "/opt/ric/secret/helm_repo_username"
+  "helm-password-file": "/opt/ric/secret/helm_repo_password"
+  "retry": 1
+"xapp":
+  #Namespace to install xAPPs
+  "namespace": "ricxapp"
+  "tarDir": "/tmp"
+  "schema": "descriptors/schema.json"
+  "config": "config/config-file.json"
+  "tmpConfig": "/tmp/config-file.json"
+
+
+===== AppMgr ConfigMaps =====
+configmap-ricplt-appmgr-appconfig                 1      9d
+configmap-ricplt-appmgr-bin                       2      9d
+configmap-ricplt-appmgr-env                       9      9d
+
+===== AppMgr deployment env/volumes =====
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "2"
+    meta.helm.sh/release-name: r4-appmgr
+    meta.helm.sh/release-namespace: ricplt
+  creationTimestamp: "2026-05-30T05:46:58Z"
+  generation: 2
+  labels:
+    app: ricplt-appmgr
+    app.kubernetes.io/managed-by: Helm
+    chart: appmgr-3.0.0
+    heritage: Helm
+    release: r4-appmgr
+  name: deployment-ricplt-appmgr
+  namespace: ricplt
+  resourceVersion: "1463314"
+  uid: 85f698a3-4956-417a-888d-194e0ceb3888
+--
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: ricplt-appmgr
+      release: r4-appmgr
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+--
+        kubectl.kubernetes.io/restartedAt: "2026-06-08T16:02:37+05:30"
+      creationTimestamp: null
+      labels:
+        app: ricplt-appmgr
+        release: r4-appmgr
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: configmap-ricplt-appmgr-env
+        - configMapRef:
+            name: configmap-ricplt-dbaas-appconfig
+        image: nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-appmgr:0.5.10
+        imagePullPolicy: IfNotPresent
+        name: container-ricplt-appmgr
+        ports:
+        - containerPort: 8080
+          name: http
+--
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/ric/config/appmgr.yaml
+          name: config-volume
+          subPath: appmgr.yaml
+        - mountPath: /opt/ric/secret
+          name: helm-secret-volume
+        - mountPath: /opt/ric/secret/helm_repo_username
+          name: secret-volume
+          subPath: helm_repo_username
+        - mountPath: /opt/ric/secret/helm_repo_password
+          name: secret-volume
+          subPath: helm_repo_password
+      dnsPolicy: ClusterFirst
+      hostname: appmgr
+      imagePullSecrets:
+      - name: secret-nexus3-o-ran-sc-org-10002-o-ran-sc
+      initContainers:
+      - command:
+        - /appmgr-tiller-secret-copier.sh
+        env:
+        - name: SVCACCT_NAME
+          value: svcacct-ricplt-appmgr
+        - name: CLUSTER_NAME
+          value: kubernetes
+        - name: KUBECONFIG
+          value: /tmp/kubeconfig
+        - name: K8S_API_HOST
+          value: https://kubernetes.default.svc.cluster.local/
+        - name: SECRET_NAMESPACE
+          value: ricinfra
+        - name: SECRET_NAME
+          value: ricxapp-helm-secret
+        envFrom:
+        - configMapRef:
+            name: configmap-ricplt-appmgr-env
+        image: nexus3.o-ran-sc.org:10002/o-ran-sc/it-dep-init:0.0.1
+        imagePullPolicy: IfNotPresent
+        name: container-ricplt-appmgr-copy-tiller-secret
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/ric/secret
+          name: helm-secret-volume
+        - mountPath: /svcacct-to-kubeconfig.sh
+          name: appmgr-bin-volume
+          subPath: svcacct-to-kubeconfig.sh
+        - mountPath: /appmgr-tiller-secret-copier.sh
+          name: appmgr-bin-volume
+          subPath: appmgr-tiller-secret-copier.sh
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: svcacct-ricplt-appmgr
+      serviceAccountName: svcacct-ricplt-appmgr
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: configmap-ricplt-appmgr-appconfig
+        name: config-volume
+      - name: secret-volume
+        secret:
+          defaultMode: 420
+          secretName: secret-ricplt-appmgr
+      - emptyDir: {}
+        name: helm-secret-volume
+      - configMap:
+          defaultMode: 493
+          name: configmap-ricplt-appmgr-bin
+        name: appmgr-bin-volume
+status:
+  availableReplicas: 1
+  conditions:
+--
+    type: Available
+  - lastTransitionTime: "2026-05-30T06:06:56Z"
+    lastUpdateTime: "2026-06-08T10:32:50Z"
+    message: ReplicaSet "deployment-ricplt-appmgr-79cff89dd5" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing

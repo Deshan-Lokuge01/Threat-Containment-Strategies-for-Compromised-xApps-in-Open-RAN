@@ -1,0 +1,19 @@
+{
+  "xapp": "traffic-analyzer",
+  "role": "traffic-analytics",
+  "state": "traffic-analytics",
+  "uptime_sec": 412.77,
+  "heartbeat_age_sec": 3.26,
+  "heartbeat_ok": true,
+  "work_units_processed": 66755,
+  "ric_activity_counter": 64,
+  "control_action_counter": 0,
+  "telemetry_samples": 0,
+  "qos_decisions": 0,
+  "traffic_reports": 64,
+  "resource_recommendations": 0,
+  "security_checks": 0,
+  "last_decision": "processed_1114_traffic_flows",
+  "errors": 0,
+  "time": "2026-06-05T05:51:49.995123+00:00"
+}

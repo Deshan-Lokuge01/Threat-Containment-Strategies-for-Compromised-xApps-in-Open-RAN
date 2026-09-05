@@ -1,0 +1,89 @@
+{
+  "schema": "zt-xguard-scalability-campaign-manifest-v1",
+  "created_utc": "2026-08-08T05:17:32.747953+00:00",
+  "git_commit": "aaaf051ec599d93b0ffaec4037e6dcf9b2f22d40",
+  "git_branch": "refactor/zt-xguard",
+  "git_dirty": true,
+  "host": "near-rt-ric",
+  "platform": "Linux-6.17.0-29-generic-x86_64-with-glibc2.39",
+  "python": "3.12.3",
+  "cpu_cores": 6,
+  "ram_total": "11Gi",
+  "kubernetes_server_version": "v1.33.12",
+  "policy_engine_image": "docker.io/library/zt-xguard-policy-engine:laptop-observe-v1-20260724T201030Z",
+  "policy_engine_cpu_limit_cores": 1,
+  "kpimon_image": "127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v1",
+  "detector_model_version": {
+    "pressure": "step54/v3_frozen",
+    "gate": "step76/v5_frozen",
+    "note": "only kpimon-go statistical model is validated; all detector contexts share it"
+  },
+  "processing_slo_ms": 1000,
+  "processing_slo_note": "PROJECT-DEFINED processing budget tied to the 1-Hz monitoring cadence; NOT an O-RAN standardized deadline",
+  "experiment_1": {
+    "name": "detector-context scalability",
+    "N_values": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      10,
+      20,
+      40,
+      60,
+      80
+    ],
+    "repetitions": 5,
+    "warmup_ticks": 8,
+    "measured_ticks": 300,
+    "tP_source": "n/a"
+  },
+  "experiment_2": {
+    "name": "policy decision-plane throughput/saturation",
+    "R_values": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      10,
+      20,
+      40,
+      60,
+      80
+    ],
+    "repetitions": 5,
+    "open_loop": true,
+    "distinct_ids_per_rate": true,
+    "fine_sweep": "adaptive ~5/s inside knee interval",
+    "decision_correct": "actual state == deterministic reference state"
+  },
+  "experiment_3": {
+    "name": "concurrent security-enforcement scalability (4 real xApps)",
+    "xapps": [
+      "ricxapp-hw-go",
+      "ricxapp-hw-python",
+      "ricxapp-kpimon-go",
+      "ricxapp-trafficxapp"
+    ],
+    "e2_active": [
+      "ricxapp-kpimon-go"
+    ],
+    "K_values": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "valid_trials_per_K": 10,
+    "trial_schedule_seed": 20260808,
+    "tP_source": "/csm/state state->COMPROMISED (client poll + server last_update); NO app.py change",
+    "reset": "policy-engine restart -> Ready -> stabilize -> restore/verify 4 locks -> PRECONDITION=PASS -> attack",
+    "networkpolicy": "pre-existing zt-xguard-quarantine-deny-all selects quarantine=true; responder patches label"
+  },
+  "T2_AUTO_CONTAIN_before": "true",
+  "T2_AUTO_CONTAIN_during_exp3": "false (to be set)",
+  "T2_AUTO_CONTAIN_restored_after": "pending",
+  "raw_datasets": "to be filled as experiments complete"
+}

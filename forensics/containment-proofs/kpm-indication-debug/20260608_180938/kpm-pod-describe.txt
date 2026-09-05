@@ -1,0 +1,124 @@
+Name:             kpm-monitor-65fc447797-wmn2d
+Namespace:        ricxapp
+Priority:         0
+Service Account:  kpm-monitor
+Node:             near-rt-ric/192.168.112.129
+Start Time:       Mon, 08 Jun 2026 18:02:22 +0530
+Labels:           app=kpm-monitor
+                  pod-template-hash=65fc447797
+                  version=1.0.0
+                  zt-xguard.io/provider=sp1
+                  zt-xguard.io/verified=true
+Annotations:      <none>
+Status:           Running
+SeccompProfile:   RuntimeDefault
+IP:               10.244.0.217
+IPs:
+  IP:           10.244.0.217
+Controlled By:  ReplicaSet/kpm-monitor-65fc447797
+Init Containers:
+  fetch-svid:
+    Container ID:  containerd://7f6c0f8ce05d19bfa95fc94e581a572759ada51834898d9167936c73bb99e673
+    Image:         localhost:5000/spire-fetcher:1.0-nonroot
+    Image ID:      sha256:27bc2b1b240c4c264a23f1d4e535959f8515e4313a7f2ea94087386b6cad4d49
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      set -e
+      echo "Waiting for SPIRE socket..."
+      while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+      echo "Socket ready. Fetching SVID..."
+      /opt/spire/bin/spire-agent api fetch x509 \
+        -socketPath /var/run/spire/sockets/spire-agent.sock \
+        -write /svid-data
+      echo "SVID fetched successfully."
+      ls -l /svid-data || true
+      
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Mon, 08 Jun 2026 18:02:38 +0530
+      Finished:     Mon, 08 Jun 2026 18:02:39 +0530
+    Ready:          True
+    Restart Count:  2
+    Environment:    <none>
+    Mounts:
+      /svid-data from svid-data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-dgkjk (ro)
+      /var/run/spire/sockets from spiffe-socket (ro)
+Containers:
+  kpm-monitor:
+    Container ID:   containerd://0e4633faa261458722e31ea82d2f530c0078b403aae697ae39c88d4cb66fe422
+    Image:          localhost:5000/zt-kpm-monitor:1.0
+    Image ID:       sha256:fdbef84fa85cbe6bbffa08cdd9ef1590d0e44615e5dafdb9abd6ac13018733d6
+    Ports:          8092/TCP, 4560/TCP
+    Host Ports:     0/TCP, 0/TCP
+    State:          Running
+      Started:      Mon, 08 Jun 2026 18:02:40 +0530
+    Ready:          True
+    Restart Count:  0
+    Liveness:       http-get http://:http/health delay=10s timeout=1s period=15s #success=1 #failure=3
+    Readiness:      http-get http://:http/health delay=10s timeout=1s period=15s #success=1 #failure=3
+    Environment:
+      XAPP_PROFILE_PATH:       /etc/xapp-profile/profile.json
+      XAPP_PORT:               8092
+      POD_IP:                   (v1:status.podIP)
+      SERVICE_HTTP_HOST:       kpm-monitor.ricxapp
+      SERVICE_HTTP_PORT:       8092
+      HTTP_PORT:               8092
+      RMR_PORT:                4560
+      SUBMGR_URI:              http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1
+      E2MGR_NODEB_STATES_URL:  http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800/v1/nodeb/states
+      E2_NODE_ID:              gnbd_001_001_00019b_0
+      RAN_FUNCTION_ID:         2
+      KPM_REPORT_STYLE:        1
+      KPM_METRICS:             DRB.UEThpUl,DRB.UEThpDl
+    Mounts:
+      /etc/svid from svid-data (ro)
+      /etc/xapp-profile from xapp-profile (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-dgkjk (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  spiffe-socket:
+    Type:              CSI (a Container Storage Interface (CSI) volume source)
+    Driver:            csi.spiffe.io
+    FSType:            
+    ReadOnly:          true
+    VolumeAttributes:  <none>
+  svid-data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  xapp-profile:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      kpm-monitor-profile
+    Optional:  false
+  kube-api-access-dgkjk:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                   From               Message
+  ----     ------     ----                  ----               -------
+  Normal   Scheduled  7m17s                 default-scheduler  Successfully assigned ricxapp/kpm-monitor-65fc447797-wmn2d to near-rt-ric
+  Warning  BackOff    7m13s                 kubelet            Back-off restarting failed container fetch-svid in pod kpm-monitor-65fc447797-wmn2d_ricxapp(f1ae1288-5f4d-44c7-8d98-b673416ea441)
+  Normal   Pulled     7m1s (x3 over 7m16s)  kubelet            Container image "localhost:5000/spire-fetcher:1.0-nonroot" already present on machine
+  Normal   Created    7m1s (x3 over 7m16s)  kubelet            Created container: fetch-svid
+  Normal   Started    7m1s (x3 over 7m16s)  kubelet            Started container fetch-svid
+  Normal   Pulled     6m59s                 kubelet            Container image "localhost:5000/zt-kpm-monitor:1.0" already present on machine
+  Normal   Created    6m59s                 kubelet            Created container: kpm-monitor
+  Normal   Started    6m59s                 kubelet            Started container kpm-monitor

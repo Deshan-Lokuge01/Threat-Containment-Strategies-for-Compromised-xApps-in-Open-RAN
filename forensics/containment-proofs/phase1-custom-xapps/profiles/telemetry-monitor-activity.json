@@ -1,0 +1,19 @@
+{
+  "xapp": "telemetry-monitor",
+  "role": "telemetry-monitoring",
+  "state": "telemetry-monitoring",
+  "uptime_sec": 407.35,
+  "heartbeat_age_sec": 2.34,
+  "heartbeat_ok": true,
+  "work_units_processed": 1053,
+  "ric_activity_counter": 82,
+  "control_action_counter": 0,
+  "telemetry_samples": 1053,
+  "qos_decisions": 0,
+  "traffic_reports": 0,
+  "resource_recommendations": 0,
+  "security_checks": 0,
+  "last_decision": "collected_16_telemetry_samples",
+  "errors": 0,
+  "time": "2026-06-05T05:51:43.898602+00:00"
+}

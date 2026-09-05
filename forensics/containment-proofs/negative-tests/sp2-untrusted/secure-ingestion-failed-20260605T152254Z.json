@@ -1,0 +1,7 @@
+{
+  "time": "2026-06-05T15:22:54Z",
+  "provider": "sp2",
+  "payload": "traffic-analyzer-sp2-descriptor.tar.gz",
+  "result": "REJECTED",
+  "reason": "Provider GPG public key not found in SMO trust store"
+}

@@ -1,0 +1,57 @@
+===== AppMgr REST API deploy-related lines =====
+35:      operationId : getHealthAlive
+44:      operationId : getHealthReady
+51:    post:
+55:      operationId: deployXapp
+60:      parameters:
+75:    get:
+79:      operationId: getAllXapps
+90:    get:
+94:      operationId: listAllXapps
+104:  /xapps/{xAppName}:
+105:    get:
+109:      operationId: getXappByName
+112:      parameters:
+113:        - name: xAppName
+129:    delete:
+133:      operationId: undeployXapp
+134:      parameters:
+135:        - name: xAppName
+147:  /xapps/{xAppName}/instances/{xAppInstanceName}:
+148:    get:
+152:      operationId: getXappInstanceByName
+155:      parameters:
+156:        - name: xAppName
+182:      operationId: ModifyXappConfig
+187:      parameters:
+204:    get:
+208:      operationId: getAllXappConfig
+219:    get:
+223:      operationId: GetConfigElement
+226:      parameters:
+240:    post:
+245:      operationId: addSubscription
+250:      parameters:
+264:    get:
+269:      operationId: getSubscriptions
+278:    get:
+283:      operationId: getSubscriptionById
+286:      parameters:
+306:      operationId: modifySubscription
+311:      parameters:
+330:    delete:
+336:      operationId: deleteSubscription
+337:      parameters:
+349:    post:
+354:      operationId: registerXapp
+359:      parameters:
+372:    post:
+377:      operationId: deregisterXapp
+380:      parameters:
+468:      helmVersion:
+471:      releaseName:
+474:      namespace:
+476:        description: Name of the namespace to which xApp is deployed. Overrides the value given in Helm chart value file.
+488:      - namespace
+493:      namespace:
+495:        description: Name of the namespace

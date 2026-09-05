@@ -1,0 +1,17 @@
+[2026-06-08T13:47:34.686497+00:00] Starting kpm-monitor real O-RAN xApp
+[2026-06-08T13:47:34.686551+00:00] POD_IP=10.244.0.230, SERVICE_HTTP_HOST=service-ricxapp-kpimon-go-rmr.ricxapp, SUBMGR_URI=http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1
+[2026-06-08T13:47:34.686565+00:00] E2_NODE_ID=gnbd_001_001_00019b_0, RAN_FUNCTION_ID=2, KPM_METRICS=['DRB.UEThpUl', 'DRB.UEThpDl']
+[2026-06-08T13:47:34.687570+00:00] Starting RMR listener on port 4560
+1780926454 1/RMR [INFO] ric message routing library on SI95/g mv=3 flg=00 (f25dc7f 4.0.5 built: May  7 2020)
+[2026-06-08T13:47:34.688607+00:00] HTTP server listening on 0.0.0.0:8092
+[2026-06-08T13:47:35.689231+00:00] RMR listener is ready
+1780926455 1/RMR [INFO] sends: ts=1780926455 src=kpm-monitor-5f6bcc8586-jn8q5:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780926455 1/RMR [INFO] sends: ts=1780926455 src=kpm-monitor-5f6bcc8586-jn8q5:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:47:45.026975+00:00] Sending KPM subscription request to http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1/subscriptions
+[2026-06-08T13:47:45.027022+00:00] Target E2 node=gnbd_001_001_00019b_0, RANFunctionID=2, metrics=['DRB.UEThpUl', 'DRB.UEThpDl']
+[2026-06-08T13:47:45.043385+00:00] Subscription accepted. HTTP=201, SubscriptionId=3ErAlZJZ3KuBxFJFKvTidMGQkww, body={"SubscriptionId":"3ErAlZJZ3KuBxFJFKvTidMGQkww","SubscriptionInstances":null}
+
+1780926486 1/RMR [INFO] sends: ts=1780926486 src=kpm-monitor-5f6bcc8586-jn8q5:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780926486 1/RMR [INFO] sends: ts=1780926486 src=kpm-monitor-5f6bcc8586-jn8q5:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780926517 1/RMR [INFO] sends: ts=1780926517 src=kpm-monitor-5f6bcc8586-jn8q5:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780926517 1/RMR [INFO] sends: ts=1780926517 src=kpm-monitor-5f6bcc8586-jn8q5:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)

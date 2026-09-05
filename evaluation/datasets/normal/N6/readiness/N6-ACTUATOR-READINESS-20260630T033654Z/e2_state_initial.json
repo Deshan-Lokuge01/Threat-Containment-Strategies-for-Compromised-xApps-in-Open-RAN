@@ -1,0 +1,5 @@
+{
+  "dataset": "N6",
+  "timestamp_utc": "20260630T033654Z",
+  "note": "E2 state captured by collection script during run; readiness confirms KPIMON pod and actuator dormant state."
+}

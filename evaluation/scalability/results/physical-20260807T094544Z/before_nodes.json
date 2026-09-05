@@ -1,0 +1,497 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Node",
+            "metadata": {
+                "annotations": {
+                    "csi.volume.kubernetes.io/nodeid": "{\"csi.spiffe.io\":\"near-rt-ric\"}",
+                    "flannel.alpha.coreos.com/backend-data": "{\"VNI\":1,\"VtepMAC\":\"b6:56:53:93:94:ca\"}",
+                    "flannel.alpha.coreos.com/backend-type": "vxlan",
+                    "flannel.alpha.coreos.com/kube-subnet-manager": "true",
+                    "flannel.alpha.coreos.com/public-ip": "192.168.8.159",
+                    "kubeadm.alpha.kubernetes.io/cri-socket": "unix:///run/containerd/containerd.sock",
+                    "node.alpha.kubernetes.io/ttl": "0",
+                    "volumes.kubernetes.io/controller-managed-attach-detach": "true"
+                },
+                "creationTimestamp": "2026-05-25T09:39:55Z",
+                "labels": {
+                    "beta.kubernetes.io/arch": "amd64",
+                    "beta.kubernetes.io/os": "linux",
+                    "kubernetes.io/arch": "amd64",
+                    "kubernetes.io/hostname": "near-rt-ric",
+                    "kubernetes.io/os": "linux",
+                    "local-storage": "enable",
+                    "node-role.kubernetes.io/control-plane": "",
+                    "node.kubernetes.io/exclude-from-external-load-balancers": ""
+                },
+                "name": "near-rt-ric",
+                "resourceVersion": "4236145",
+                "uid": "f2ec333e-dd2b-4fc9-bda2-18c4b7f97c68"
+            },
+            "spec": {
+                "podCIDR": "10.244.0.0/24",
+                "podCIDRs": [
+                    "10.244.0.0/24"
+                ]
+            },
+            "status": {
+                "addresses": [
+                    {
+                        "address": "192.168.8.159",
+                        "type": "InternalIP"
+                    },
+                    {
+                        "address": "near-rt-ric",
+                        "type": "Hostname"
+                    }
+                ],
+                "allocatable": {
+                    "cpu": "6",
+                    "ephemeral-storage": "131870269222",
+                    "hugepages-1Gi": "0",
+                    "hugepages-2Mi": "0",
+                    "memory": "11805780Ki",
+                    "pods": "110"
+                },
+                "capacity": {
+                    "cpu": "6",
+                    "ephemeral-storage": "143088400Ki",
+                    "hugepages-1Gi": "0",
+                    "hugepages-2Mi": "0",
+                    "memory": "11908180Ki",
+                    "pods": "110"
+                },
+                "conditions": [
+                    {
+                        "lastHeartbeatTime": "2026-08-06T16:33:46Z",
+                        "lastTransitionTime": "2026-08-06T16:33:46Z",
+                        "message": "Flannel is running on this node",
+                        "reason": "FlannelIsUp",
+                        "status": "False",
+                        "type": "NetworkUnavailable"
+                    },
+                    {
+                        "lastHeartbeatTime": "2026-08-07T09:44:05Z",
+                        "lastTransitionTime": "2026-08-07T03:28:24Z",
+                        "message": "kubelet has sufficient memory available",
+                        "reason": "KubeletHasSufficientMemory",
+                        "status": "False",
+                        "type": "MemoryPressure"
+                    },
+                    {
+                        "lastHeartbeatTime": "2026-08-07T09:44:05Z",
+                        "lastTransitionTime": "2026-08-07T03:28:24Z",
+                        "message": "kubelet has no disk pressure",
+                        "reason": "KubeletHasNoDiskPressure",
+                        "status": "False",
+                        "type": "DiskPressure"
+                    },
+                    {
+                        "lastHeartbeatTime": "2026-08-07T09:44:05Z",
+                        "lastTransitionTime": "2026-08-07T03:28:24Z",
+                        "message": "kubelet has sufficient PID available",
+                        "reason": "KubeletHasSufficientPID",
+                        "status": "False",
+                        "type": "PIDPressure"
+                    },
+                    {
+                        "lastHeartbeatTime": "2026-08-07T09:44:05Z",
+                        "lastTransitionTime": "2026-08-07T03:28:24Z",
+                        "message": "kubelet is posting ready status",
+                        "reason": "KubeletReady",
+                        "status": "True",
+                        "type": "Ready"
+                    }
+                ],
+                "daemonEndpoints": {
+                    "kubeletEndpoint": {
+                        "Port": 10250
+                    }
+                },
+                "features": {
+                    "supplementalGroupsPolicy": true
+                },
+                "images": [
+                    {
+                        "names": [
+                            "127.0.0.1:80/kpimon-ocudu-cell@sha256:47833746e5d1d1b32f339c218e9fe87b8eb180ae5ee789793a18717b00bb570a",
+                            "127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v1"
+                        ],
+                        "sizeBytes": 975537172
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/zt-xguard-policy-engine:laptop-observe-v1-20260724T201030Z"
+                        ],
+                        "sizeBytes": 682551262
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/zt-xguard-policy-engine:20260715-163131"
+                        ],
+                        "sizeBytes": 507411423
+                    },
+                    {
+                        "names": [
+                            "docker.io/redis/redis-stack@sha256:96a8426b991a06c1e07198c5af5a62d0b24e87a7dfd6a1efaff19c2d80af836b",
+                            "docker.io/redis/redis-stack:7.2.0-v11"
+                        ],
+                        "sizeBytes": 357913192
+                    },
+                    {
+                        "names": [
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-o1@sha256:7d7229ba91cff45d20ecdfdaee8d2f7aee73433503e353096b3f787e82f909e4",
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-o1:0.6.4"
+                        ],
+                        "sizeBytes": 286609929
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/zt-spire-fetcher:1.0"
+                        ],
+                        "sizeBytes": 223050036
+                    },
+                    {
+                        "names": [
+                            "127.0.0.1:80/trafficxapp:latest"
+                        ],
+                        "sizeBytes": 176182040
+                    },
+                    {
+                        "names": [
+                            "quay.io/calico/node@sha256:63683e5285e73977594cc57ff09c59fbee9e357be68d3c52d627830eec181db4",
+                            "quay.io/calico/node:v3.31.5"
+                        ],
+                        "sizeBytes": 159374886
+                    },
+                    {
+                        "names": [
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-e2@sha256:f665e303882c33d1957b4e38861246e7d4227aacb7103d86b422a2c05b4b80c6",
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-e2:6.0.8"
+                        ],
+                        "sizeBytes": 136195994
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/zt-resource-optimizer:1.0"
+                        ],
+                        "sizeBytes": 129485833
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/zt-telemetry-monitor:1.0"
+                        ],
+                        "sizeBytes": 129484809
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/zt-security-observer:1.0"
+                        ],
+                        "sizeBytes": 129484808
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/zt-traffic-analyzer:1.0"
+                        ],
+                        "sizeBytes": 129484808
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/zt-qos-optimizer:1.0"
+                        ],
+                        "sizeBytes": 129484805
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/influxdb@sha256:0bf6457dc1282f653d9e82186fad7e35138892364c7f81e5e2c47b551c65a49a",
+                            "docker.io/library/influxdb:2.2.0-alpine"
+                        ],
+                        "sizeBytes": 125281910
+                    },
+                    {
+                        "names": [
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-submgr@sha256:f2a485b63d277ec0ff19aa6dfaee2a7b19c6189f0b41e03d63abb032a9968afb",
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-submgr:0.10.4"
+                        ],
+                        "sizeBytes": 97385061
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/kong@sha256:a42d2b4503e7b6674ca7914883bdb0d2274b806b0e397a6af28d1dd57aafce4e",
+                            "docker.io/library/kong:3.6"
+                        ],
+                        "sizeBytes": 97246033
+                    },
+                    {
+                        "names": [
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-e2mgr@sha256:7c1a44f755638ed4883726668b3ce0049b687e38b31aa6e26b3a57f9cdb12455",
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-e2mgr:6.0.8"
+                        ],
+                        "sizeBytes": 95260178
+                    },
+                    {
+                        "names": [
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-rtmgr@sha256:b54d5275af9f631b8f3b1f0ea86b8afd63fa7fff2953b1b713b65b849b8c3297",
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-rtmgr:0.9.7"
+                        ],
+                        "sizeBytes": 93293260
+                    },
+                    {
+                        "names": [
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-a1@sha256:3f1aafd20c67b61c854492b9ed84200ba0d585d0569dccb164e3af9a48208ad5",
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-a1:3.2.3"
+                        ],
+                        "sizeBytes": 93173323
+                    },
+                    {
+                        "names": [
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-appmgr@sha256:7b3ed350460159242b4dd279cca9f8490b8515ca933bf81c6645e7f24e49805e",
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-appmgr:0.5.10"
+                        ],
+                        "sizeBytes": 91304086
+                    },
+                    {
+                        "names": [
+                            "127.0.0.1:80/hw-python@sha256:27df6096588108f145a60c8328c59cdd2bf855048248da89425a7385148c2680",
+                            "127.0.0.1:80/hw-python:latest"
+                        ],
+                        "sizeBytes": 89389188
+                    },
+                    {
+                        "names": [
+                            "quay.io/calico/cni@sha256:6cf324cd595c661293872fa1144be38bfc94dcd4154c1f8e3cc0f548b715917e",
+                            "quay.io/calico/cni:v3.31.5"
+                        ],
+                        "sizeBytes": 70675394
+                    },
+                    {
+                        "names": [
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-vespamgr@sha256:de6dc780871528c440c071b29d50c3ca53090bce669ed370e9418f5d54f81b57",
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-vespamgr:0.7.5"
+                        ],
+                        "sizeBytes": 61473437
+                    },
+                    {
+                        "names": [
+                            "docker.io/prom/prometheus@sha256:5880ec936055fad18ccee798d2a63f64ed85bd28e8e0af17c6923a090b686c3d",
+                            "docker.io/prom/prometheus:v2.18.1"
+                        ],
+                        "sizeBytes": 57579840
+                    },
+                    {
+                        "names": [
+                            "docker.io/falcosecurity/falcosidekick@sha256:1976da72151850aae4436f33a5ed94bdef469f42a9b61c182b4feeb5441fb081",
+                            "docker.io/falcosecurity/falcosidekick:2.32.0"
+                        ],
+                        "sizeBytes": 56029322
+                    },
+                    {
+                        "names": [
+                            "quay.io/calico/kube-controllers@sha256:d285c3a7eea5226d3d862189565ef82fdb7961909f55c40a247e00be335fbc3c",
+                            "quay.io/calico/kube-controllers:v3.31.5"
+                        ],
+                        "sizeBytes": 53040186
+                    },
+                    {
+                        "names": [
+                            "docker.io/falcosecurity/falco@sha256:d0cfe422d6ac0e0f20857798f46c7d7273210e1b064b22821e4e6e7f843cde6b",
+                            "docker.io/falcosecurity/falco:0.44.1"
+                        ],
+                        "sizeBytes": 50287511
+                    },
+                    {
+                        "names": [
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-alarmmanager@sha256:7f37cfca3ca07115634095b2b8f33af396f518425c2c660d31c815ea16b1b168",
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-alarmmanager:0.5.17"
+                        ],
+                        "sizeBytes": 48913117
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/python@sha256:baf89808ec37adeaab83cec287adb4a2afa4a11c1d51e961c7ec737877e61af6",
+                            "docker.io/library/python:3.11-slim"
+                        ],
+                        "sizeBytes": 45510716
+                    },
+                    {
+                        "names": [
+                            "127.0.0.1:80/hw-go@sha256:119b5d05b341c112f3db841f3f8d23623aa4a2e802161fc07672a86f8ee94d9e",
+                            "127.0.0.1:80/hw-go:latest"
+                        ],
+                        "sizeBytes": 43459610
+                    },
+                    {
+                        "names": [
+                            "docker.io/library/python@sha256:a39549e211a16149edf74e5fdc9ef03a6767e46cd987c5048b6659b6c9904c94",
+                            "docker.io/library/python:3.12-slim"
+                        ],
+                        "sizeBytes": 43209562
+                    },
+                    {
+                        "names": [
+                            "ghcr.io/spiffe/spire-server@sha256:abfb368f538557646d5eb138ab0854361b79fa5ae36243ca5efe378dcbe85d61",
+                            "ghcr.io/spiffe/spire-server:1.15.1"
+                        ],
+                        "sizeBytes": 42649233
+                    },
+                    {
+                        "names": [
+                            "docker.io/falcosecurity/falcoctl@sha256:0eeb79adc580ae6a5abfdefd7f8f0fed9151fcb545f015c84e8f1d7b2d8a6b02",
+                            "docker.io/falcosecurity/falcoctl:0.13.0"
+                        ],
+                        "sizeBytes": 33923062
+                    },
+                    {
+                        "names": [
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/it-dep-init@sha256:bfe51e3b32dec8e445793cce616906cd334b0aa677ea4dbc679eced65ae32cd1",
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/it-dep-init:0.0.1"
+                        ],
+                        "sizeBytes": 32798796
+                    },
+                    {
+                        "names": [
+                            "docker.io/flannel/flannel@sha256:b6b426436c5b221226033a90d77544243a2010692dcf6fa7dfe76f732256fd2e",
+                            "docker.io/flannel/flannel:v0.24.4"
+                        ],
+                        "sizeBytes": 32735995
+                    },
+                    {
+                        "names": [
+                            "registry.k8s.io/kube-proxy@sha256:44bed5c15a1118e4cf6092a017ac884bec423a405da519ec3a612b0e375f92ef",
+                            "registry.k8s.io/kube-proxy:v1.33.12"
+                        ],
+                        "sizeBytes": 32009721
+                    },
+                    {
+                        "names": [
+                            "registry.k8s.io/kube-apiserver@sha256:03be9f8f45bf633159752fe2bd4db3cdf574830dccc15a26f81301fcdbd777f1",
+                            "registry.k8s.io/kube-apiserver:v1.33.12"
+                        ],
+                        "sizeBytes": 30190589
+                    },
+                    {
+                        "names": [
+                            "ghcr.io/spiffe/spire-controller-manager@sha256:3f70cfa140a829e4ef456763e72b461b0fb491900efb89c4b34b6a10be1c2d7a",
+                            "ghcr.io/spiffe/spire-controller-manager:0.6.6"
+                        ],
+                        "sizeBytes": 29401343
+                    },
+                    {
+                        "names": [
+                            "ghcr.io/helm/tiller@sha256:6003775d503546087266eda39418d221f9afb5ccfe35f637c32a1161619a3f9c",
+                            "ghcr.io/helm/tiller:v2.16.12"
+                        ],
+                        "sizeBytes": 28967108
+                    },
+                    {
+                        "names": [
+                            "registry.k8s.io/kube-controller-manager@sha256:5a8394db1dba0fe9a2e4c222956599939652ba51a3406e623edba90b35b1e849",
+                            "registry.k8s.io/kube-controller-manager:v1.33.12"
+                        ],
+                        "sizeBytes": 27737800
+                    },
+                    {
+                        "names": [
+                            "docker.io/prom/alertmanager@sha256:7e4e9f7a0954b45736d149c40e9620a6664036bb05f0dce447bef5042b139f5d",
+                            "docker.io/prom/alertmanager:v0.20.0"
+                        ],
+                        "sizeBytes": 25309428
+                    },
+                    {
+                        "names": [
+                            "registry.k8s.io/etcd@sha256:251e7e490f64859d329cd963bc879dc04acf3d7195bb52c4c50b4a07bedf37d6",
+                            "registry.k8s.io/etcd:3.5.24-0"
+                        ],
+                        "sizeBytes": 23716032
+                    },
+                    {
+                        "names": [
+                            "registry.k8s.io/kube-scheduler@sha256:ee9e45f00a30973c1f7b116ccf5ca4836ab70cb033ff552ae55aa17401e6dab5",
+                            "registry.k8s.io/kube-scheduler:v1.33.12"
+                        ],
+                        "sizeBytes": 21856113
+                    },
+                    {
+                        "names": [
+                            "registry.k8s.io/coredns/coredns@sha256:40384aa1f5ea6bfdc77997d243aec73da05f27aed0c5e9d65bfa98933c519d97",
+                            "registry.k8s.io/coredns/coredns:v1.12.0"
+                        ],
+                        "sizeBytes": 20939036
+                    },
+                    {
+                        "names": [
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-dbaas@sha256:6a4f57bf9b6746df71342eb43da991bdc80938b528d85a3a2dc3e02eab215c7f",
+                            "nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-dbaas:0.6.5"
+                        ],
+                        "sizeBytes": 19998067
+                    },
+                    {
+                        "names": [
+                            "docker.io/falcosecurity/falcosidekick-ui@sha256:0faadedfdff7e6af8be0d7d90efb0638cedc337e4e5c3e57f527da2f6722c851",
+                            "docker.io/falcosecurity/falcosidekick-ui:2.2.0"
+                        ],
+                        "sizeBytes": 19463094
+                    },
+                    {
+                        "names": [
+                            "ghcr.io/spiffe/spire-agent@sha256:501ea7072748adb74d1f9ac3320ddceedcf3b8c4a1cc9d2b4bedd427d277475b",
+                            "ghcr.io/spiffe/spire-agent:1.15.1"
+                        ],
+                        "sizeBytes": 16288496
+                    },
+                    {
+                        "names": [
+                            "docker.io/kong/kubernetes-ingress-controller@sha256:999213b98257cae9db2452d5aaaeda98e962c5d3d384ef5b7c269f0ad49dec09",
+                            "docker.io/kong/kubernetes-ingress-controller:3.1"
+                        ],
+                        "sizeBytes": 15869764
+                    },
+                    {
+                        "names": [
+                            "registry.k8s.io/sig-storage/csi-node-driver-registrar@sha256:11f199f6bec47403b03cb49c79a41f445884b213b382582a60710b8c6fdc316a",
+                            "registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.15.0"
+                        ],
+                        "sizeBytes": 15243146
+                    }
+                ],
+                "nodeInfo": {
+                    "architecture": "amd64",
+                    "bootID": "22183529-774f-47bb-9586-19d879da213f",
+                    "containerRuntimeVersion": "containerd://2.2.4",
+                    "kernelVersion": "6.17.0-29-generic",
+                    "kubeProxyVersion": "",
+                    "kubeletVersion": "v1.33.12",
+                    "machineID": "467c265abea7452ea444ca15eaad9b24",
+                    "operatingSystem": "linux",
+                    "osImage": "Ubuntu 24.04.4 LTS",
+                    "swap": {
+                        "capacity": 8589930496
+                    },
+                    "systemUUID": "5a154d56-c741-0dd6-966f-d449b0d52d27"
+                },
+                "runtimeHandlers": [
+                    {
+                        "features": {
+                            "recursiveReadOnlyMounts": true,
+                            "userNamespaces": true
+                        },
+                        "name": ""
+                    },
+                    {
+                        "features": {
+                            "recursiveReadOnlyMounts": true,
+                            "userNamespaces": true
+                        },
+                        "name": "runc"
+                    }
+                ]
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

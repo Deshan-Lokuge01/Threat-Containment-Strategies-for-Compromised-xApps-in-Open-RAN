@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: r4-submgr
+    meta.helm.sh/release-namespace: ricplt
+  creationTimestamp: "2026-05-30T05:47:41Z"
+  labels:
+    app: ricplt-submgr
+    app.kubernetes.io/managed-by: Helm
+    chart: submgr-3.0.0
+    heritage: Helm
+    release: r4-submgr
+  name: service-ricplt-submgr-rmr
+  namespace: ricplt
+  resourceVersion: "1097"
+  uid: f87bf0fb-be01-47af-be17-95049aeb88c1
+spec:
+  clusterIP: None
+  clusterIPs:
+  - None
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: rmrdata
+    port: 4560
+    protocol: TCP
+    targetPort: rmrdata
+  - name: rmrroute
+    port: 4561
+    protocol: TCP
+    targetPort: rmrroute
+  selector:
+    app: ricplt-submgr
+    release: r4-submgr
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

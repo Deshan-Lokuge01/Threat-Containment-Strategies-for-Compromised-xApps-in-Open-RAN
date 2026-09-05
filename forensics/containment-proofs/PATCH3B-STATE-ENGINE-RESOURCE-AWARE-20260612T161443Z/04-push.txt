@@ -1,0 +1,30 @@
+The push refers to repository [localhost:5000/zt-xguard-policy-engine]
+bd7262ab3e82: Preparing
+c44600ca585d: Preparing
+fee02d1e4e9a: Preparing
+2e647651e86a: Preparing
+16fa002c3e67: Preparing
+1a81bf350a1e: Preparing
+214debc7479a: Preparing
+fc765e52b6a7: Preparing
+28b2c2519a70: Preparing
+30397027ad83: Preparing
+f4f8b983b714: Preparing
+1a81bf350a1e: Waiting
+214debc7479a: Waiting
+fc765e52b6a7: Waiting
+28b2c2519a70: Waiting
+f4f8b983b714: Waiting
+30397027ad83: Waiting
+16fa002c3e67: Layer already exists
+2e647651e86a: Layer already exists
+1a81bf350a1e: Layer already exists
+fc765e52b6a7: Layer already exists
+214debc7479a: Layer already exists
+28b2c2519a70: Layer already exists
+30397027ad83: Layer already exists
+f4f8b983b714: Layer already exists
+fee02d1e4e9a: Pushed
+c44600ca585d: Pushed
+bd7262ab3e82: Pushed
+1.0: digest: sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63 size: 2618

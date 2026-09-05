@@ -1,0 +1,57 @@
+{
+  "events": [
+    {
+      "count": 83,
+      "firstTimestamp": "2026-09-03T15:49:08+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-nmdh5",
+        "namespace": "ricxapp",
+        "resourceVersion": "5235108",
+        "uid": "b8996613-1c5d-4899-b774-4f54262bd834"
+      },
+      "lastTimestamp": "2026-09-03T17:24:18+00:00",
+      "message": "Unable to retrieve some image pull secrets (127-0-0-1-80); attempting to pull the image may not succeed.",
+      "metadata": {
+        "creationTimestamp": "2026-09-03T15:49:08+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-09-03T17:24:18+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-nmdh5.18d1da4c708990bb",
+        "namespace": "ricxapp",
+        "resourceVersion": "5249564",
+        "uid": "a7bcbc00-9b88-4eb3-badd-ad0f028892be"
+      },
+      "reason": "FailedToRetrieveImagePullSecret",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Warning"
+    }
+  ]
+}

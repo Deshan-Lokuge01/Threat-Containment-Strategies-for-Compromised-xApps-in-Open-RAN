@@ -1,0 +1,19 @@
+{
+  "xapp": "resource-optimizer",
+  "role": "resource-optimization",
+  "state": "resource-optimization",
+  "uptime_sec": 415.79,
+  "heartbeat_age_sec": 3.27,
+  "heartbeat_ok": true,
+  "work_units_processed": 12160,
+  "ric_activity_counter": 76,
+  "control_action_counter": 76,
+  "telemetry_samples": 0,
+  "qos_decisions": 0,
+  "traffic_reports": 0,
+  "resource_recommendations": 76,
+  "security_checks": 0,
+  "last_decision": "resource_action=reduce_load",
+  "errors": 0,
+  "time": "2026-06-05T05:51:53.046167+00:00"
+}

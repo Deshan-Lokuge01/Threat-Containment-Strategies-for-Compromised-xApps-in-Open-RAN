@@ -1,0 +1,1396 @@
+{
+  "events": [
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T03:12:34+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024592",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T03:12:34+00:00",
+      "message": "Successfully assigned ricxapp/ricxapp-kpimon-go-5fb4d469c5-24hqh to near-rt-ric",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:34+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:source": {
+                "f:component": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kube-scheduler",
+            "operation": "Update",
+            "time": "2026-08-29T03:12:34+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281c530df3cd",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024595",
+        "uid": "7fc10c84-0c0a-4e76-876d-35c1cd59abd9"
+      },
+      "reason": "Scheduled",
+      "reportingComponent": "default-scheduler",
+      "reportingInstance": "",
+      "source": {
+        "component": "default-scheduler"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 331,
+      "firstTimestamp": "2026-08-29T03:12:34+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024593",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T04:03:23+00:00",
+      "message": "Unable to retrieve some image pull secrets (127-0-0-1-80); attempting to pull the image may not succeed.",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:34+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T04:03:23+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281c6c1f8bd3",
+        "namespace": "ricxapp",
+        "resourceVersion": "5030998",
+        "uid": "a495bb5a-989b-406d-a39f-3d9e01d765b9"
+      },
+      "reason": "FailedToRetrieveImagePullSecret",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Warning"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T03:12:35+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.initContainers{fetch-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024593",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T03:12:35+00:00",
+      "message": "Container image \"docker.io/library/zt-spire-fetcher:1.0\" already present on machine",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:35+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T03:12:35+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281c92c4370d",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024608",
+        "uid": "b7fe6d8d-d433-4086-bbe6-39b24dbe3b2c"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T03:12:35+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.initContainers{fetch-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024593",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T03:12:35+00:00",
+      "message": "Created container: fetch-svid",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:35+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T03:12:35+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281c968a663f",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024609",
+        "uid": "786baaa2-602c-48d6-8932-dc298deffc59"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T03:12:35+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.initContainers{fetch-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024593",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T03:12:35+00:00",
+      "message": "Started container fetch-svid",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:35+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T03:12:35+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281c9feadb38",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024610",
+        "uid": "1312919e-797b-483f-ab1f-2a46dceaad7c"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T03:12:44+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{kpimon-go}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024593",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T03:12:44+00:00",
+      "message": "Container image \"127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v1\" already present on machine",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:44+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T03:12:44+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281e9da83a93",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024631",
+        "uid": "e963d1c7-7c96-4c7b-a03f-a59982939ef1"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T03:12:44+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{kpimon-go}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024593",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T03:12:44+00:00",
+      "message": "Created container: kpimon-go",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:44+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T03:12:44+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281eb5506df3",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024633",
+        "uid": "05892765-38b3-4ddd-bc5b-ca5875ae60ab"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T03:12:44+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{kpimon-go}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024593",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T03:12:44+00:00",
+      "message": "Started container kpimon-go",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:44+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T03:12:44+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281ec5574696",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024637",
+        "uid": "390a8272-a9c0-4474-b2f2-11d8bdc9b7b8"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T03:12:44+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{renew-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024593",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T03:12:44+00:00",
+      "message": "Container image \"docker.io/library/zt-spire-fetcher:1.0\" already present on machine",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:44+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T03:12:44+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281ec568d1bd",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024638",
+        "uid": "25b3f9bd-434f-406e-a6fc-d994a93c69a8"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T03:12:44+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{renew-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024593",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T03:12:44+00:00",
+      "message": "Created container: renew-svid",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:44+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T03:12:44+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281eca2a613b",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024639",
+        "uid": "548bef7b-eb06-4db8-8c93-0afe14430a95"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T03:12:45+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{renew-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024593",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T03:12:45+00:00",
+      "message": "Started container renew-svid",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:45+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T03:12:45+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281ee16dc250",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024640",
+        "uid": "369bba3c-b6c8-4f81-adf3-0ccdf14892dc"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T03:12:49+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{kpimon-go}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024593",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T03:12:49+00:00",
+      "message": "Liveness probe failed: Get \"http://10.244.0.107:8080/ric/v1/health/alive\": dial tcp 10.244.0.107:8080: connect: connection refused",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T03:12:49+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T03:12:49+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d0281fea474391",
+        "namespace": "ricxapp",
+        "resourceVersion": "5024650",
+        "uid": "ba6f4e7c-af27-446a-9918-fa51bd9c5240"
+      },
+      "reason": "Unhealthy",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Warning"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T04:07:42+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031335",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T04:07:42+00:00",
+      "message": "Node is not ready",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T04:07:42+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:source": {
+                "f:component": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kube-controller-manager",
+            "operation": "Update",
+            "time": "2026-08-29T04:07:42+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d02b1e847f4dfd",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031534",
+        "uid": "c4f91619-0b18-467d-8a4c-9b35f0e4d949"
+      },
+      "reason": "NodeNotReady",
+      "reportingComponent": "node-controller",
+      "reportingInstance": "",
+      "source": {
+        "component": "node-controller"
+      },
+      "type": "Warning"
+    },
+    {
+      "count": 5,
+      "firstTimestamp": "2026-08-29T13:49:24+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:49:32+00:00",
+      "message": "MountVolume.SetUp failed for volume \"spiffe-socket\" : kubernetes.io/csi: mounter.SetUpAt failed to get CSI client: driver name csi.spiffe.io not found in the list of registered CSI drivers",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:49:27+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:49:32+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04adcf7fa93fb",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032120",
+        "uid": "9a32cc2f-0990-4ba6-918e-fe85f24ee115"
+      },
+      "reason": "FailedMount",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Warning"
+    },
+    {
+      "count": 11,
+      "firstTimestamp": "2026-08-29T13:49:41+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:51:11+00:00",
+      "message": "Unable to retrieve some image pull secrets (127-0-0-1-80); attempting to pull the image may not succeed.",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:49:41+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:51:11+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04ae0c27c2ca0",
+        "namespace": "ricxapp",
+        "resourceVersion": "5033102",
+        "uid": "dd102977-f299-4767-98c5-166f58929f40"
+      },
+      "reason": "FailedToRetrieveImagePullSecret",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Warning"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T13:49:41+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:49:41+00:00",
+      "message": "Pod sandbox changed, it will be killed and re-created.",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:49:41+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:49:41+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04ae0c27cfd31",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032265",
+        "uid": "29628d38-e91f-4efb-bd37-3e1d7aff96ab"
+      },
+      "reason": "SandboxChanged",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T13:49:44+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.initContainers{fetch-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:49:44+00:00",
+      "message": "Container image \"docker.io/library/zt-spire-fetcher:1.0\" already present on machine",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:49:44+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:49:44+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04ae18a0fb263",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032328",
+        "uid": "bfc4c97f-5cc4-4d6c-8c71-6d11ecd7ad0b"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T13:49:44+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.initContainers{fetch-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:49:44+00:00",
+      "message": "Created container: fetch-svid",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:49:44+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:49:44+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04ae19021a39e",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032333",
+        "uid": "abbcbeef-9293-45e9-b4ad-35785f2f35c7"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T13:49:45+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.initContainers{fetch-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:49:45+00:00",
+      "message": "Started container fetch-svid",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:49:46+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:49:46+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04ae1d495d9f2",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032439",
+        "uid": "165da11f-021d-4c87-b5a6-c6a421e038c3"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T13:50:19+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{kpimon-go}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:50:19+00:00",
+      "message": "Container image \"127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v1\" already present on machine",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:50:19+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:50:19+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04ae999e5c3a9",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032773",
+        "uid": "b7379d3a-0947-491a-a074-c5702f5326d0"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T13:50:19+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{kpimon-go}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:50:19+00:00",
+      "message": "Created container: kpimon-go",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:50:19+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:50:19+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04ae9a32ea332",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032778",
+        "uid": "c5f1e7b4-a915-4283-a02c-349247c797b4"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T13:50:19+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{kpimon-go}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:50:19+00:00",
+      "message": "Started container kpimon-go",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:50:19+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:50:19+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04ae9b71dab8f",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032788",
+        "uid": "5cd9c1ec-a63b-459e-9062-ffb4068fc2bf"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T13:50:19+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{renew-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:50:19+00:00",
+      "message": "Container image \"docker.io/library/zt-spire-fetcher:1.0\" already present on machine",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:50:19+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:50:19+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04ae9b8d445d1",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032789",
+        "uid": "63aacd27-1505-4559-9944-e43395c6384b"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T13:50:19+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{renew-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:50:19+00:00",
+      "message": "Created container: renew-svid",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:50:19+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:50:19+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04ae9bf6f1493",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032792",
+        "uid": "267976c2-674b-47b0-9d19-e4ba25a821a0"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T13:50:20+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{renew-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:50:20+00:00",
+      "message": "Started container renew-svid",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:50:20+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:50:20+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04ae9dc8b5f01",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032808",
+        "uid": "6d5b9ff0-870b-49e4-a0e3-205d880ce327"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-08-29T13:50:26+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{kpimon-go}",
+        "kind": "Pod",
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh",
+        "namespace": "ricxapp",
+        "resourceVersion": "5031529",
+        "uid": "b1755cfe-d7b6-4eae-87a0-af3427b1a9e5"
+      },
+      "lastTimestamp": "2026-08-29T13:50:26+00:00",
+      "message": "Liveness probe failed: Get \"http://10.244.0.137:8080/ric/v1/health/alive\": dial tcp 10.244.0.137:8080: connect: connection refused",
+      "metadata": {
+        "creationTimestamp": "2026-08-29T13:50:26+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-08-29T13:50:26+00:00"
+          }
+        ],
+        "name": "ricxapp-kpimon-go-5fb4d469c5-24hqh.18d04aeb3cd488ca",
+        "namespace": "ricxapp",
+        "resourceVersion": "5032828",
+        "uid": "f455e70b-3ec2-40b3-a946-085250050cbd"
+      },
+      "reason": "Unhealthy",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Warning"
+    }
+  ]
+}

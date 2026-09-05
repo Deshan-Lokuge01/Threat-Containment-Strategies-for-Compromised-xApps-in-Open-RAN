@@ -1,0 +1,18 @@
+{
+  "spec": {
+    "namespaceSelector": {
+      "matchExpressions": [
+        {
+          "key": "kubernetes.io/metadata.name",
+          "operator": "NotIn",
+          "values": [
+            "spire-mgmt",
+            "spire-server",
+            "spire-system",
+            "ricxapp"
+          ]
+        }
+      ]
+    }
+  }
+}

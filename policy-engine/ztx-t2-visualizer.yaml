@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ztx-t2-visualizer
+  namespace: zt-xguard
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ztx-t2-visualizer-reader
+  namespace: ricxapp
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ztx-t2-visualizer-reader-binding
+  namespace: ricxapp
+subjects:
+  - kind: ServiceAccount
+    name: ztx-t2-visualizer
+    namespace: zt-xguard
+roleRef:
+  kind: Role
+  name: ztx-t2-visualizer-reader
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zt-xguard-t2-visualizer
+  namespace: zt-xguard
+  labels:
+    app: zt-xguard-t2-visualizer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zt-xguard-t2-visualizer
+  template:
+    metadata:
+      labels:
+        app: zt-xguard-t2-visualizer
+    spec:
+      serviceAccountName: ztx-t2-visualizer
+      hostPID: true
+      containers:
+        - name: visualizer
+          image: python:3.11-slim
+          command: ["python3", "/app/ztx_t2_visualizer.py"]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: script
+              mountPath: /app/ztx_t2_visualizer.py
+              subPath: ztx_t2_visualizer.py
+            - name: cgroup
+              mountPath: /sys/fs/cgroup
+              readOnly: true
+            - name: t2-state
+              mountPath: /var/lib/ztx-t2-state
+              readOnly: true
+      volumes:
+        - name: script
+          configMap:
+            name: zt-xguard-t2-visualizer-script
+        - name: cgroup
+          hostPath:
+            path: /sys/fs/cgroup
+            type: Directory
+        - name: t2-state
+          hostPath:
+            # Written by ztx_t2_collector.py (runs directly on this same
+            # node, outside Kubernetes) - created automatically on first
+            # write if it doesn't exist yet, hence DirectoryOrCreate.
+            path: /var/lib/ztx-t2-state
+            type: DirectoryOrCreate

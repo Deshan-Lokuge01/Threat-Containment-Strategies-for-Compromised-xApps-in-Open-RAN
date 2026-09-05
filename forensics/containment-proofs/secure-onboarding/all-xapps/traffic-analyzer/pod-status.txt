@@ -1,0 +1,2 @@
+NAME                              READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+traffic-analyzer-b8cb5d96-nfp2n   1/1     Running   0          4h57m   10.244.0.198   near-rt-ric   <none>           <none>

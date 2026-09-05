@@ -1,0 +1,2 @@
+NAME                                        READY   STATUS    RESTARTS   AGE   IP            NODE          NOMINATED NODE   READINESS GATES
+deployment-ricplt-submgr-5b8796c997-xbm54   1/1     Running   0          9d    10.244.0.14   near-rt-ric   <none>           <none>

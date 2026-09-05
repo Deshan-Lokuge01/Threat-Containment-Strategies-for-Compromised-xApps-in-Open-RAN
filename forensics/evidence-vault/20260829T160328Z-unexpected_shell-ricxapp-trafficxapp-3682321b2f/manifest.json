@@ -1,0 +1,44 @@
+{
+  "schema": "ztx-forensic-vault-v1",
+  "incident_id": "20260829T160328Z-unexpected_shell-ricxapp-trafficxapp-3682321b2f",
+  "captured_utc": null,
+  "sealed_utc": "2026-08-29T16:03:31Z",
+  "captured_by": "ZT-XGuard policy-engine (automated containment)",
+  "asset": {
+    "xapp": null,
+    "pod": null,
+    "namespace": null
+  },
+  "trigger": {
+    "source": null,
+    "signal": null,
+    "falco_rule": null,
+    "priority": null,
+    "rule_ids": null,
+    "alert": ""
+  },
+  "decision": {
+    "state": null,
+    "detection_state": null,
+    "containment_required": null,
+    "containment_action": null,
+    "isolation_timing": null,
+    "severity": null,
+    "score": null,
+    "confidence": null
+  },
+  "integrity": "sha256",
+  "artifacts": [],
+  "chain_of_custody": [
+    {
+      "actor": "policy-engine.forensic-capture",
+      "action": "captured",
+      "utc": null
+    },
+    {
+      "actor": "policy-engine.vault-sealer",
+      "action": "sealed+hashed",
+      "utc": "2026-08-29T16:03:31Z"
+    }
+  ]
+}

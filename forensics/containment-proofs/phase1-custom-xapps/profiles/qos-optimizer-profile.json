@@ -1,0 +1,19 @@
+{
+  "xapp": "qos-optimizer",
+  "role": "qos-optimization",
+  "expected_cpu_class": "medium",
+  "expected_memory_class": "medium",
+  "expected_external_egress": false,
+  "expected_cross_xapp_comm": false,
+  "expected_ric_activity": true,
+  "expected_control_activity": true,
+  "expected_shell": false,
+  "expected_sensitive_file_access": false,
+  "heartbeat_period_sec": 5,
+  "workload_intensity": "medium",
+  "allowed_ric_services": [
+    "submgr",
+    "e2mgr"
+  ],
+  "max_api_rate_per_min": 120
+}

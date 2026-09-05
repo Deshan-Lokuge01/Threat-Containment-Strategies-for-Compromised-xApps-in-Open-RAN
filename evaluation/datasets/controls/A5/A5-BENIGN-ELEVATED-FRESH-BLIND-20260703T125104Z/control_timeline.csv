@@ -1,0 +1,3 @@
+phase,elapsed_s,utc,scenario
+elevated_start,300,2026-07-03T12:57:16Z,A5_BENIGN_CPU5_900S
+elevated_end,1200,2026-07-03T13:12:16Z,A5_BENIGN_CPU5_900S

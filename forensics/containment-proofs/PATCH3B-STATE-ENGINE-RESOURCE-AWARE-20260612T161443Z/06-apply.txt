@@ -1,0 +1,7 @@
+namespace/zt-xguard unchanged
+serviceaccount/zt-xguard-policy-engine unchanged
+persistentvolumeclaim/zt-xguard-evidence-pvc unchanged
+clusterrole.rbac.authorization.k8s.io/zt-xguard-policy-engine unchanged
+clusterrolebinding.rbac.authorization.k8s.io/zt-xguard-policy-engine unchanged
+deployment.apps/zt-xguard-policy-engine configured
+service/zt-xguard-policy-engine unchanged

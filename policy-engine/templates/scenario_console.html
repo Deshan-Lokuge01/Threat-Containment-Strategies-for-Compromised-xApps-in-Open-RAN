@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ZT-XGuard Scenario + Evaluation Console</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body data-page="scenario-console">
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">ZT-XGuard Evaluation</div>
+      <h1>Scenario + Evaluation Console</h1>
+      <p class="subtitle">Run A1–A10 attack scenarios and benign controls, then observe detection outcome, containment decision, latency, and evaluation metrics.</p>
+    </div>
+    <nav class="top-actions">
+      <a class="btn secondary" href="/dashboard">Runtime Dashboard</a>
+      <a class="btn secondary" href="/scenario-console">Scenario + Evaluation</a>
+      <button id="primeAuditBtn" class="btn">Prime Audit</button>
+      <button id="clearEvalBtn" class="btn secondary">Clear Results</button>
+      <button id="refreshBtn" class="btn secondary">Refresh</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="panel hero">
+      <div>
+        <div class="label">Evaluation Pass Rate</div>
+        <div id="evalPassRate" class="overall unknown">--</div>
+      </div>
+      <div class="summary-grid">
+        <div class="metric good"><span id="tpCount">0</span><small>TP</small></div>
+        <div class="metric good"><span id="tnCount">0</span><small>TN</small></div>
+        <div class="metric bad"><span id="fpCount">0</span><small>FP</small></div>
+        <div class="metric bad"><span id="fnCount">0</span><small>FN</small></div>
+        <div class="metric info"><span id="totalRuns">0</span><small>Total</small></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <h2>Scenario Matrix</h2>
+          <p>A1–A10 validate attack detection and containment. B scenarios validate benign behavior and false-positive resistance.</p>
+        </div>
+      </div>
+      <div id="scenarioGrid" class="scenario-grid"></div>
+    </section>
+
+    <section class="two-col">
+      <div class="panel">
+        <h2>Last Scenario Result</h2>
+        <pre id="scenarioBox" class="codebox">No scenario executed yet.</pre>
+      </div>
+
+      <div class="panel">
+        <h2>Evaluation Metrics</h2>
+        <pre id="evaluationBox" class="codebox">Waiting for evaluation data...</pre>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Recent Results</h2>
+      <div id="recentResults" class="events-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Recovery Control</h2>
+      <div class="form-row">
+        <select id="xappSelect"></select>
+        <button id="verifyBtn" class="btn secondary">Verify</button>
+        <button id="restoreBtn" class="btn danger">Restore + Re-admit</button>
+      </div>
+      <pre id="containmentBox" class="codebox">Waiting for containment data...</pre>
+    </section>
+  </main>
+
+  <script src="/static/dashboard.js?v=backend-truth-v1"></script>
+</body>
+</html>

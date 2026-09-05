@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.t2-collector-venv/
+*.egg-info/
+
+# caches
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
+# OS / editor
+.DS_Store
+*.swp
+
+# large / regenerable artifacts
+*.zip
+*.tar
+*.tar.gz
+
+# third-party binaries (download separately)
+**/peirates

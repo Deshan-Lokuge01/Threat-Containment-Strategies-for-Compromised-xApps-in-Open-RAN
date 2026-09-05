@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Content-Length: 2195
+Content-Type: application/vnd.docker.distribution.manifest.v2+json
+Docker-Content-Digest: sha256:6486a85f6129dc067c7f1c380fe5123eed755168fb4b08f418f52b229cf90ec5
+Docker-Distribution-Api-Version: registry/2.0
+Etag: "sha256:6486a85f6129dc067c7f1c380fe5123eed755168fb4b08f418f52b229cf90ec5"
+X-Content-Type-Options: nosniff
+Date: Fri, 05 Jun 2026 15:34:02 GMT
+

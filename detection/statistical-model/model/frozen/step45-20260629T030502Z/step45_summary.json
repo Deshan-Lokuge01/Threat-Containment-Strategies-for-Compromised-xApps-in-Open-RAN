@@ -1,0 +1,63 @@
+{
+  "schema": "ztx-step45-corrective-model-v2-summary",
+  "step": 45,
+  "timestamp_utc": "2026-06-29T03:05:07.721484+00:00",
+  "reason": "Step44H failed on clean N4; top T2 contribution was absolute M3 baseline shift.",
+  "corrective_action": "Remove M3_run_pod_centered from covariance model; retain M4 memory growth.",
+  "features": [
+    "M1_log1p",
+    "M4_identity",
+    "M5_log1p",
+    "M6_log1p"
+  ],
+  "fitting_datasets": [
+    "N1",
+    "N2"
+  ],
+  "calibration_dataset": "N3",
+  "n4_role": "post_hoc_diagnostic_only_not_final_v2_validation",
+  "selected_candidate": {
+    "dataset_id": "N3",
+    "window_seconds": 8,
+    "half_life_seconds": 3,
+    "lambda_value": 0.206299,
+    "score_available_after_seconds": 27,
+    "warning_quantile": 0.975,
+    "upper_quantile": 0.995,
+    "warning_limit": 12.858651313374208,
+    "upper_limit": 25.58879353054043,
+    "warning_false_positive_rate": 0.02521489971346705,
+    "upper_false_positive_rate": 0.005157593123209169,
+    "persistent_upper_false_positive_rate": 0.0,
+    "horizon_states": 16,
+    "required_count": 12,
+    "persistent_episode_count": 0,
+    "p99": 18.608695915515877,
+    "maximum": 37.80523496348883
+  },
+  "n4_posthoc_metrics": {
+    "n_scores": 1745,
+    "t2_p50": 2.5107209859404414,
+    "t2_p95": 11.864433559889331,
+    "t2_p99": 17.71573215196824,
+    "t2_maximum": 29.48743263747415,
+    "warning_false_positive_rate": 0.03954154727793696,
+    "upper_false_positive_rate": 0.002292263610315186,
+    "persistent_upper_false_positive_rate": 0.0,
+    "public_normal_occupancy": 0.960458452722063,
+    "public_suspicious_occupancy": 0.03954154727793696,
+    "compromised_occupancy": 0.0
+  },
+  "acceptance_criteria": {
+    "n4_not_used_for_fit": true,
+    "n4_not_used_for_threshold_selection": true,
+    "n4_labelled_posthoc_only": true,
+    "m3_removed_from_covariance_features": true,
+    "m4_memory_growth_retained": true,
+    "lambda_matches_formula": true,
+    "public_states_valid": true,
+    "compromised_not_declared_by_resource_only": true
+  },
+  "next_required_step": "Collect N5 clean normal after v2 freeze for untouched final clean validation.",
+  "output_directory": "D:\\Data Collection for Mathematical Model\\outputs\\step45\\20260629T030502Z"
+}

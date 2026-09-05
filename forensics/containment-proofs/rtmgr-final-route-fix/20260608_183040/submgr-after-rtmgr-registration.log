@@ -1,0 +1,3 @@
+1780923613238 1/RMR [INFO] sends: ts=1780923613 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923613238 1/RMR [INFO] sends: ts=1780923613 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923613238 1/RMR [INFO] sends: ts=1780923613 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)

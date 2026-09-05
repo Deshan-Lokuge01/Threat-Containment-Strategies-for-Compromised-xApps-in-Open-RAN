@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ZT-XGuard Incident Investigation Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/dashboard.css">
+  <style>
+    .lock-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .lock-card { background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem; text-align: center; }
+    .lock-title { text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.4rem; }
+    .lock-state { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
+    .lock-state.locked { color: var(--red); }
+    .lock-state.unlocked { color: var(--green); }
+    .control-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">ZT-XGuard Closed-Loop Isolation Engine</div>
+      <h1>Incident Investigation Center</h1>
+      <p class="subtitle">Target Component Domain: <span id="ztxTargetPodName" style="color: var(--yellow); font-weight:bold;">Loading...</span></p>
+    </div>
+    <nav class="top-actions">
+      <a class="btn secondary" href="/dashboard">Back to Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="lock-grid">
+      <div class="lock-card">
+        <div class="lock-title">Lock 1: Network Boundary</div>
+        <div id="lock1-status" class="lock-state">LOADING...</div>
+        <p style="font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem;">Calico Ingress/Egress Isolation Policy</p>
+      </div>
+      <div class="lock-card">
+        <div class="lock-title">Lock 2: Process Execution</div>
+        <div id="lock2-status" class="lock-state">LOADING...</div>
+        <p style="font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem;">Kernel Cgroups Instruction Freeze</p>
+      </div>
+      <div class="lock-card">
+        <div class="lock-title">Lock 3: Forensic Vault</div>
+        <div id="lock3-status" class="lock-state">LOADING...</div>
+        <p style="font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem;">Volatile State Extracted to Host</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Extracted System Evidentiary Data</h2>
+      <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem;">Immutable host-level file cache generated dynamically during the automated containment callback loop.</p>
+      <pre id="ztxForensicConsoleBox" class="codebox">Loading system evidence files from unmodifiable host directory vault...</pre>
+      
+      <div class="control-actions">
+        <button class="btn danger" onclick="executeZtxAction('terminate')">Force Evict Workload</button>
+        <button class="btn" style="background: linear-gradient(135deg, #10b981, #047857);" onclick="executeZtxAction('restore')">Trigger Safe Boot Recovery</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/analyze.js"></script>
+</body>
+</html>
+

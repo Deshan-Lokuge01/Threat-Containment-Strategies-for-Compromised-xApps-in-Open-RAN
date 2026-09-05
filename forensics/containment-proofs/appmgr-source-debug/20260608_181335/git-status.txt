@@ -1,0 +1,16 @@
+On branch m-release
+Your branch is up to date with 'origin/m-release'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   xapp_orchestrater/dev/xapp_onboarder/requirements.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	xapp_orchestrater/dev/xapp_onboarder/build/
+	xapp_orchestrater/dev/xapp_onboarder/requirements.previous.txt
+	xapp_orchestrater/dev/xapp_onboarder/venv/
+	xapp_orchestrater/dev/xapp_onboarder/xapp_onboarder.egg-info/
+
+no changes added to commit (use "git add" and/or "git commit -a")

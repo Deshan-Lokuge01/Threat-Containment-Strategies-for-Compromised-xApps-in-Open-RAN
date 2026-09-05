@@ -1,0 +1,7 @@
+127.0.0.1:80/hw-python:latest              3e312124e6fc        227MB             0B        
+127.0.0.1:80/kpimon-go:latest              8be29d48bd93       3.03GB             0B        
+127.0.0.1:80/trafficxapp:latest            15c0bafe2249        171MB             0B        
+example.com:80/hw-go:latest                04643d73126d        100MB             0B        
+oransim:0.0.999                            8426571220d2        2.7GB             0B        
+zt-xguard-xapp-base:1.0                    68395f6e97e9        125MB             0B        
+zt-xguard-xapp-base:1.1                    bdee0b8b915a        125MB             0B        

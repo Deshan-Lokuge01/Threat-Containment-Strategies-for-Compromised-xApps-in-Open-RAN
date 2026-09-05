@@ -1,0 +1,11 @@
+2. Build the Docker image:
+
+Bash
+docker build --no-cache -t ${RIC_IP}:5000/dos-detector:1.0.1 .
+3. Push the image to his local registry:
+
+Bash
+docker push ${RIC_IP}:5000/dos-detector:1.0.1
+4. Verify it was pushed successfully:
+
+Bash

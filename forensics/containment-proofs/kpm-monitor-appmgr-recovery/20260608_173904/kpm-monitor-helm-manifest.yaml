@@ -1,0 +1,375 @@
+---
+# Source: kpm-monitor/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kpm-monitor
+  namespace: ricxapp
+  labels:
+    app: kpm-monitor
+    zt-xguard.io/verified: "true"
+---
+# Source: kpm-monitor/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kpm-monitor-profile
+  namespace: ricxapp
+  labels:
+    app: kpm-monitor
+    zt-xguard.io/verified: "true"
+data:
+  profile.json: |-
+
+    {
+      "xapp": "kpm-monitor",
+      "role": "real-oran-kpm-monitor",
+      "controls": {
+        "expected_cpu_class": "medium",
+        "expected_memory_class": "medium",
+        "expected_ric_activity": true,
+        "expected_control_activity": false,
+        "expected_shell": false,
+        "expected_sensitive_file_access": false,
+        "expected_external_egress": false,
+        "expected_cross_xapp_comm": false,
+        "heartbeat_period_sec": 5,
+        "workload_intensity": "medium",
+        "allowed_ric_services": [
+          "e2mgr",
+          "submgr",
+          "prometheus"
+        ],
+        "allowed_e2_nodes": [
+          "gnbd_001_001_00019b_0"
+        ],
+        "max_api_rate_per_min": 120
+      },
+      "oran": {
+        "enabled": true,
+        "mode": "kpm-subscription-stage-1",
+        "service_model": "E2SM-KPM",
+        "e2_node_id": "gnbd_001_001_00019b_0",
+        "ran_function_id": 2,
+        "kpm_report_style": 1,
+        "metrics": [
+          "DRB.UEThpUl",
+          "DRB.UEThpDl"
+        ],
+        "submgr_uri": "http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1",
+        "e2mgr_nodeb_states_url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800/v1/nodeb/states"
+      },
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "kpm-monitor",
+            "port": 8092,
+            "description": "HTTP REST API for runtime status and metrics"
+          },
+          {
+            "name": "rmr_data",
+            "container": "kpm-monitor",
+            "port": 4562,
+            "description": "RMR data port for RIC indications and subscription messages"
+          }
+        ]
+      },
+      "runtime_counters": {
+        "e2_node_state": true,
+        "subscription_attempts": true,
+        "subscription_success": true,
+        "subscription_failures": true,
+        "rmr_messages_total": true,
+        "rmr_indications_total": true
+      },
+      "security_monitoring": {
+        "compromise_indicators": [
+          "unexpected_shell_spawn",
+          "sensitive_file_access",
+          "service_account_token_access",
+          "unexpected_external_egress",
+          "high_cpu_without_ric_activity",
+          "stale_heartbeat",
+          "unexpected_rmr_traffic",
+          "unexpected_submgr_subscription_behavior"
+        ],
+        "containment_actions": [
+          "label_as_quarantined",
+          "deny_all_network_policy",
+          "preserve_pod_for_forensics"
+        ]
+      }
+    }
+    
+  xapp-descriptor.json: |-
+
+    {
+      "name": "kpm-monitor",
+      "version": "1.0.0",
+      "provider": "sp1",
+      "containers": [
+        {
+          "name": "kpm-monitor",
+          "image": {
+            "registry": "localhost:5000",
+            "name": "zt-kpm-monitor",
+            "tag": "1.0",
+            "digest": "sha256:ad33e4066862da37731a118b170832ec29a51aac3c3433095d8a32b4582913fe",
+            "reference": "localhost:5000/zt-kpm-monitor:1.0",
+            "immutable_reference": "localhost:5000/zt-kpm-monitor@sha256:ad33e4066862da37731a118b170832ec29a51aac3c3433095d8a32b4582913fe"
+          }
+        }
+      ],
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "kpm-monitor",
+            "port": 8092,
+            "description": "HTTP API for health, profile, activity, RIC/E2 checks, subscription status, and metrics"
+          },
+          {
+            "name": "rmr_data",
+            "container": "kpm-monitor",
+            "port": 4562,
+            "description": "RMR data port for O-RAN RIC indications, subscription responses, and failures"
+          }
+        ],
+        "rmr": {
+          "enabled": true,
+          "port": 4562,
+          "rxMessages": [
+            "RIC_SUB_RESP",
+            "RIC_SUB_FAILURE",
+            "RIC_INDICATION",
+            "RIC_CONTROL_ACK",
+            "RIC_CONTROL_FAILURE"
+          ],
+          "txMessages": [
+            "RIC_SUB_REQ"
+          ]
+        }
+      },
+      "oran": {
+        "xappType": "real-kpm-monitor",
+        "serviceModel": "E2SM-KPM",
+        "e2NodeId": "gnbd_001_001_00019b_0",
+        "ranFunctionId": 2,
+        "kpmReportStyle": 1,
+        "metrics": [
+          "DRB.UEThpUl",
+          "DRB.UEThpDl"
+        ],
+        "submgrUri": "http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1",
+        "e2mgrNodebStatesUrl": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800/v1/nodeb/states"
+      },
+      "livenessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8092
+        },
+        "initialDelaySeconds": 15,
+        "periodSeconds": 15
+      },
+      "readinessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8092
+        },
+        "initialDelaySeconds": 15,
+        "periodSeconds": 15
+      },
+      "security": {
+        "serviceAccount": "kpm-monitor",
+        "spiffeID": "spiffe://example.org/ns/ricxapp/sa/kpm-monitor",
+        "requiresSVID": true,
+        "runAsNonRoot": true,
+        "allowPrivilegeEscalation": false
+      }
+    }
+---
+# Source: kpm-monitor/templates/rmr-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-ricxapp-kpm-monitor-rmr
+  namespace: ricxapp
+  labels:
+    app: kpm-monitor
+    zt-xguard.io/verified: "true"
+    zt-xguard.io/rmr: "true"
+spec:
+  type: ClusterIP
+  selector:
+    app: kpm-monitor
+  ports:
+    - name: http
+      port: 8092
+      targetPort: http
+      protocol: TCP
+    - name: rmr-data
+      port: 4560
+      targetPort: rmr
+      protocol: TCP
+---
+# Source: kpm-monitor/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kpm-monitor
+  namespace: ricxapp
+  labels:
+    app: kpm-monitor
+    zt-xguard.io/verified: "true"
+spec:
+  type: ClusterIP
+  selector:
+    app: kpm-monitor
+  ports:
+    - name: http
+      port: 8092
+      targetPort: http
+      protocol: TCP
+    - name: rmr
+      port: 4560
+      targetPort: rmr
+      protocol: TCP
+---
+# Source: kpm-monitor/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kpm-monitor
+  namespace: ricxapp
+  labels:
+    app: kpm-monitor
+    version: "1.0.0"
+    zt-xguard.io/verified: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kpm-monitor
+  template:
+    metadata:
+      labels:
+        app: kpm-monitor
+        version: "1.0.0"
+        zt-xguard.io/verified: "true"
+        zt-xguard.io/provider: "sp1"
+    spec:
+      serviceAccountName: kpm-monitor
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: "OnRootMismatch"
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: spiffe-socket
+          csi:
+            driver: "csi.spiffe.io"
+            readOnly: true
+        - name: svid-data
+          emptyDir: {}
+        - name: xapp-profile
+          configMap:
+            name: kpm-monitor-profile
+      initContainers:
+        - name: fetch-svid
+          image: localhost:5000/spire-fetcher:1.0-nonroot
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              echo "Waiting for SPIRE socket..."
+              while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+              echo "Socket ready. Fetching SVID..."
+              /opt/spire/bin/spire-agent api fetch x509 \
+                -socketPath /var/run/spire/sockets/spire-agent.sock \
+                -write /svid-data
+              echo "SVID fetched successfully."
+              ls -l /svid-data || true
+          volumeMounts:
+            - name: spiffe-socket
+              mountPath: /var/run/spire/sockets
+              readOnly: true
+            - name: svid-data
+              mountPath: /svid-data
+      containers:
+        - name: kpm-monitor
+          image: localhost:5000/zt-kpm-monitor:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8092
+              protocol: TCP
+            - name: rmr
+              containerPort: 4560
+              protocol: TCP
+          env:
+            - name: XAPP_PROFILE_PATH
+              value: /etc/xapp-profile/profile.json
+            - name: XAPP_PORT
+              value: "8092"
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: SERVICE_HTTP_HOST
+              value: "kpm-monitor.ricxapp"
+            - name: SERVICE_HTTP_PORT
+              value: "8092"
+            - name: HTTP_PORT
+              value: "8092"
+            - name: RMR_PORT
+              value: "4560"
+            - name: SUBMGR_URI
+              value: "http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1"
+            - name: E2MGR_NODEB_STATES_URL
+              value: "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800/v1/nodeb/states"
+            - name: E2_NODE_ID
+              value: "gnbd_001_001_00019b_0"
+            - name: RAN_FUNCTION_ID
+              value: "2"
+            - name: KPM_REPORT_STYLE
+              value: "1"
+            - name: KPM_METRICS
+              value: "DRB.UEThpUl,DRB.UEThpDl"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: svid-data
+              mountPath: /etc/svid
+              readOnly: true
+            - name: xapp-profile
+              mountPath: /etc/xapp-profile
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+

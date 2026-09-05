@@ -1,0 +1,745 @@
+# ZT-XGuard custom Falco rules for controlled O-RAN Near-RT RIC xApps.
+# These rules are intentionally scoped to the ricxapp namespace and to the
+# main xApp containers only. Helper/init containers such as fetch-svid are
+# excluded to reduce false positives.
+
+- macro: ztx_xapp_namespace
+  condition: k8s.ns.name = ricxapp
+
+
+- list: ztx_main_xapp_containers
+  items:
+    - telemetry-monitor
+    - qos-optimizer
+    - traffic-analyzer
+    - resource-optimizer
+    - security-observer
+    - kpimon-go
+    - hw-go
+    - hw-python
+    - trafficxapp
+
+- list: ztx_helper_containers
+  items:
+    - fetch-svid
+    - spire-fetcher
+    - istio-proxy
+    - linkerd-proxy
+
+- macro: ztx_controlled_xapp_pod
+  condition: >
+    (k8s.pod.name startswith "telemetry-monitor" or
+     k8s.pod.name startswith "qos-optimizer" or
+     k8s.pod.name startswith "traffic-analyzer" or
+     k8s.pod.name startswith "resource-optimizer" or
+     k8s.pod.name startswith "security-observer" or
+     k8s.pod.name startswith "ricxapp-kpimon-go" or
+     k8s.pod.name startswith "ricxapp-hw-go" or
+     k8s.pod.name startswith "ricxapp-hw-python" or
+     k8s.pod.name startswith "ricxapp-trafficxapp")
+
+- macro: ztx_main_xapp_container
+  condition: >
+    container.name in (ztx_main_xapp_containers) and
+    not container.name in (ztx_helper_containers)
+
+- macro: ztx_in_container
+  condition: container.id != host
+
+- macro: ztx_controlled_xapp
+  condition: >
+    ztx_in_container and ztx_xapp_namespace and ztx_controlled_xapp_pod and ztx_main_xapp_container
+
+# --- Per-xApp identity and per-xApp allow-lists ---------------------------
+# The rules below (unexpected_ric_probe, unexpected_peer_contact) are
+# intentionally profile-specific, not shared like the rest of this file.
+# Every xApp is forbidden from doing things like spawning a shell or
+# touching the token file - that part of the profile is identical for all
+# 5, so one shared rule per technique is correct and not lazy. But which
+# RIC platform service and which peer xApp each one may contact is
+# different per xApp (see k8s/profiles/*.json, the real, deployed source
+# of truth for this) - a rule that just checks "did any xApp mention a
+# ricxapp service" cannot tell a legitimate contact from an illegitimate
+# one. These macros encode each xApp's own allow-list explicitly, exactly
+# matching the profile actually mounted into that xApp's pod.
+
+- macro: ztx_telemetry_monitor_pod
+  condition: k8s.pod.name startswith "telemetry-monitor"
+
+- macro: ztx_traffic_analyzer_pod
+  condition: k8s.pod.name startswith "traffic-analyzer"
+
+- macro: ztx_qos_optimizer_pod
+  condition: k8s.pod.name startswith "qos-optimizer"
+
+- macro: ztx_resource_optimizer_pod
+  condition: k8s.pod.name startswith "resource-optimizer"
+
+- macro: ztx_security_observer_pod
+  condition: k8s.pod.name startswith "security-observer"
+
+# The 4 non-dummy xApps (kpimon-go, hw-go, hw-python, trafficxapp) have no
+# declared allow-list profile - they get every universal rule in this file,
+# but are deliberately excluded from the peer/RIC-service allow-list rules
+# (rules 6/7 below), which only make sense for an xApp with a known "who am
+# I allowed to talk to" profile. kpimon-go in particular talks to RIC
+# platform services constantly as its normal job (E2 registration,
+# subscription, etc.) - applying rules 6/7 to it would flag its entire
+# normal operation as "unexpected." ztx_profiled_xapp (not
+# ztx_controlled_xapp) is what rules 6/7 use, so they stay scoped to only
+# the 5 xApps that actually have a profile to check against.
+- macro: ztx_profiled_xapp_pod
+  condition: >
+    (ztx_telemetry_monitor_pod or ztx_traffic_analyzer_pod or
+     ztx_qos_optimizer_pod or ztx_resource_optimizer_pod or
+     ztx_security_observer_pod)
+
+- macro: ztx_profiled_xapp
+  condition: >
+    ztx_in_container and ztx_xapp_namespace and ztx_profiled_xapp_pod and ztx_main_xapp_container
+
+# The five profiled reference xApps are Python services whose immutable image
+# entrypoint is exactly `python3 /app/app.py`. Treating the interpreter name
+# alone as attack tooling made every legitimate container start trigger
+# ZTX-A6. Keep this exemption deliberately narrow: it applies only to the
+# profiled xApps, only to container PID 1, and only to that exact command.
+# A post-compromise Python process, a different script, or a child process is
+# still evaluated by ZTX-A6.
+- macro: ztx_declared_python_xapp_entrypoint
+  condition: >
+    ztx_profiled_xapp and
+    proc.vpid = 1 and
+    proc.name = python3 and
+    proc.cmdline = "python3 /app/app.py"
+
+# RIC-platform-service destinations, one macro per real RIC service used
+# anywhere across the 5 profiles (see ztx_common/runtime.py RIC_SERVICE_CANDIDATES
+# for the same DNS names).
+- macro: ztx_dest_e2mgr
+  condition: fd.sip.name = "service-ricplt-e2mgr-http.ricplt.svc.cluster.local"
+
+- macro: ztx_dest_prometheus
+  condition: fd.sip.name = "r4-infrastructure-prometheus-server.ricplt.svc.cluster.local"
+
+- macro: ztx_dest_submgr
+  condition: fd.sip.name = "service-ricplt-submgr-http.ricplt.svc.cluster.local"
+
+- macro: ztx_dest_rtmgr
+  condition: fd.sip.name = "service-ricplt-rtmgr-http.ricplt.svc.cluster.local"
+
+# kpimon-go's own real RIC-platform contacts, taken from directly observing
+# its live logs this session (E2 registration/subscription flow) - not a
+# declared profile, since kpimon-go has none and is never modified. Used
+# only by the informational "confirmed normal" rule below, never by a
+# violation rule - kpimon-go is exempt from rules 6/7 (see ztx_profiled_xapp).
+- macro: ztx_kpimon_go_pod
+  condition: k8s.pod.name startswith "ricxapp-kpimon-go"
+
+- macro: ztx_dest_e2term
+  condition: fd.sip.name = "service-ricplt-e2term-rmr-alpha.ricplt.svc.cluster.local"
+
+- macro: ztx_dest_appmgr
+  condition: fd.sip.name = "service-ricplt-appmgr-http.ricplt.svc.cluster.local"
+
+- macro: ztx_dest_a1mediator
+  condition: fd.sip.name = "service-ricplt-a1mediator-rmr.ricplt.svc.cluster.local"
+
+# fd.sip.name only supports exact match (=/!=), not contains/startswith -
+# confirmed the hard way (Falco crashed on startup with "filter error:
+# fd.*ip.name filter only supports '=' and '!=' operators"). So "any RIC
+# platform service" has to be an explicit OR of every known one, not a
+# domain-suffix wildcard.
+- macro: ztx_ric_platform_dest
+  condition: >
+    (ztx_dest_e2mgr or ztx_dest_prometheus or ztx_dest_e2term or
+     ztx_dest_appmgr or ztx_dest_a1mediator or ztx_dest_submgr or ztx_dest_rtmgr)
+
+# Peer-xApp destinations, one macro per dummy xApp's own Kubernetes Service.
+- macro: ztx_dest_telemetry_monitor
+  condition: fd.sip.name = "telemetry-monitor.ricxapp.svc.cluster.local"
+
+- macro: ztx_dest_traffic_analyzer
+  condition: fd.sip.name = "traffic-analyzer.ricxapp.svc.cluster.local"
+
+- macro: ztx_dest_qos_optimizer
+  condition: fd.sip.name = "qos-optimizer.ricxapp.svc.cluster.local"
+
+- macro: ztx_dest_resource_optimizer
+  condition: fd.sip.name = "resource-optimizer.ricxapp.svc.cluster.local"
+
+- macro: ztx_peer_xapp_dest
+  condition: >
+    (ztx_dest_telemetry_monitor or ztx_dest_traffic_analyzer or
+     ztx_dest_qos_optimizer or ztx_dest_resource_optimizer)
+
+# Per-xApp allow-list, matching k8s/profiles/*.json exactly:
+#   telemetry-monitor:   allowed_ric_services=[e2mgr]        allowed_peers=[]
+#   traffic-analyzer:    allowed_ric_services=[]              allowed_peers=[telemetry-monitor]
+#   qos-optimizer:        allowed_ric_services=[]              allowed_peers=[traffic-analyzer]
+#   resource-optimizer:  allowed_ric_services=[prometheus]    allowed_peers=[]
+#   security-observer:   allowed_ric_services=[]              allowed_peers=[telemetry-monitor, traffic-analyzer, qos-optimizer, resource-optimizer]
+- macro: ztx_allowed_ric_dest_for_xapp
+  condition: >
+    (ztx_telemetry_monitor_pod and ztx_dest_e2mgr) or
+    (ztx_resource_optimizer_pod and ztx_dest_prometheus)
+
+- macro: ztx_allowed_peer_dest_for_xapp
+  condition: >
+    (ztx_traffic_analyzer_pod and ztx_dest_telemetry_monitor) or
+    (ztx_qos_optimizer_pod and ztx_dest_traffic_analyzer) or
+    (ztx_security_observer_pod and
+     (ztx_dest_telemetry_monitor or ztx_dest_traffic_analyzer or
+      ztx_dest_qos_optimizer or ztx_dest_resource_optimizer))
+
+- list: ztx_shell_binaries
+  items: [sh, bash, dash, zsh, ksh, ash]
+
+- list: ztx_sensitive_paths
+  items:
+    - /etc/shadow
+    - /etc/sudoers
+    - /etc/passwd
+
+- list: ztx_sensitive_read_tools
+  items:
+    - cat
+    - cp
+    - tar
+    - base64
+    - hexdump
+    - xxd
+    - od
+    - strings
+    - grep
+    - sed
+    - awk
+    - head
+    - tail
+    - less
+    - more
+    - openssl
+
+- list: ztx_package_manager_binaries
+  items: [apt, apt-get, apk, yum, dnf, rpm, dpkg, pip, pip3]
+
+- list: ztx_permission_tamper_binaries
+  items: [chmod, chown, setcap]
+
+# 2026-07-24: both path macros below originally only checked fd.name,
+# which is correct for fd-based syscalls (open/openat/openat2) but is
+# EMPTY for path-based metadata syscalls - confirmed live via a debug rule
+# dump: `chmod`/`fchmodat` reports its target via evt.arg.filename, with
+# fd.name blank. Since ztx_write_or_metadata_tamper (used by both A11 and
+# A12) explicitly includes chmod/fchmod/fchmodat/rename/renameat/unlink/
+# unlinkat/chown/fchown/fchownat in its event-type list, a real chmod/
+# rename/unlink-based tamper attempt against SVID material or xApp config
+# was silently never matching either rule - the ONLY thing that fired was
+# the separate, unrelated "Permission Tamper" rule (matches on exec of the
+# chmod/chown/setcap BINARY itself, not the syscall's target path), which
+# is a lower-severity SUSPICIOUS-tier signal. This is a structural gap
+# affecting metadata-tamper detection for ALL 9 xApps, not just kpimon-go -
+# found via kpimon-go's own N=50x8 evaluation run repeatedly showing 0
+# successful containment for the config-tamper attack. Added
+# evt.arg.filename as an alternate match.
+- macro: ztx_svid_or_spire_path
+  condition: >
+    (fd.name startswith "/etc/svid" or
+     fd.name startswith "/run/spire" or
+     fd.name startswith "/var/run/spire" or
+     evt.arg.filename startswith "/etc/svid" or
+     evt.arg.filename startswith "/run/spire" or
+     evt.arg.filename startswith "/var/run/spire")
+
+- macro: ztx_xapp_config_path
+  condition: >
+    (fd.name startswith "/etc/xapp-profile" or
+     fd.name startswith "/etc/config" or
+     fd.name startswith "/opt/ric/config" or
+     evt.arg.filename startswith "/etc/xapp-profile" or
+     evt.arg.filename startswith "/etc/config" or
+     evt.arg.filename startswith "/opt/ric/config")
+
+- macro: ztx_exec_drop_path
+  condition: >
+    ((fd.name startswith "/tmp/" or
+      fd.name startswith "/var/tmp/" or
+      fd.name startswith "/dev/shm/") and
+     (fd.name endswith ".sh" or
+      fd.name endswith ".py" or
+      fd.name endswith ".pl" or
+      fd.name endswith ".rb" or
+      fd.name endswith ".so" or
+      fd.name endswith ".bin" or
+      fd.name endswith ".run" or
+      fd.name endswith ".out"))
+
+- macro: ztx_write_or_metadata_tamper
+  condition: >
+    ((evt.type in (open, openat, openat2) and evt.is_open_write=true) or
+     evt.type in (rename, renameat, unlink, unlinkat, chmod, fchmod, fchmodat, chown, fchown, fchownat, setxattr, removexattr))
+
+- macro: ztx_suspicious_sensitive_read
+  condition: >
+    evt.type in (open, openat, openat2) and
+    evt.is_open_read=true and
+    proc.name in (ztx_sensitive_read_tools)
+
+- macro: ztx_k8s_api_target
+  condition: >
+    fd.sport=443 and
+    (fd.sip=10.96.0.1 or
+     fd.sip.name = "kubernetes.default.svc.cluster.local" or
+     fd.sip.name = "kubernetes.default" or
+     fd.sip.name = "kubernetes")
+
+# CoreDNS itself. Confirmed live from the cluster (2026-07-14):
+# `kubectl get svc -n kube-system -l k8s-app=kube-dns` -> ClusterIP
+# 10.96.0.10, the standard kubeadm default. Matched by raw IP, not
+# fd.sip.name, because Falco cannot resolve a reverse-DNS name for the
+# DNS server itself at the moment of first connecting to it - every
+# xApp's DNS lookup (the UDP connect that happens before it can reach
+# e2mgr/appmgr/a peer service by name) was showing up as
+# fd.sip.name=null and getting misclassified as external egress before
+# this macro existed. This is the exact case ztx_k8s_api_target already
+# handles the same way for the K8s API server's own address.
+- macro: ztx_dest_coredns
+  condition: fd.sip=10.96.0.10
+
+# 2026-07-24: kpimon-go's RMR library does a loopback self-probe during its
+# own route-table bootstrap (confirmed live: connect attempts to
+# 127.0.0.1:9, ::1:9, ::1:8090 immediately after "IP address is not able to
+# resolve Interface... invalid network interface name" in its own startup
+# log - port 9 is the classic discard port, consistent with a
+# connectivity/interface self-test, not a real destination). This is
+# traffic that never leaves the pod's own network namespace - it cannot be
+# "external egress" under any definition, regardless of what it's actually
+# testing internally.
+- macro: ztx_dest_loopback
+  condition: (fd.sip=127.0.0.1 or fd.sip="::1")
+
+# CIDR notation in fd.sip in (...) is NOT valid Falco syntax either
+# (confirmed the hard way: "unrecognized IPv4 address 10.244.0.0/16").
+# Rather than guess a third IP-matching syntax, reuse the destination
+# macros already proven to work (exact-match on fd.sip.name or fd.sip).
+# "Known internal/expected traffic" = matches one of the destinations we
+# already explicitly track. This is arguably the more correct Zero-Trust
+# framing anyway: an xApp contacting some internal service we never
+# enumerated is still worth flagging, not something to quietly wave
+# through just because it happens to be inside the cluster.
+#
+# 2026-07-23: added raw-IP matching for every RIC platform service,
+# alongside the existing by-name (fd.sip.name) macros above - confirmed
+# live that kpimon-go's genuine RMR traffic to e2mgr/e2term/appmgr/
+# a1mediator/submgr/rtmgr repeatedly shows fd.sip.name=null (same
+# unresolved-at-connect-time phenomenon already documented for CoreDNS
+# above, but affecting ALL RMR peers here, not just DNS itself, since RMR
+# connects via raw IP and often never triggers a DNS lookup Falco could
+# snoop at all). Confirmed via kubectl (2026-07-23) these are the live
+# ClusterIPs (submgr's Services are headless/ClusterIP:None, so its pod IP
+# is used instead - same durability caveat as any other pod-IP-based
+# match, acceptable for a single-node cluster with low churn). This only
+# widens the generic "is this genuinely external" catch-all
+# (ztx_known_internal_dest, used by ZTX-A8 below) - it does NOT touch the
+# separate, still-fully-enforced per-xApp allow-list rules 6/7
+# (ztx_allowed_ric_dest_for_xapp/ztx_allowed_peer_dest_for_xapp), which
+# correctly keep the 5 profiled demo xApps restricted to their own
+# declared subset of these same services.
+#
+# 2026-07-23 (follow-up): also missing SDL/DBAAS (service-ricplt-dbaas-tcp,
+# Redis, port 6379) - found live after fixing kpimon-go's DBAAS_SERVICE_HOST
+# env var (was missing the .svc.cluster.local suffix, causing slow/failing
+# DNS lookups that were ALSO contributing to its liveness-probe timeouts).
+# Once DNS resolution started succeeding, its genuine Redis connections
+# immediately showed up as new external_egress false positives (same
+# fd.sip.name=null pattern, since it's also headless/ClusterIP:None - pod IP
+# used instead, same durability caveat as submgr above). hw-go hits this
+# too. Added its current backing pod IP alongside the others.
+# 2026-07-24: the two pod-IP entries here (submgr, dbaas/redis - both
+# headless/ClusterIP:None) had drifted stale after a cluster-wide pod
+# churn event (Felix/Calico backend diagnostic that briefly broke pod
+# networking cluster-wide and triggered mass pod restarts), causing
+# kpimon-go's genuine SDL/DBAAS Redis traffic to misclassify as external
+# egress and repeatedly auto-quarantine a perfectly healthy xApp - this is
+# exactly the durability caveat this macro's own comments already warned
+# about, now observed for real.
+#
+# Split into two groups instead of one flat list: stable ClusterIPs (real
+# Services, never change) vs. headless-service backing-pod IPs (no stable
+# Service IP exists, so the pod's own IP is used instead - drifts on every
+# restart of that pod). The two single-IP macros below are each
+# auto-reconciled by ztx_falco_rule_sync.py's background loop (started
+# alongside app.py's other background threads) - do NOT hand-edit these
+# two lines, they get overwritten the next time the reconciler runs
+# (default every RECONCILE_INTERVAL_SECONDS) if it finds the backing pod's
+# IP has changed.
+# 2026-07-24 (follow-up): kpimon-go writes KPI metrics directly to
+# InfluxDB (r4-influxdb-influxdb2, stable ClusterIP, port 80) as part of
+# its own normal operation - confirmed live (fd.sip=10.109.93.154 on a
+# genuine, unattacked pod immediately after a restore). Never previously
+# enumerated at all (not even in the original stale list) - a real,
+# previously-unknown gap, not a regression from the other fixes today.
+- macro: ztx_ric_platform_stable_ips
+  condition: >
+    fd.sip in (10.110.255.182, 10.97.218.194, 10.106.73.114, 10.102.220.163,
+               10.97.234.238, 10.102.61.81, 10.107.162.169, 10.103.185.176,
+               10.100.239.72, 10.106.216.185, 10.98.35.144, 10.109.93.154)
+
+- macro: ztx_dest_submgr_pod_ip
+  condition: fd.sip=10.244.0.213
+
+- macro: ztx_dest_dbaas_pod_ip
+  condition: fd.sip=10.244.0.191
+
+- macro: ztx_ric_platform_dest_by_ip
+  condition: >
+    (ztx_ric_platform_stable_ips or ztx_dest_submgr_pod_ip or ztx_dest_dbaas_pod_ip)
+
+- macro: ztx_known_internal_dest
+  condition: >
+    (ztx_ric_platform_dest or ztx_ric_platform_dest_by_ip or ztx_peer_xapp_dest or ztx_k8s_api_target or ztx_dest_coredns or ztx_dest_loopback)
+
+- macro: ztx_container_runtime_socket_path
+  condition: >
+    (fd.name startswith "/var/run/docker.sock" or
+     fd.name startswith "/run/docker.sock" or
+     fd.name startswith "/var/run/containerd/containerd.sock" or
+     fd.name startswith "/run/containerd/containerd.sock" or
+     fd.name startswith "/var/run/crio/crio.sock" or
+     fd.name startswith "/run/crio/crio.sock")
+
+- rule: ZTX xApp Unexpected Shell
+  desc: A shell was spawned inside a controlled xApp main container.
+  condition: >
+    evt.type in (execve, execveat) and
+    ztx_controlled_xapp and
+    proc.name in (ztx_shell_binaries)
+  output: >
+    ztx_signal=unexpected_shell rule_id=ZTX-A1 xapp shell spawned
+    (user=%user.name command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name image=%container.image.repository)
+  priority: CRITICAL
+  tags: [zt-xguard, xapp, runtime, shell, compromise]
+
+# 2026-07-23: kpimon-go's own container startup (glibc/Go runtime init doing
+# a user-lookup style read of /etc/passwd, plus the entrypoint/init process
+# reading its own mounted serviceaccount token - completely standard for any
+# containerized, Kubernetes-aware app) was repeatedly triggering both rules
+# below as CRITICAL false positives on every restart, confirmed directly:
+# command=runc:[1:CHILD] init and command=entripoint.sh ./entripoint.sh
+# [sic - that's the real observed binary name]. proc.vpid=1 is the
+# container's own PID-1/entrypoint process as seen from its own PID
+# namespace (confirmed valid Falco field via `falco --list`) - a universal,
+# runtime-independent signal, not fragile to exact script naming, so it's
+# included alongside the two specific observed cmdline patterns for
+# belt-and-suspenders precision. This does not weaken detection of a real
+# post-compromise file read: an attacker reading these files after gaining
+# code execution (e.g. via a spawned shell, already caught by ZTX-A1) runs
+# as a later, non-PID-1 process, which still matches these rules normally.
+# 2026-07-24: this exemption only ever covered the bash entrypoint script
+# itself (PID 1) - but kpimon-go's real work happens in two compiled
+# binaries (kpimon, f1apServer) that the entrypoint forks as children
+# (confirmed live via `ps`/`/proc` inspection: PID 1 = entripoint.sh, PID
+# 7/8 = f1apServer/kpimon). Those binaries almost certainly load their own
+# credentials (SVID cert via /etc/svid, possibly a ServiceAccount token if
+# either does in-cluster K8s API calls) at THEIR OWN startup, which runs as
+# a non-PID-1, non-entrypoint-named process - a case the old exemption
+# never covered, meaning a legitimate first read from either binary could
+# misfire as CRITICAL sensitive_file_access/serviceaccount_token_access.
+# Added a second clause matching the real, observed parent-child
+# relationship (proc.pname = the entrypoint, proc.name = one of the two
+# known xApp binaries) - this still requires the read to come from a
+# process directly forked by the container's own entrypoint, so a
+# differently-parented process (e.g. a shell spawned by a compromised
+# kpimon process to go read these files) still does NOT match and is
+# still flagged. Known, inherent limit of syscall-level monitoring: this
+# can't distinguish an in-process exploit (attacker code executing inside
+# the already-running kpimon binary, no new process spawned) from a
+# legitimate read, since both look identical at the syscall layer - not
+# something this fix (or any purely syscall-based rule) can resolve.
+- macro: ztx_kpimon_go_own_binaries
+  condition: >
+    (proc.pname in (entripoint.sh, entrypoint.sh) and
+     proc.name in (kpimon, f1apServer))
+
+- macro: ztx_container_init_process
+  condition: >
+    (proc.vpid = 1 or
+     proc.cmdline startswith "runc:" or
+     proc.cmdline contains "entripoint.sh" or
+     proc.cmdline contains "entrypoint.sh" or
+     ztx_kpimon_go_own_binaries)
+
+- rule: ZTX xApp Sensitive File Access
+  desc: A controlled xApp main container attempted to open sensitive files.
+  condition: >
+    evt.type in (open, openat, openat2) and
+    ztx_controlled_xapp and
+    (fd.name in (ztx_sensitive_paths) or fd.name startswith "/root/.ssh" or fd.name contains "/.ssh/") and
+    not ztx_container_init_process
+  output: >
+    ztx_signal=sensitive_file_access rule_id=ZTX-A2 xapp sensitive file access
+    (user=%user.name file=%fd.name command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: CRITICAL
+  tags: [zt-xguard, xapp, filesystem, sensitive-file, compromise]
+
+- rule: ZTX xApp ServiceAccount Token Access
+  desc: A controlled xApp main container attempted to read Kubernetes ServiceAccount token material.
+  condition: >
+    evt.type in (open, openat, openat2) and
+    ztx_controlled_xapp and
+    fd.name startswith "/var/run/secrets/kubernetes.io/serviceaccount" and
+    not ztx_container_init_process
+  output: >
+    ztx_signal=serviceaccount_token_access rule_id=ZTX-A3 xapp serviceaccount token access
+    (user=%user.name file=%fd.name command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: CRITICAL
+  tags: [zt-xguard, xapp, identity, serviceaccount, compromise]
+
+- rule: ZTX xApp Suspicious Tool Execution
+  desc: A controlled xApp main container started tools commonly used for probing, download, or data movement.
+  condition: >
+    evt.type in (execve, execveat) and
+    ztx_controlled_xapp and
+    proc.name in (curl, wget, nc, ncat, netcat, socat, ssh, scp, python, python3, perl, ruby) and
+    not ztx_declared_python_xapp_entrypoint
+  output: >
+    ztx_signal=malicious_tool_execution rule_id=ZTX-A6 xapp suspicious tool execution
+    (user=%user.name command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: WARNING
+  tags: [zt-xguard, xapp, process, probing]
+
+- rule: ZTX xApp External Egress Attempt
+  desc: A controlled xApp main container attempted an outbound connection. External egress is forbidden by default for these xApps.
+  condition: >
+    evt.type=connect and
+    ztx_controlled_xapp and
+    fd.typechar in (4, 6) and
+    not ztx_known_internal_dest
+  output: >
+    ztx_signal=external_egress rule_id=ZTX-A8 xapp external egress attempt
+    (user=%user.name dest=%fd.sip.name:%fd.sport dest_ip=%fd.sip command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: CRITICAL
+  tags: [zt-xguard, xapp, network, egress, compromise]
+
+- rule: ZTX xApp Unexpected Peer xApp Contact
+  desc: >
+    A controlled xApp connected to another dummy xApp that is not on its own
+    declared peer allow-list (see k8s/profiles/*.json for the per-xApp list).
+    Replaces an earlier, naive version of this rule that only checked whether
+    a ricxapp address appeared in the process command line, regardless of
+    which xApp it was or whether that specific contact was expected -
+    this version checks the real connection destination against the
+    specific xApp's own profile.
+  condition: >
+    evt.type=connect and
+    ztx_profiled_xapp and
+    fd.typechar in (4, 6) and
+    ztx_peer_xapp_dest and
+    not ztx_allowed_peer_dest_for_xapp
+  output: >
+    ztx_signal=unexpected_peer_contact rule_id=ZTX-A7 xapp unexpected peer contact
+    (user=%user.name dest=%fd.sip.name:%fd.sport command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: WARNING
+  tags: [zt-xguard, xapp, network, peer-contact, profile-violation]
+
+- rule: ZTX xApp Unexpected RIC Service Contact
+  desc: >
+    A controlled xApp connected to a RIC platform service that is not on
+    its own declared allow-list (see k8s/profiles/*.json for the per-xApp
+    list) - e.g. traffic-analyzer, qos-optimizer, and security-observer
+    have no RIC platform service allowed at all under the current profile
+    design, so any RIC-platform contact from them is unexpected by
+    definition.
+  condition: >
+    evt.type=connect and
+    ztx_profiled_xapp and
+    fd.typechar in (4, 6) and
+    ztx_ric_platform_dest and
+    not ztx_allowed_ric_dest_for_xapp
+  output: >
+    ztx_signal=unexpected_ric_probe rule_id=ZTX-A17 xapp unexpected ric service contact
+    (user=%user.name dest=%fd.sip.name:%fd.sport command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: WARNING
+  tags: [zt-xguard, xapp, network, ric-service, profile-violation]
+
+- rule: ZTX xApp SVID Or SPIFFE Material Access
+  desc: A controlled xApp main container accessed or tampered with SVID/SPIRE identity material.
+  condition: >
+    ztx_controlled_xapp and
+    ztx_svid_or_spire_path and
+    (ztx_write_or_metadata_tamper or ztx_suspicious_sensitive_read)
+  output: >
+    ztx_signal=svid_material_access rule_id=ZTX-A11 xapp SVID or SPIFFE material access
+    (user=%user.name file=%fd.name file_arg=%evt.arg.filename command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: CRITICAL
+  tags: [zt-xguard, xapp, identity, spiffe, spire, svid]
+
+- rule: ZTX xApp Profile Or Config Tamper
+  desc: A controlled xApp main container modified verified profile or runtime config paths.
+  condition: >
+    ztx_controlled_xapp and
+    ztx_xapp_config_path and
+    ztx_write_or_metadata_tamper
+  output: >
+    ztx_signal=xapp_profile_or_config_tamper rule_id=ZTX-A12 xapp profile or config tamper
+    (user=%user.name file=%fd.name file_arg=%evt.arg.filename command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: CRITICAL
+  tags: [zt-xguard, xapp, config, integrity, tamper]
+
+- rule: ZTX xApp Package Manager Execution
+  desc: A controlled xApp main container executed a package manager binary.
+  condition: >
+    evt.type in (execve, execveat) and
+    ztx_controlled_xapp and
+    proc.name in (ztx_package_manager_binaries)
+  output: >
+    ztx_signal=package_manager_execution rule_id=ZTX-A13 xapp package manager execution
+    (user=%user.name command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: WARNING
+  tags: [zt-xguard, xapp, process, package-manager]
+
+- rule: ZTX xApp Binary Drop In Writable Path
+  desc: A controlled xApp main container wrote an executable-looking artifact into a writable execution path.
+  condition: >
+    ztx_controlled_xapp and
+    ztx_exec_drop_path and
+    ztx_write_or_metadata_tamper
+  output: >
+    ztx_signal=binary_drop rule_id=ZTX-A14 xapp binary or script drop
+    (user=%user.name file=%fd.name command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: WARNING
+  tags: [zt-xguard, xapp, filesystem, dropper, writable-path]
+
+- rule: ZTX xApp Permission Tamper
+  desc: A controlled xApp main container executed permission or ownership tampering binaries.
+  condition: >
+    evt.type in (execve, execveat) and
+    ztx_controlled_xapp and
+    proc.name in (ztx_permission_tamper_binaries)
+  output: >
+    ztx_signal=permission_tamper rule_id=ZTX-A15 xapp permission tamper
+    (user=%user.name command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: WARNING
+  tags: [zt-xguard, xapp, filesystem, permissions, tamper]
+
+- rule: ZTX xApp Kubernetes API Contact
+  desc: A controlled xApp main container connected to the Kubernetes API service on port 443.
+  condition: >
+    evt.type=connect and
+    ztx_controlled_xapp and
+    fd.typechar in (4, 6) and
+    ztx_k8s_api_target
+  output: >
+    ztx_signal=k8s_api_contact rule_id=ZTX-A16 xapp kubernetes api contact
+    (user=%user.name dest=%fd.sip.name:%fd.sport command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: WARNING
+  tags: [zt-xguard, xapp, kubernetes, api, network]
+
+- rule: ZTX xApp Privileged Container Escape Attempt
+  desc: A controlled xApp main container attempted to access the container runtime socket (Docker/containerd/CRI-O) - a well-known container-escape and privilege-escalation vector (MITRE ATT&CK T1611, Escape to Host).
+  condition: >
+    evt.type in (open, openat, openat2, connect) and
+    ztx_controlled_xapp and
+    ztx_container_runtime_socket_path
+  output: >
+    ztx_signal=privileged_container_escape_attempt rule_id=ZTX-LM-03 xapp container escape attempt
+    (user=%user.name file=%fd.name command=%proc.cmdline pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: CRITICAL
+  tags: [zt-xguard, xapp, container-escape, privilege-escalation, compromise]
+
+# =====================================================================
+# "Normal state" rules - audit-only confirmation of expected behavior.
+# These are the positive mirror of rules above: they fire when something
+# EXPECTED happens, not when something is wrong. All four are tagged
+# ztx_signal=ignored on purpose - if this ever reaches the policy engine,
+# ztx_state_engine.py already treats "ignored" as explicitly out of scope
+# (state=IGNORED, no effect on the xApp's real security state), so these
+# stay a pure Falco-side audit trail and never add noise to the decision
+# engine. Falco itself cannot prove a negative ("nothing bad happened") -
+# these rules only confirm that a specific expected action occurred.
+# =====================================================================
+
+- rule: ZTX xApp Identity Renewal Confirmed Normal
+  desc: >
+    A helper container (fetch-svid/renew-svid) accessed SVID/SPIFFE
+    identity material as expected - this is the legitimate, designed
+    identity-renewal path, logged for audit completeness. Contrast with
+    "ZTX xApp SVID Or SPIFFE Material Access" above, which fires (as a
+    real violation) if the MAIN xApp container does this instead of the
+    helper. Applies identically to all 9 xApps - every one has the same
+    fetch-svid/renew-svid sidecar pattern.
+  condition: >
+    ztx_in_container and
+    ztx_xapp_namespace and
+    ztx_controlled_xapp_pod and
+    container.name in (fetch-svid, renew-svid) and
+    ztx_svid_or_spire_path and
+    (ztx_write_or_metadata_tamper or ztx_suspicious_sensitive_read)
+  output: >
+    ztx_signal=ignored rule_id=ZTX-NORM-01 xapp identity renewal confirmed normal
+    (helper=%container.name file=%fd.name pod=%k8s.pod.name ns=%k8s.ns.name)
+  priority: INFORMATIONAL
+  tags: [zt-xguard, xapp, identity, normal, audit]
+
+- rule: ZTX xApp In-Cluster Connection Confirmed Normal
+  desc: >
+    A controlled xApp made an outbound connection to one of the RIC
+    platform services, peer xApps, or the Kubernetes API server we
+    already explicitly track - the expected case, logged for audit
+    completeness. Contrast with "ZTX xApp External Egress Attempt"
+    above, which fires when a connection does NOT match any of these
+    known destinations. Applies identically to all 9 xApps.
+  condition: >
+    evt.type=connect and
+    ztx_controlled_xapp and
+    fd.typechar in (4, 6) and
+    ztx_known_internal_dest
+  output: >
+    ztx_signal=ignored rule_id=ZTX-NORM-02 xapp in-cluster connection confirmed normal
+    (dest=%fd.sip.name:%fd.sport pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: INFORMATIONAL
+  tags: [zt-xguard, xapp, network, normal, audit]
+
+- rule: ZTX xApp Expected Peer Or RIC Contact Confirmed Normal
+  desc: >
+    One of the 5 profiled xApps connected to a peer or RIC service that
+    IS on its own declared allow-list - the expected case, logged for
+    audit completeness. Contrast with "ZTX xApp Unexpected Peer xApp
+    Contact" and "ZTX xApp Unexpected RIC Service Contact" above, which
+    fire on the disallowed case. One rule covers all 5, the same way
+    rules 6/7 do - the per-xApp distinction lives in the
+    ztx_allowed_peer_dest_for_xapp / ztx_allowed_ric_dest_for_xapp
+    macros already built for rules 6/7, reused here unchanged.
+  condition: >
+    evt.type=connect and
+    ztx_profiled_xapp and
+    fd.typechar in (4, 6) and
+    ((ztx_peer_xapp_dest and ztx_allowed_peer_dest_for_xapp) or
+     (ztx_ric_platform_dest and ztx_allowed_ric_dest_for_xapp))
+  output: >
+    ztx_signal=ignored rule_id=ZTX-NORM-03 xapp expected peer or ric contact confirmed normal
+    (dest=%fd.sip.name:%fd.sport pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: INFORMATIONAL
+  tags: [zt-xguard, xapp, network, normal, audit, profile-match]
+
+- rule: ZTX kpimon-go Expected RIC Platform Contact Confirmed Normal
+  desc: >
+    kpimon-go connected to a RIC platform service consistent with its
+    real observed normal behavior (appmgr registration, e2term RMR
+    routing, a1mediator RMR routing) - logged for audit completeness.
+    Based on directly watching its real logs this session, not a
+    declared profile - kpimon-go has no profile file and is never
+    modified. kpimon-go does not get rules 6/7 (see ztx_profiled_xapp),
+    so this is its only "confirmed normal" network signal.
+  condition: >
+    evt.type=connect and
+    ztx_in_container and
+    ztx_xapp_namespace and
+    ztx_kpimon_go_pod and
+    container.name = "kpimon-go" and
+    fd.typechar in (4, 6) and
+    (ztx_dest_e2term or ztx_dest_appmgr or ztx_dest_a1mediator)
+  output: >
+    ztx_signal=ignored rule_id=ZTX-NORM-04 kpimon-go expected ric platform contact confirmed normal
+    (dest=%fd.sip.name:%fd.sport pod=%k8s.pod.name ns=%k8s.ns.name container=%container.name)
+  priority: INFORMATIONAL
+  tags: [zt-xguard, xapp, kpimon-go, network, normal, audit]

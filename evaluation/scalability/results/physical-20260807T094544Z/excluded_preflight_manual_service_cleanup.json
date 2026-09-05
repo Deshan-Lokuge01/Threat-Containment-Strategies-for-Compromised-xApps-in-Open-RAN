@@ -1,0 +1,77 @@
+[
+  {
+    "service": "telemetry-monitor",
+    "restored_selector": {
+      "app": "telemetry-monitor"
+    },
+    "removed_annotations": [
+      "zt-xguard.io/original-service-selector",
+      "zt-xguard.io/service-isolated",
+      "zt-xguard.io/service-isolated-incident",
+      "zt-xguard.io/service-isolated-reason",
+      "zt-xguard.io/service-isolated-selector-token",
+      "zt-xguard.io/service-isolated-time",
+      "zt-xguard.io/xapp"
+    ]
+  },
+  {
+    "service": "qos-optimizer",
+    "restored_selector": {
+      "app": "qos-optimizer"
+    },
+    "removed_annotations": [
+      "zt-xguard.io/original-service-selector",
+      "zt-xguard.io/service-isolated",
+      "zt-xguard.io/service-isolated-incident",
+      "zt-xguard.io/service-isolated-reason",
+      "zt-xguard.io/service-isolated-selector-token",
+      "zt-xguard.io/service-isolated-time",
+      "zt-xguard.io/xapp"
+    ]
+  },
+  {
+    "service": "traffic-analyzer",
+    "restored_selector": {
+      "app": "traffic-analyzer"
+    },
+    "removed_annotations": [
+      "zt-xguard.io/original-service-selector",
+      "zt-xguard.io/service-isolated",
+      "zt-xguard.io/service-isolated-incident",
+      "zt-xguard.io/service-isolated-reason",
+      "zt-xguard.io/service-isolated-selector-token",
+      "zt-xguard.io/service-isolated-time",
+      "zt-xguard.io/xapp"
+    ]
+  },
+  {
+    "service": "resource-optimizer",
+    "restored_selector": {
+      "app": "resource-optimizer"
+    },
+    "removed_annotations": [
+      "zt-xguard.io/original-service-selector",
+      "zt-xguard.io/service-isolated",
+      "zt-xguard.io/service-isolated-incident",
+      "zt-xguard.io/service-isolated-reason",
+      "zt-xguard.io/service-isolated-selector-token",
+      "zt-xguard.io/service-isolated-time",
+      "zt-xguard.io/xapp"
+    ]
+  },
+  {
+    "service": "security-observer",
+    "restored_selector": {
+      "app": "security-observer"
+    },
+    "removed_annotations": [
+      "zt-xguard.io/original-service-selector",
+      "zt-xguard.io/service-isolated",
+      "zt-xguard.io/service-isolated-incident",
+      "zt-xguard.io/service-isolated-reason",
+      "zt-xguard.io/service-isolated-selector-token",
+      "zt-xguard.io/service-isolated-time",
+      "zt-xguard.io/xapp"
+    ]
+  }
+]

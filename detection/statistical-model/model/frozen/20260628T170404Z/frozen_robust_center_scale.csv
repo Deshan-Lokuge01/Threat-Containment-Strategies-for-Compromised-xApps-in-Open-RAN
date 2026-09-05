@@ -1,0 +1,6 @@
+feature_id,metric_id,column,selected_transform,center,scale,scale_method,center_method,fitting_dataset_ids,n_fit_rows,center_scope,mad_scale_constant,iqr_scale_constant,N1_after_median,N2_after_median
+M1_log1p,M1,m1_cpu_millicores,log1p,0.8522854018982426,0.14961759309248365,scaled_mad,median,N1+N2,3544,pooled_n1_n2_transformed_values,1.4826,1.349,0.8590851684063446,0.8484400649659807
+M3_run_pod_centered,M3,m3_memory_working_set_bytes,identity,0.0,194327.3472,scaled_mad,median,N1+N2,3544,per_run_pod_offset_then_pooled_residual_median,1.4826,1.349,0.0,0.0
+M4_identity,M4,m4_memory_growth_bytes_per_s,identity,906.5685000000001,3322.7882940000004,scaled_mad,median,N1+N2,3544,pooled_n1_n2_transformed_values,1.4826,1.349,629.3325,1147.9899999999998
+M5_log1p,M5,m5_network_rx_bytes_per_s,log1p,6.511114372832169,0.0037709443690853587,scaled_mad,median,N1+N2,3544,pooled_n1_n2_transformed_values,1.4826,1.349,6.511092070252373,6.5111381617000195
+M6_log1p,M6,m6_network_tx_bytes_per_s,log1p,6.883949148349977,0.003490163987321421,scaled_mad,median,N1+N2,3544,pooled_n1_n2_transformed_values,1.4826,1.349,6.883963485513467,6.88391944924639

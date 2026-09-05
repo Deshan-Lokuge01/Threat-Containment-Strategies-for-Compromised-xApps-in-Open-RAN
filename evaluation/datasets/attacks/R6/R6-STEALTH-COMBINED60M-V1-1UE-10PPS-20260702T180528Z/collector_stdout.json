@@ -1,0 +1,13 @@
+{
+  "endpoint_errors": 51,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/attacks/R6/R6-STEALTH-COMBINED60M-V1-1UE-10PPS-20260702T180528Z/raw_metrics.csv",
+  "profile": "ATTACK_R6_STEALTH_COMBINED60M_V1_1UE_10PPS",
+  "resource_counter_resets": 0,
+  "rows_written": 5700,
+  "run_id": "R6-STEALTH-COMBINED60M-V1-1UE-10PPS-20260702T180528Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 5700,
+  "timing_errors": 60
+}

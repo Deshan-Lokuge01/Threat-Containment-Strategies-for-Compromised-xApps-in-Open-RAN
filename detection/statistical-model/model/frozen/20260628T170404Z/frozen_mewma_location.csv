@@ -1,0 +1,6 @@
+"window_seconds","half_life_seconds","feature_id","mewma_location","source"
+"5","3","M1_log1p","0.3797726138920614","reconstructed_from_step39_N1_N2_warmed_states_no_N3"
+"5","3","M3_run_pod_centered","0.06502307697885099","reconstructed_from_step39_N1_N2_warmed_states_no_N3"
+"5","3","M4_identity","-0.10658273721524748","reconstructed_from_step39_N1_N2_warmed_states_no_N3"
+"5","3","M5_log1p","40.79306659600155","reconstructed_from_step39_N1_N2_warmed_states_no_N3"
+"5","3","M6_log1p","27.54324843577056","reconstructed_from_step39_N1_N2_warmed_states_no_N3"

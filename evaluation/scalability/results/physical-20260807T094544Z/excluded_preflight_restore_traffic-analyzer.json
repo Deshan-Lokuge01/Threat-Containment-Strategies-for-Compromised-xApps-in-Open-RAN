@@ -1,0 +1,225 @@
+{
+  "http_code": 200,
+  "response": {
+    "namespace": "ricxapp",
+    "pod_label_restore": [
+      {
+        "direct_network_restore": {
+          "actions": [
+            {
+              "already_absent": true,
+              "direction": "egress"
+            },
+            {
+              "already_absent": true,
+              "direction": "ingress"
+            }
+          ],
+          "attempted": true,
+          "blocked": false,
+          "pod_ip": "10.244.0.19",
+          "verification": {
+            "blocked": false,
+            "checked": true,
+            "egress_blocked": false,
+            "ingress_blocked": false
+          }
+        },
+        "identity_restore": {
+          "attempted": true,
+          "method": "svid_enabled_label_true",
+          "restored": true
+        },
+        "labels_removed": true,
+        "pod": "traffic-analyzer-7c5c577dc4-sc825",
+        "removed_count": 1
+      }
+    ],
+    "pod_recreation": {
+      "attempted": true,
+      "delete_errors": [],
+      "deleted_pods": [
+        "traffic-analyzer-7c5c577dc4-644np"
+      ],
+      "new_pod_ready": true,
+      "ready_pod_names": [
+        "traffic-analyzer-7c5c577dc4-sc825"
+      ],
+      "waited_seconds": 20.22
+    },
+    "restored": false,
+    "scale_restore": {
+      "deployment": "traffic-analyzer",
+      "method": "deployment_scale_restore",
+      "reason": "no_original_replicas_annotation",
+      "restored": false,
+      "xapp": "traffic-analyzer"
+    },
+    "service_restore": {
+      "namespace": "ricxapp",
+      "restored": true,
+      "services": [
+        {
+          "endpoint_summary_after_restore": {
+            "addresses": [
+              "10.244.0.19"
+            ],
+            "endpoint_count": 1,
+            "error": null,
+            "has_endpoints": true,
+            "patch5b_v3": true,
+            "ports": [
+              {
+                "name": "http",
+                "port": 8080,
+                "protocol": "TCP"
+              }
+            ],
+            "service": "traffic-analyzer",
+            "source": "endpoints"
+          },
+          "restored": true,
+          "restored_selector": {
+            "app": "traffic-analyzer"
+          },
+          "selector_after_restore": {
+            "app": "traffic-analyzer"
+          },
+          "selector_patch_used": [
+            {
+              "op": "remove",
+              "path": "/spec/selector/zt-xguard.io~1service-isolated"
+            },
+            {
+              "op": "replace",
+              "path": "/spec/selector/app",
+              "value": "traffic-analyzer"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1original-service-selector"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1service-isolated"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1service-isolated-incident"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1service-isolated-time"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1service-isolated-reason"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1service-isolated-selector-token"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1xapp"
+            }
+          ],
+          "service": "traffic-analyzer"
+        }
+      ],
+      "xapp": "traffic-analyzer"
+    },
+    "time": "2026-08-07T09:54:50.622911+00:00",
+    "verification_after_restore": {
+      "contained": true,
+      "containment_note": "Patch5B v3: contained=true when quarantine-labelled pod is paired with service isolation, OR when direct node-level iptables blocking is verified active (independent mechanism, does not depend on Calico/Felix)",
+      "direct_network_isolated": false,
+      "namespace": "ricxapp",
+      "patch5b_v3": true,
+      "pod_labelled_quarantined": true,
+      "pods": [
+        {
+          "direct_network_isolation": {
+            "blocked": false,
+            "checked": true,
+            "egress_blocked": false,
+            "ingress_blocked": false
+          },
+          "labels": {
+            "app": "traffic-analyzer",
+            "pod-template-hash": "7c5c577dc4",
+            "security-status": "quarantined",
+            "zt-xguard.io/decision": "quarantined",
+            "zt-xguard.io/quarantine": "true",
+            "zt-xguard.io/svid-enabled": "true",
+            "zt-xguard/component": "custom-xapp",
+            "zt-xguard/profile": "traffic-analyzer"
+          },
+          "phase": "Running",
+          "pod": "traffic-analyzer-7c5c577dc4-sc825",
+          "quarantine_label": true,
+          "ready": true
+        }
+      ],
+      "quarantine_marked": true,
+      "service_isolated": true,
+      "services": [
+        {
+          "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"traffic-analyzer\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"traffic-analyzer\",\"namespace\":\"ricxapp\"},\"spec\":{\"ports\":[{\"name\":\"http\",\"port\":8080,\"protocol\":\"TCP\",\"targetPort\":\"http\"}],\"selector\":{\"app\":\"traffic-analyzer\"},\"type\":\"ClusterIP\"}}\n",
+            "zt-xguard.io/original-service-selector": "{\"app\": \"traffic-analyzer\"}",
+            "zt-xguard.io/service-isolated": "true",
+            "zt-xguard.io/service-isolated-incident": "20260807T095440Z-malicious_tool_execution-traffic-analyzer-1f372f26e7",
+            "zt-xguard.io/service-isolated-reason": "known_attack_tool_or_technique_executed_inside_controlled_xapp",
+            "zt-xguard.io/service-isolated-selector-token": "ztxq-3c5ff9e68aa5ad91",
+            "zt-xguard.io/service-isolated-time": "2026-08-07T09:54:50.131004+00:00",
+            "zt-xguard.io/xapp": "traffic-analyzer"
+          },
+          "endpoint_summary": {
+            "addresses": [],
+            "endpoint_count": 0,
+            "error": null,
+            "has_endpoints": false,
+            "patch5b_v3": true,
+            "ports": [],
+            "service": "traffic-analyzer",
+            "source": "endpoints"
+          },
+          "endpoints_empty": true,
+          "patch5b_v3": true,
+          "selector": {
+            "app": "traffic-analyzer",
+            "zt-xguard.io/service-isolated": "ztxq-3c5ff9e68aa5ad91"
+          },
+          "service": "traffic-analyzer",
+          "service_isolated": true
+        }
+      ],
+      "time": "2026-08-07T09:54:50.622776+00:00",
+      "verification_unknown": false,
+      "xapp": "traffic-analyzer"
+    },
+    "xapp": "traffic-analyzer",
+    "ztx_surgical_containment_fix_v2": true,
+    "ztx_v2_state_after_restore": {
+      "containment_required": false,
+      "containment_verified": false,
+      "downgrade_blocked": false,
+      "findings": [],
+      "last_signal": "restore",
+      "last_source": "containment_restore",
+      "last_update": "2026-08-07T09:54:50.623302+00:00",
+      "pod": null,
+      "previous_state": "NORMAL",
+      "raw_state": "RESTORED",
+      "risk_score": 0,
+      "score": 0,
+      "score_type": "risk_score_0_to_100_higher_means_riskier",
+      "state": "NORMAL",
+      "trust_score": 100,
+      "xapp": "traffic-analyzer",
+      "ztx_surgical_containment_fix_v2": true,
+      "ztx_surgical_policy_fix_v1": true
+    }
+  }
+}

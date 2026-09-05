@@ -1,0 +1,27 @@
+NAME                                      READY   STATUS    RESTARTS      AGE   IP             NODE          NOMINATED NODE   READINESS GATES
+pod/kpm-monitor-85d4d9d7d8-4vgz8          1/1     Running   2 (15h ago)   33h   10.244.0.176   near-rt-ric   <none>           <none>
+pod/qos-optimizer-854f67c675-8hfjk        1/1     Running   2 (15h ago)   32h   10.244.0.178   near-rt-ric   <none>           <none>
+pod/resource-optimizer-5bd45cd6bb-wc5br   1/1     Running   2 (15h ago)   32h   10.244.0.177   near-rt-ric   <none>           <none>
+pod/security-observer-747955f9b5-jtwwz    1/1     Running   2 (15h ago)   32h   10.244.0.175   near-rt-ric   <none>           <none>
+pod/telemetry-monitor-8555f8bb8f-tlxrw    1/1     Running   2 (15h ago)   32h   10.244.0.179   near-rt-ric   <none>           <none>
+pod/traffic-analyzer-679744878-h6wll      1/1     Running   2 (15h ago)   32h   10.244.0.174   near-rt-ric   <none>           <none>
+
+NAME                                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE     SELECTOR
+service/aux-entry                         ClusterIP   10.107.82.56    <none>        80/TCP,443/TCP               10d     <none>
+service/kpm-monitor                       ClusterIP   10.110.94.197   <none>        8092/TCP                     35h     app=kpm-monitor
+service/qos-optimizer                     ClusterIP   10.110.22.61    <none>        8080/TCP                     4d10h   app=qos-optimizer
+service/resource-optimizer                ClusterIP   10.111.197.10   <none>        8080/TCP                     4d10h   app=resource-optimizer
+service/security-observer                 ClusterIP   10.98.54.249    <none>        8080/TCP                     4d10h   app=security-observer
+service/service-ricxapp-kpm-monitor-rmr   ClusterIP   10.102.61.135   <none>        8092/TCP,4560/TCP,4561/TCP   35h     app=kpm-monitor
+service/telemetry-monitor                 ClusterIP   10.111.29.111   <none>        8080/TCP                     4d10h   app=telemetry-monitor
+service/traffic-analyzer                  ClusterIP   10.100.88.54    <none>        8080/TCP                     4d15h   app=traffic-analyzer
+
+NAME                                        ENDPOINTS                                               AGE
+endpoints/aux-entry                         192.168.112.129:32080,192.168.112.129:32443             10d
+endpoints/kpm-monitor                       10.244.0.176:8092                                       35h
+endpoints/qos-optimizer                     10.244.0.178:8080                                       4d10h
+endpoints/resource-optimizer                10.244.0.177:8080                                       4d10h
+endpoints/security-observer                 10.244.0.175:8080                                       4d10h
+endpoints/service-ricxapp-kpm-monitor-rmr   10.244.0.176:8092,10.244.0.176:4560,10.244.0.176:4560   35h
+endpoints/telemetry-monitor                 10.244.0.179:8080                                       4d10h
+endpoints/traffic-analyzer                  10.244.0.174:8080                                       4d15h

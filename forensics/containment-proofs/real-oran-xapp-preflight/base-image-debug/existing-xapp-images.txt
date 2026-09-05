@@ -1,0 +1,2 @@
+resource-optimizer -> localhost:5000/zt-resource-optimizer:1.0
+traffic-analyzer -> localhost:5000/zt-traffic-analyzer:1.0

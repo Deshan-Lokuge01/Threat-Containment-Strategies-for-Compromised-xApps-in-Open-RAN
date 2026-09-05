@@ -1,0 +1,135 @@
+===== Deployment image/config =====
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "20"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"zt-xguard-policy-engine"},"name":"zt-xguard-policy-engine","namespace":"zt-xguard"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"zt-xguard-policy-engine"}},"template":{"metadata":{"labels":{"app":"zt-xguard-policy-engine"}},"spec":{"containers":[{"env":[{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}},{"name":"XAPP_NAMESPACE","value":"ricxapp"},{"name":"TRUST_DOMAIN","value":"example.org"},{"name":"TRUSTED_PROVIDER","value":"sp1"},{"name":"APPROVED_REGISTRY_PREFIX","value":"localhost:5000/zt-"},{"name":"AUTO_QUARANTINE","value":"false"},{"name":"REVOKE_SPIRE","value":"false"},{"name":"SCAN_INTERVAL_SEC","value":"0"},{"name":"EVIDENCE_DIR","value":"/evidence"},{"name":"REQUEST_TIMEOUT","value":"2.0"},{"name":"ACTIVITY_TIMEOUT","value":"2.0"},{"name":"XAPP_LIST","value":"telemetry-monitor,qos-optimizer,traffic-analyzer,resource-optimizer,security-observer"}],"image":"localhost:5000/zt-xguard-policy-engine:1.0","imagePullPolicy":"Always","livenessProbe":{"httpGet":{"path":"/health","port":"http"},"initialDelaySeconds":10,"periodSeconds":20},"name":"policy-engine","ports":[{"containerPort":5000,"name":"http"}],"readinessProbe":{"httpGet":{"path":"/ready","port":"http"},"initialDelaySeconds":5,"periodSeconds":10},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}},"volumeMounts":[{"mountPath":"/evidence","name":"evidence"}]}],"serviceAccountName":"zt-xguard-policy-engine","volumes":[{"name":"evidence","persistentVolumeClaim":{"claimName":"zt-xguard-evidence-pvc"}}]}}}}
+  creationTimestamp: "2026-06-05T06:02:33Z"
+  generation: 20
+  labels:
+    app: zt-xguard-policy-engine
+  name: zt-xguard-policy-engine
+  namespace: zt-xguard
+  resourceVersion: "1838085"
+  uid: a92853fc-4e57-4535-96ca-aa7bd3eff64d
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: zt-xguard-policy-engine
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2026-06-09T22:10:29+05:30"
+      creationTimestamp: null
+      labels:
+        app: zt-xguard-policy-engine
+    spec:
+      containers:
+      - env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: XAPP_NAMESPACE
+          value: ricxapp
+        - name: TRUST_DOMAIN
+          value: example.org
+        - name: TRUSTED_PROVIDER
+          value: sp1
+        - name: APPROVED_REGISTRY_PREFIX
+          value: localhost:5000/zt-
+        - name: AUTO_QUARANTINE
+          value: "true"
+        - name: REVOKE_SPIRE
+          value: "false"
+        - name: SCAN_INTERVAL_SEC
+          value: "0"
+        - name: EVIDENCE_DIR
+          value: /evidence
+        - name: REQUEST_TIMEOUT
+          value: "2.0"
+        - name: ACTIVITY_TIMEOUT
+          value: "2.0"
+        - name: XAPP_LIST
+          value: telemetry-monitor,qos-optimizer,traffic-analyzer,resource-optimizer,security-observer
+        - name: CONTAINMENT_MODE
+          value: service
+        image: localhost:5000/zt-xguard-policy-engine:1.0
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: policy-engine
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /ready
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /evidence
+          name: evidence
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: zt-xguard-policy-engine
+      serviceAccountName: zt-xguard-policy-engine
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: evidence
+        persistentVolumeClaim:
+          claimName: zt-xguard-evidence-pvc
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-06-09T12:38:33Z"
+    lastUpdateTime: "2026-06-09T12:38:33Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2026-06-05T06:02:33Z"
+    lastUpdateTime: "2026-06-09T16:40:42Z"
+    message: ReplicaSet "zt-xguard-policy-engine-569fcfdf9b" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 20
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

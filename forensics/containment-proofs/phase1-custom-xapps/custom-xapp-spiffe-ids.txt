@@ -1,0 +1,5 @@
+SPIFFE ID        : spiffe://example.org/ns/ricxapp/sa/qos-optimizer
+SPIFFE ID        : spiffe://example.org/ns/ricxapp/sa/resource-optimizer
+SPIFFE ID        : spiffe://example.org/ns/ricxapp/sa/security-observer
+SPIFFE ID        : spiffe://example.org/ns/ricxapp/sa/telemetry-monitor
+SPIFFE ID        : spiffe://example.org/ns/ricxapp/sa/traffic-analyzer

@@ -1,0 +1,47 @@
+{
+    "name": "my-secure-dos-xapp",
+    "version": "1.0.1",
+    "provider": "sp1",
+    "containers": [
+        {
+            "name": "my-secure-dos-xapp",
+            "image": {
+                "registry": "192.168.8.135:5000",
+                "name": "dos-detector",
+                "tag": "1.0.1",
+                "digest": "sha256:4441d08ab147f768e923a87df35afbf0f5b180d25d5c235814944b00b4b986be",
+                "reference": "192.168.8.135:5000/dos-detector:1.0.1",
+                "immutable_reference": "192.168.8.135:5000/dos-detector@sha256:4441d08ab147f768e923a87df35afbf0f5b180d25d5c235814944b00b4b986be"
+            }
+        }
+    ],
+    "messaging": {
+        "ports": [
+            {
+                "name": "rmr_data",
+                "container": "my-secure-dos-xapp",
+                "port": 4562,
+                "rxMessages": ["RIC_INDICATION", "RIC_SUB_RESP", "RIC_SUB_FAILURE"],
+                "txMessages": ["RIC_SUB_REQ", "RIC_CONTROL_REQ"],
+                "policies": [1]
+            }
+        ]
+    },
+    "livenessProbe": {
+        "httpGet": {
+            "path": "/ric/v1/health/alive",
+            "port": 8092
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+    },
+    "readinessProbe": {
+        "httpGet": {
+            "path": "/ric/v1/health/ready",
+            "port": 8092
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+    }
+}
+

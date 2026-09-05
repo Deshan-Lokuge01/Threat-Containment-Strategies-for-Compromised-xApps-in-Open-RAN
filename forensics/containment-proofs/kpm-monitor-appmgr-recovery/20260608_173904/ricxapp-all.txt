@@ -1,0 +1,41 @@
+NAME                                      READY   STATUS    RESTARTS   AGE
+pod/kpm-monitor-6b98c5654-xvbrt           1/1     Running   0          154m
+pod/qos-optimizer-77877f44b8-snz8x        1/1     Running   0          2d19h
+pod/resource-optimizer-76cd8c474d-qq2dz   1/1     Running   0          2d19h
+pod/security-observer-9f84cf9bd-4rg9z     1/1     Running   0          2d19h
+pod/telemetry-monitor-667cc6d846-dfrf8    1/1     Running   0          2d19h
+pod/traffic-analyzer-b8cb5d96-nfp2n       1/1     Running   0          3d
+
+NAME                                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)             AGE
+service/aux-entry                         ClusterIP   10.107.82.56    <none>        80/TCP,443/TCP      9d
+service/kpm-monitor                       ClusterIP   10.101.6.37     <none>        8092/TCP,4560/TCP   3h26m
+service/qos-optimizer                     ClusterIP   10.110.22.61    <none>        8080/TCP            2d19h
+service/resource-optimizer                ClusterIP   10.111.197.10   <none>        8080/TCP            2d19h
+service/security-observer                 ClusterIP   10.98.54.249    <none>        8080/TCP            2d19h
+service/service-ricxapp-kpm-monitor-rmr   ClusterIP   10.107.17.73    <none>        8092/TCP,4560/TCP   160m
+service/telemetry-monitor                 ClusterIP   10.111.29.111   <none>        8080/TCP            2d19h
+service/traffic-analyzer                  ClusterIP   10.100.88.54    <none>        8080/TCP            3d
+
+NAME                                 READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/kpm-monitor          1/1     1            1           3h26m
+deployment.apps/qos-optimizer        1/1     1            1           2d19h
+deployment.apps/resource-optimizer   1/1     1            1           2d19h
+deployment.apps/security-observer    1/1     1            1           2d19h
+deployment.apps/telemetry-monitor    1/1     1            1           2d19h
+deployment.apps/traffic-analyzer     1/1     1            1           3d
+
+NAME                                            DESIRED   CURRENT   READY   AGE
+replicaset.apps/kpm-monitor-5b7bccb685          0         0         0       3h9m
+replicaset.apps/kpm-monitor-5bcd4c67d6          0         0         0       160m
+replicaset.apps/kpm-monitor-6949b59856          0         0         0       178m
+replicaset.apps/kpm-monitor-6b98c5654           1         1         1       154m
+replicaset.apps/kpm-monitor-77ff646c7d          0         0         0       3h26m
+replicaset.apps/kpm-monitor-78df79475f          0         0         0       177m
+replicaset.apps/kpm-monitor-7bd9486669          0         0         0       158m
+replicaset.apps/kpm-monitor-7d9d466745          0         0         0       157m
+replicaset.apps/qos-optimizer-77877f44b8        1         1         1       2d19h
+replicaset.apps/resource-optimizer-76cd8c474d   1         1         1       2d19h
+replicaset.apps/security-observer-9f84cf9bd     1         1         1       2d19h
+replicaset.apps/telemetry-monitor-667cc6d846    1         1         1       2d19h
+replicaset.apps/traffic-analyzer-858c6cb456     0         0         0       3d
+replicaset.apps/traffic-analyzer-b8cb5d96       1         1         1       3d

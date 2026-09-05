@@ -1,0 +1,26 @@
+{
+    "xapp_name": "dos-detector",
+    "version": "1.0.0",
+    "controls": {
+        "security_threshold_ul": 200.0,
+        "measurement_interval": 1000
+    },
+    "messaging": {
+        "ports": [
+            {
+                "name": "rmr_data",
+                "container": "my-secure-dos-xapp",
+                "port": 4562,
+                "rxMessages": ["RIC_INDICATION"],
+                "txMessages": ["RIC_CONTROL_REQ"],
+                "policies": [1]
+            },
+            {
+                "name": "http_service",
+                "container": "my-secure-dos-xapp",
+                "port": 8092,
+                "description": "HTTP REST API for the xApp"
+            }
+        ]
+    }
+}

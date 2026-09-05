@@ -1,0 +1,4 @@
+prompt_utc=2026-06-30T10:57:23Z
+planned_elapsed_s=300
+operation_name=ZTX-T1499-KPIMON-CPU-Resource-Exhaustion-Step50-NoMonitor
+adversary=ZT-XGuard T1499 KPIMON CPU Resource Exhaustion Pilot V2

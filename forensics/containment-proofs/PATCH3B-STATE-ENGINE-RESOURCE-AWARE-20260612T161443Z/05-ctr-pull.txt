@@ -1,0 +1,81 @@
+localhost:5000/zt xguard policy engine:1	fetching image content	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Pulling from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.0 s	total:   0.0 B	(0.0 B/s)	
+[1A[2K[1A[2K[1A[2Klocalhost:5000/zt xguard policy engine:1	fetching image content	
+└──manifest (58c5b25ffd87)              	waiting    	|[32m[0m--------------------------------------|	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Pulling from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.0 s	total:   0.0 B	(0.0 B/s)	
+[1A[2K[1A[2K[1A[2K[1A[2Klocalhost:5000/zt xguard policy engine:1	fetching image content	
+└──manifest (58c5b25ffd87)              	waiting    	|[32m[0m--------------------------------------|	
+   └──config (2bcbeee24b7a)             	waiting    	|[32m[0m--------------------------------------|	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Pulling from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.0 s	total:   0.0 B	(0.0 B/s)	
+[1A[2K[1A[2K[1A[2K[1A[2K[1A[2Klocalhost:5000/zt xguard policy engine:1	fetching image content	
+└──manifest (58c5b25ffd87)              	waiting    	|[32m[0m--------------------------------------|	
+   ├──config (2bcbeee24b7a)             	waiting    	|[32m[0m--------------------------------------|	
+   └──layer (73321903c44b)              	waiting    	|[32m[0m--------------------------------------|	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Pulling from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.0 s	total:   0.0 B	(0.0 B/s)	
+[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2Klocalhost:5000/zt xguard policy engine:1	fetching image content	
+└──manifest (58c5b25ffd87)              	waiting    	|[32m[0m--------------------------------------|	
+   ├──config (2bcbeee24b7a)             	waiting    	|[32m[0m--------------------------------------|	
+   ├──layer (73321903c44b)              	waiting    	|[32m[0m--------------------------------------|	
+   └──layer (21102af5de63)              	waiting    	|[32m[0m--------------------------------------|	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Pulling from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.0 s	total:   0.0 B	(0.0 B/s)	
+[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2Klocalhost:5000/zt xguard policy engine:1	fetching image content	
+└──manifest (58c5b25ffd87)              	waiting    	|[32m[0m--------------------------------------|	
+   ├──config (2bcbeee24b7a)             	waiting    	|[32m[0m--------------------------------------|	
+   ├──layer (73321903c44b)              	waiting    	|[32m[0m--------------------------------------|	
+   ├──layer (21102af5de63)              	waiting    	|[32m[0m--------------------------------------|	
+   └──layer (8d5a6166921d)              	waiting    	|[32m[0m--------------------------------------|	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Pulling from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.0 s	total:   0.0 B	(0.0 B/s)	
+[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2Klocalhost:5000/zt xguard policy engine:1	saved	
+└──manifest (58c5b25ffd87)              	waiting    	|[32m[0m--------------------------------------|	
+   ├──config (2bcbeee24b7a)             	waiting    	|[32m[0m--------------------------------------|	
+   ├──layer (73321903c44b)              	waiting    	|[32m[0m--------------------------------------|	
+   ├──layer (21102af5de63)              	waiting    	|[32m[0m--------------------------------------|	
+   └──layer (8d5a6166921d)              	waiting    	|[32m[0m--------------------------------------|	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Pulling from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.1 s	total:   0.0 B	(0.0 B/s)	
+[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2Klocalhost:5000/zt xguard policy engine:1	saved	
+└──manifest (58c5b25ffd87)              	complete   	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──config (2bcbeee24b7a)             	waiting    	|[32m[0m--------------------------------------|	
+   ├──layer (73321903c44b)              	waiting    	|[32m[0m--------------------------------------|	
+   ├──layer (21102af5de63)              	waiting    	|[32m[0m--------------------------------------|	
+   └──layer (8d5a6166921d)              	waiting    	|[32m[0m--------------------------------------|	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Completed pull from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.1 s	total:  2.6 Ki	(32.9 KiB/s)	
+[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2Klocalhost:5000/zt xguard policy engine:1	saved	
+└──manifest (58c5b25ffd87)              	complete   	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──config (2bcbeee24b7a)             	complete   	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──layer (73321903c44b)              	waiting    	|[32m[0m--------------------------------------|	
+   ├──layer (21102af5de63)              	waiting    	|[32m[0m--------------------------------------|	
+   └──layer (8d5a6166921d)              	waiting    	|[32m[0m--------------------------------------|	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Completed pull from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.1 s	total:  10.1 K	(130.1 KiB/s)	
+[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2Klocalhost:5000/zt xguard policy engine:1	saved	
+└──manifest (58c5b25ffd87)              	complete   	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──config (2bcbeee24b7a)             	complete   	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──layer (73321903c44b)              	extracted  	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──layer (21102af5de63)              	waiting    	|[32m[0m--------------------------------------|	
+   └──layer (8d5a6166921d)              	waiting    	|[32m[0m--------------------------------------|	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Completed pull from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.1 s	total:  30.5 K	(390.4 KiB/s)	
+[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2Klocalhost:5000/zt xguard policy engine:1	saved	
+└──manifest (58c5b25ffd87)              	complete   	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──config (2bcbeee24b7a)             	complete   	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──layer (73321903c44b)              	extracted  	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──layer (21102af5de63)              	extracted  	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   └──layer (8d5a6166921d)              	waiting    	|[32m[0m--------------------------------------|	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Completed pull from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.1 s	total:  36.0 K	(456.0 KiB/s)	
+[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2Klocalhost:5000/zt xguard policy engine:1	saved	
+└──manifest (58c5b25ffd87)              	complete   	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──config (2bcbeee24b7a)             	complete   	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──layer (73321903c44b)              	extracted  	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   ├──layer (21102af5de63)              	extracted  	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+   └──layer (8d5a6166921d)              	extracted  	|[32m++++++++++++++++++++++++++++++++++++++[0m|	
+application/vnd.docker.distribution.manifest.v2+json sha256:58c5b25ffd87cc18ad408efe1df62e90307c5620448546a5567cf60f982c7a63
+Completed pull from OCI Registry (localhost:5000/zt-xguard-policy-engine:1.0)	elapsed: 0.1 s	total:  40.5 K	(511.3 KiB/s)	

@@ -1,0 +1,72 @@
+{
+  "all_passed": true,
+  "results": [
+    {
+      "case": "high_cpu_invalid_activity_should_be_suspicious",
+      "expected": "SUSPICIOUS",
+      "actual": "SUSPICIOUS",
+      "passed": true,
+      "rule_ids": [
+        "RESOURCE_CPU_THRESHOLD_EXCEEDED",
+        "RESOURCE_CPU_PROFILE_DEVIATION"
+      ],
+      "reasons": [
+        "cpu_usage_percent=92.00 exceeds threshold=60.00 (default_cpu_class:medium)",
+        "cpu_usage_not_profile_consistent_or_activity_invalid:cpu=92.00,threshold=60.00"
+      ],
+      "evidence_sources": {
+        "falco": false,
+        "prometheus": false,
+        "cadvisor": true,
+        "svid": false,
+        "kubernetes": false,
+        "xapp_activity": true,
+        "integrity": false
+      }
+    },
+    {
+      "case": "high_cpu_valid_activity_should_be_observed",
+      "expected": "OBSERVED",
+      "actual": "OBSERVED",
+      "passed": true,
+      "rule_ids": [
+        "RESOURCE_CPU_THRESHOLD_EXCEEDED",
+        "R-PROFILE-01"
+      ],
+      "reasons": [
+        "cpu_usage_percent=90.00 exceeds threshold=85.00 (default_cpu_class:high)",
+        "resource_usage_matches_declared_xapp_intent_and_valid_activity_work_units=4800_profile_allows_high_workload"
+      ],
+      "evidence_sources": {
+        "falco": false,
+        "prometheus": false,
+        "cadvisor": true,
+        "svid": false,
+        "kubernetes": false,
+        "xapp_activity": true,
+        "integrity": false
+      }
+    },
+    {
+      "case": "normal_cpu_heartbeat_should_be_trusted",
+      "expected": "TRUSTED",
+      "actual": "TRUSTED",
+      "passed": true,
+      "rule_ids": [
+        "R-BENIGN-01"
+      ],
+      "reasons": [
+        "normal_heartbeat_profile_consistent"
+      ],
+      "evidence_sources": {
+        "falco": false,
+        "prometheus": false,
+        "cadvisor": true,
+        "svid": false,
+        "kubernetes": false,
+        "xapp_activity": true,
+        "integrity": false
+      }
+    }
+  ]
+}

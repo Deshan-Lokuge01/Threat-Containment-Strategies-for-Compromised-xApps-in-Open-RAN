@@ -1,0 +1,3 @@
+body-a-xapp-object.json -> HTTP 400
+body-b-xapps-array.json -> HTTP 400
+body-c-xapps-string.json -> HTTP 200

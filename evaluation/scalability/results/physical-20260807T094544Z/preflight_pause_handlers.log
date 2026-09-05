@@ -1,0 +1,5 @@
+deployment.apps/zt-xguard-policy-engine scaled
+deployment.apps/falco-falcosidekick scaled
+pod/zt-xguard-policy-engine-75bd85d966-9f877 condition met
+timed out waiting for the condition on pods/falco-falcosidekick-ui-7577fb575b-wflhj
+client rate limiter Wait returned an error: context deadline exceeded

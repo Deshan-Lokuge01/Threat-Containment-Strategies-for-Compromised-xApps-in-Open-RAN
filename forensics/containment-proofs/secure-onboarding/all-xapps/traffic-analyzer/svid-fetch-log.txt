@@ -1,0 +1,24 @@
+Waiting for SPIRE socket...
+Socket ready. Fetching SVID...
+Received 1 svid after 526.511398ms
+
+SPIFFE ID:		spiffe://example.org/ns/ricxapp/sa/traffic-analyzer
+SVID Valid After:	2026-06-05 11:59:06 +0000 UTC
+SVID Valid Until:	2026-06-05 15:59:16 +0000 UTC
+CA #1 Valid After:	2026-06-03 20:38:34 +0000 UTC
+CA #1 Valid Until:	2026-06-04 20:38:44 +0000 UTC
+CA #2 Valid After:	2026-06-04 08:38:34 +0000 UTC
+CA #2 Valid Until:	2026-06-05 08:38:44 +0000 UTC
+CA #3 Valid After:	2026-06-04 20:38:34 +0000 UTC
+CA #3 Valid Until:	2026-06-05 20:38:44 +0000 UTC
+CA #4 Valid After:	2026-06-05 08:38:34 +0000 UTC
+CA #4 Valid Until:	2026-06-06 08:38:44 +0000 UTC
+
+Writing SVID #0 to file /svid-data/svid.0.pem.
+Writing key #0 to file /svid-data/svid.0.key.
+Writing bundle #0 to file /svid-data/bundle.0.pem.
+SVID fetched successfully.
+total 16
+-rw-r--r--    1 fetcher  fetcher       4880 Jun  5 11:59 bundle.0.pem
+-rw-------    1 fetcher  fetcher        241 Jun  5 11:59 svid.0.key
+-rw-r--r--    1 fetcher  fetcher       1099 Jun  5 11:59 svid.0.pem

@@ -1,0 +1,46 @@
+      responses   :
+        '200':
+          description : xApp Manager is ready for service
+        '503':
+          description: xApp Manager is not ready for service
+  /xapps:
+    post:
+      summary: Deploy a xapp
+      tags:
+        - xapp
+      operationId: deployXapp
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: XappDescriptor
+          in: body
+          description: xApp deployment info
+          schema:
+            $ref: '#/definitions/XappDescriptor'
+      responses:
+        '201':
+          description: xApp successfully created
+          schema:
+            $ref: '#/definitions/Xapp'
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal error
+    get:
+      summary: Returns the status of all xapps
+      tags:
+        - xapp
+      operationId: getAllXapps
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful query of xApps
+          schema:
+            $ref: '#/definitions/AllDeployedXapps'
+        '500':
+          description: Internal error
+  /xapps/list:
+    get:

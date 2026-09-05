@@ -1,0 +1,1649 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "6",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"telemetry-monitor\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"telemetry-monitor\",\"namespace\":\"ricxapp\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"app\":\"telemetry-monitor\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"annotations\":{\"prometheus.io/path\":\"/metrics\",\"prometheus.io/port\":\"8080\",\"prometheus.io/scrape\":\"true\"},\"labels\":{\"app\":\"telemetry-monitor\",\"security-status\":\"trusted\",\"zt-xguard.io/svid-enabled\":\"true\",\"zt-xguard/component\":\"custom-xapp\",\"zt-xguard/profile\":\"telemetry-monitor\"}},\"spec\":{\"automountServiceAccountToken\":false,\"containers\":[{\"env\":[{\"name\":\"XAPP_NAME\",\"value\":\"telemetry-monitor\"},{\"name\":\"XAPP_PORT\",\"value\":\"8080\"},{\"name\":\"XAPP_PROFILE_PATH\",\"value\":\"/etc/xapp-profile/profile.json\"},{\"name\":\"XAPP_SVID_CERT\",\"value\":\"/etc/svid/svid.0.pem\"},{\"name\":\"XAPP_SVID_KEY\",\"value\":\"/etc/svid/svid.0.key\"},{\"name\":\"XAPP_SVID_BUNDLE\",\"value\":\"/etc/svid/bundle.0.pem\"}],\"image\":\"docker.io/library/zt-telemetry-monitor:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"livenessProbe\":{\"failureThreshold\":4,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":15,\"periodSeconds\":15,\"timeoutSeconds\":3},\"name\":\"telemetry-monitor\",\"ports\":[{\"containerPort\":8080,\"name\":\"http\",\"protocol\":\"TCP\"}],\"readinessProbe\":{\"failureThreshold\":6,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":5,\"periodSeconds\":10,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"256Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":false,\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/etc/xapp-profile\",\"name\":\"xapp-profile\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\",\"readOnly\":true}]},{\"args\":[\"SOCKET=/run/spire/sockets/spire-agent.sock\\nOUTPUT=/etc/svid\\nTMP=/tmp/svid-next\\n\\nwhile true; do\\n  rm -rf \\\"$TMP\\\"\\n  mkdir -p \\\"$TMP\\\"\\n\\n  if /opt/spire/bin/spire-agent api fetch x509                      -silent                      -socketPath \\\"$SOCKET\\\"                      -write \\\"$TMP\\\"\\n  then\\n    cp \\\"$TMP/svid.0.pem\\\" \\\"$OUTPUT/svid.0.pem.new\\\"\\n    cp \\\"$TMP/svid.0.key\\\" \\\"$OUTPUT/svid.0.key.new\\\"\\n    cp \\\"$TMP/bundle.0.pem\\\" \\\"$OUTPUT/bundle.0.pem.new\\\"\\n\\n    chmod 0644 \\\"$OUTPUT/svid.0.pem.new\\\"\\n    chmod 0600 \\\"$OUTPUT/svid.0.key.new\\\"\\n    chmod 0644 \\\"$OUTPUT/bundle.0.pem.new\\\"\\n\\n    mv \\\"$OUTPUT/svid.0.pem.new\\\" \\\"$OUTPUT/svid.0.pem\\\"\\n    mv \\\"$OUTPUT/svid.0.key.new\\\" \\\"$OUTPUT/svid.0.key\\\"\\n    mv \\\"$OUTPUT/bundle.0.pem.new\\\" \\\"$OUTPUT/bundle.0.pem\\\"\\n\\n    echo \\\"$(date -u +%FT%TZ) SVID_RENEW_OK\\\"\\n  else\\n    echo \\\"$(date -u +%FT%TZ) SVID_RENEW_FAILED\\\"\\n  fi\\n\\n  sleep 60\\ndone\\n\"],\"command\":[\"/bin/sh\",\"-ec\"],\"image\":\"docker.io/library/zt-spire-fetcher:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"renew-svid\",\"resources\":{\"limits\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"},\"requests\":{\"cpu\":\"5m\",\"memory\":\"16Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/run/spire/sockets\",\"name\":\"spiffe-socket\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\"}]}],\"initContainers\":[{\"args\":[\"SOCKET=/run/spire/sockets/spire-agent.sock\\nOUTPUT=/etc/svid\\n\\necho \\\"Waiting for SPIRE socket...\\\"\\n\\nfor i in $(seq 1 60); do\\n  [ -S \\\"$SOCKET\\\" ] \\u0026\\u0026 break\\n  echo \\\"Socket not ready: $i/60\\\"\\n  sleep 2\\ndone\\n\\ntest -S \\\"$SOCKET\\\"\\nmkdir -p \\\"$OUTPUT\\\"\\n\\necho \\\"Waiting for workload identity...\\\"\\n\\nfor i in $(seq 1 60); do\\n  if /opt/spire/bin/spire-agent api fetch x509                      -socketPath \\\"$SOCKET\\\"                      -write \\\"$OUTPUT\\\"\\n  then\\n    chmod 0644 \\\"$OUTPUT/svid.0.pem\\\"\\n    chmod 0600 \\\"$OUTPUT/svid.0.key\\\"\\n    chmod 0644 \\\"$OUTPUT/bundle.0.pem\\\"\\n\\n    echo \\\"SVID_FETCH_OK\\\"\\n    exit 0\\n  fi\\n\\n  echo \\\"Identity not ready: $i/60\\\"\\n  sleep 2\\ndone\\n\\necho \\\"SVID_FETCH_FAILED\\\"\\nexit 1\\n\"],\"command\":[\"/bin/sh\",\"-ec\"],\"image\":\"docker.io/library/zt-spire-fetcher:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"fetch-svid\",\"resources\":{\"limits\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"},\"requests\":{\"cpu\":\"5m\",\"memory\":\"16Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/run/spire/sockets\",\"name\":\"spiffe-socket\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\"}]}],\"securityContext\":{\"fsGroup\":10001,\"fsGroupChangePolicy\":\"OnRootMismatch\",\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001,\"seccompProfile\":{\"type\":\"RuntimeDefault\"}},\"serviceAccountName\":\"telemetry-monitor\",\"terminationGracePeriodSeconds\":5,\"volumes\":[{\"csi\":{\"driver\":\"csi.spiffe.io\",\"readOnly\":true},\"name\":\"spiffe-socket\"},{\"emptyDir\":{},\"name\":\"svid-data\"},{\"configMap\":{\"name\":\"telemetry-monitor-profile\"},\"name\":\"xapp-profile\"}]}}}}\n"
+                },
+                "creationTimestamp": "2026-06-23T06:57:00Z",
+                "generation": 11,
+                "labels": {
+                    "app": "telemetry-monitor",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "telemetry-monitor",
+                "namespace": "ricxapp",
+                "resourceVersion": "3693094",
+                "uid": "a89d9b70-0cdc-486b-a729-caa5d732aa7d"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 0,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "app": "telemetry-monitor"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "annotations": {
+                            "kubectl.kubernetes.io/restartedAt": "2026-07-23T17:12:33+05:30",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080",
+                            "prometheus.io/scrape": "true",
+                            "zt-xguard.io/svid-logger-version": "v2-configmap"
+                        },
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "telemetry-monitor",
+                            "security-status": "trusted",
+                            "zt-xguard.io/svid-enabled": "true",
+                            "zt-xguard/component": "custom-xapp",
+                            "zt-xguard/profile": "telemetry-monitor"
+                        }
+                    },
+                    "spec": {
+                        "automountServiceAccountToken": false,
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "XAPP_NAME",
+                                        "value": "telemetry-monitor"
+                                    },
+                                    {
+                                        "name": "XAPP_PORT",
+                                        "value": "8080"
+                                    },
+                                    {
+                                        "name": "XAPP_PROFILE_PATH",
+                                        "value": "/etc/xapp-profile/profile.json"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_CERT",
+                                        "value": "/etc/svid/svid.0.pem"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_KEY",
+                                        "value": "/etc/svid/svid.0.key"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_BUNDLE",
+                                        "value": "/etc/svid/bundle.0.pem"
+                                    }
+                                ],
+                                "image": "docker.io/library/zt-telemetry-monitor:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "failureThreshold": 4,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": "http",
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 15,
+                                    "periodSeconds": 15,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "name": "telemetry-monitor",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "name": "http",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 6,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": "http",
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "1",
+                                        "memory": "256Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": false,
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/etc/xapp-profile",
+                                        "name": "xapp-profile",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data",
+                                        "readOnly": true
+                                    }
+                                ]
+                            },
+                            {
+                                "args": [
+                                    "/opt/ztx/svid-renew.sh"
+                                ],
+                                "command": [
+                                    "/bin/sh"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "EXPECTED_SPIFFE_ID",
+                                        "value": "spiffe://oran.fyp.local/ns/ricxapp/sa/telemetry-monitor"
+                                    },
+                                    {
+                                        "name": "RENEW_INTERVAL_SECONDS",
+                                        "value": "60"
+                                    }
+                                ],
+                                "image": "docker.io/library/zt-spire-fetcher:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "renew-svid",
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "5m",
+                                        "memory": "16Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/opt/ztx/svid-renew.sh",
+                                        "name": "svid-renew-logger",
+                                        "readOnly": true,
+                                        "subPath": "svid-renew.sh"
+                                    },
+                                    {
+                                        "mountPath": "/run/spire/sockets",
+                                        "name": "spiffe-socket",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data"
+                                    }
+                                ]
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "initContainers": [
+                            {
+                                "args": [
+                                    "SOCKET=/run/spire/sockets/spire-agent.sock\nOUTPUT=/etc/svid\n\necho \"Waiting for SPIRE socket...\"\n\nfor i in $(seq 1 60); do\n  [ -S \"$SOCKET\" ] \u0026\u0026 break\n  echo \"Socket not ready: $i/60\"\n  sleep 2\ndone\n\ntest -S \"$SOCKET\"\nmkdir -p \"$OUTPUT\"\n\necho \"Waiting for workload identity...\"\n\nfor i in $(seq 1 60); do\n  if /opt/spire/bin/spire-agent api fetch x509                      -socketPath \"$SOCKET\"                      -write \"$OUTPUT\"\n  then\n    chmod 0644 \"$OUTPUT/svid.0.pem\"\n    chmod 0600 \"$OUTPUT/svid.0.key\"\n    chmod 0644 \"$OUTPUT/bundle.0.pem\"\n\n    echo \"SVID_FETCH_OK\"\n    exit 0\n  fi\n\n  echo \"Identity not ready: $i/60\"\n  sleep 2\ndone\n\necho \"SVID_FETCH_FAILED\"\nexit 1\n"
+                                ],
+                                "command": [
+                                    "/bin/sh",
+                                    "-ec"
+                                ],
+                                "image": "docker.io/library/zt-spire-fetcher:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "fetch-svid",
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "5m",
+                                        "memory": "16Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/run/spire/sockets",
+                                        "name": "spiffe-socket",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data"
+                                    }
+                                ]
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {
+                            "fsGroup": 10001,
+                            "fsGroupChangePolicy": "OnRootMismatch",
+                            "runAsGroup": 10001,
+                            "runAsNonRoot": true,
+                            "runAsUser": 10001,
+                            "seccompProfile": {
+                                "type": "RuntimeDefault"
+                            }
+                        },
+                        "serviceAccount": "telemetry-monitor",
+                        "serviceAccountName": "telemetry-monitor",
+                        "terminationGracePeriodSeconds": 5,
+                        "volumes": [
+                            {
+                                "configMap": {
+                                    "defaultMode": 365,
+                                    "name": "zt-xguard-svid-renew-logger"
+                                },
+                                "name": "svid-renew-logger"
+                            },
+                            {
+                                "csi": {
+                                    "driver": "csi.spiffe.io",
+                                    "readOnly": true
+                                },
+                                "name": "spiffe-socket"
+                            },
+                            {
+                                "emptyDir": {},
+                                "name": "svid-data"
+                            },
+                            {
+                                "configMap": {
+                                    "defaultMode": 420,
+                                    "name": "telemetry-monitor-profile"
+                                },
+                                "name": "xapp-profile"
+                            }
+                        ]
+                    }
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-06-23T06:57:00Z",
+                        "lastUpdateTime": "2026-07-23T11:43:04Z",
+                        "message": "ReplicaSet \"telemetry-monitor-b94497666\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    },
+                    {
+                        "lastTransitionTime": "2026-07-27T16:25:20Z",
+                        "lastUpdateTime": "2026-07-27T16:25:20Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    }
+                ],
+                "observedGeneration": 11
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "3",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"qos-optimizer\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"qos-optimizer\",\"namespace\":\"ricxapp\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"app\":\"qos-optimizer\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"annotations\":{\"prometheus.io/path\":\"/metrics\",\"prometheus.io/port\":\"8080\",\"prometheus.io/scrape\":\"true\"},\"labels\":{\"app\":\"qos-optimizer\",\"security-status\":\"trusted\",\"zt-xguard.io/svid-enabled\":\"true\",\"zt-xguard/component\":\"custom-xapp\",\"zt-xguard/profile\":\"qos-optimizer\"}},\"spec\":{\"automountServiceAccountToken\":false,\"containers\":[{\"env\":[{\"name\":\"XAPP_NAME\",\"value\":\"qos-optimizer\"},{\"name\":\"XAPP_PORT\",\"value\":\"8080\"},{\"name\":\"XAPP_PROFILE_PATH\",\"value\":\"/etc/xapp-profile/profile.json\"},{\"name\":\"XAPP_SVID_CERT\",\"value\":\"/etc/svid/svid.0.pem\"},{\"name\":\"XAPP_SVID_KEY\",\"value\":\"/etc/svid/svid.0.key\"},{\"name\":\"XAPP_SVID_BUNDLE\",\"value\":\"/etc/svid/bundle.0.pem\"}],\"image\":\"docker.io/library/zt-qos-optimizer:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"livenessProbe\":{\"failureThreshold\":4,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":15,\"periodSeconds\":15,\"timeoutSeconds\":3},\"name\":\"qos-optimizer\",\"ports\":[{\"containerPort\":8080,\"name\":\"http\",\"protocol\":\"TCP\"}],\"readinessProbe\":{\"failureThreshold\":6,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":5,\"periodSeconds\":10,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"256Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":false,\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/etc/xapp-profile\",\"name\":\"xapp-profile\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\",\"readOnly\":true}]},{\"args\":[\"SOCKET=/run/spire/sockets/spire-agent.sock\\nOUTPUT=/etc/svid\\nTMP=/tmp/svid-next\\n\\nwhile true; do\\n  rm -rf \\\"$TMP\\\"\\n  mkdir -p \\\"$TMP\\\"\\n\\n  if /opt/spire/bin/spire-agent api fetch x509                      -silent                      -socketPath \\\"$SOCKET\\\"                      -write \\\"$TMP\\\"\\n  then\\n    cp \\\"$TMP/svid.0.pem\\\" \\\"$OUTPUT/svid.0.pem.new\\\"\\n    cp \\\"$TMP/svid.0.key\\\" \\\"$OUTPUT/svid.0.key.new\\\"\\n    cp \\\"$TMP/bundle.0.pem\\\" \\\"$OUTPUT/bundle.0.pem.new\\\"\\n\\n    chmod 0644 \\\"$OUTPUT/svid.0.pem.new\\\"\\n    chmod 0600 \\\"$OUTPUT/svid.0.key.new\\\"\\n    chmod 0644 \\\"$OUTPUT/bundle.0.pem.new\\\"\\n\\n    mv \\\"$OUTPUT/svid.0.pem.new\\\" \\\"$OUTPUT/svid.0.pem\\\"\\n    mv \\\"$OUTPUT/svid.0.key.new\\\" \\\"$OUTPUT/svid.0.key\\\"\\n    mv \\\"$OUTPUT/bundle.0.pem.new\\\" \\\"$OUTPUT/bundle.0.pem\\\"\\n\\n    echo \\\"$(date -u +%FT%TZ) SVID_RENEW_OK\\\"\\n  else\\n    echo \\\"$(date -u +%FT%TZ) SVID_RENEW_FAILED\\\"\\n  fi\\n\\n  sleep 60\\ndone\\n\"],\"command\":[\"/bin/sh\",\"-ec\"],\"image\":\"docker.io/library/zt-spire-fetcher:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"renew-svid\",\"resources\":{\"limits\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"},\"requests\":{\"cpu\":\"5m\",\"memory\":\"16Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/run/spire/sockets\",\"name\":\"spiffe-socket\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\"}]}],\"initContainers\":[{\"args\":[\"SOCKET=/run/spire/sockets/spire-agent.sock\\nOUTPUT=/etc/svid\\n\\necho \\\"Waiting for SPIRE socket...\\\"\\n\\nfor i in $(seq 1 60); do\\n  [ -S \\\"$SOCKET\\\" ] \\u0026\\u0026 break\\n  echo \\\"Socket not ready: $i/60\\\"\\n  sleep 2\\ndone\\n\\ntest -S \\\"$SOCKET\\\"\\nmkdir -p \\\"$OUTPUT\\\"\\n\\necho \\\"Waiting for workload identity...\\\"\\n\\nfor i in $(seq 1 60); do\\n  if /opt/spire/bin/spire-agent api fetch x509                      -socketPath \\\"$SOCKET\\\"                      -write \\\"$OUTPUT\\\"\\n  then\\n    chmod 0644 \\\"$OUTPUT/svid.0.pem\\\"\\n    chmod 0600 \\\"$OUTPUT/svid.0.key\\\"\\n    chmod 0644 \\\"$OUTPUT/bundle.0.pem\\\"\\n\\n    echo \\\"SVID_FETCH_OK\\\"\\n    exit 0\\n  fi\\n\\n  echo \\\"Identity not ready: $i/60\\\"\\n  sleep 2\\ndone\\n\\necho \\\"SVID_FETCH_FAILED\\\"\\nexit 1\\n\"],\"command\":[\"/bin/sh\",\"-ec\"],\"image\":\"docker.io/library/zt-spire-fetcher:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"fetch-svid\",\"resources\":{\"limits\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"},\"requests\":{\"cpu\":\"5m\",\"memory\":\"16Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/run/spire/sockets\",\"name\":\"spiffe-socket\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\"}]}],\"securityContext\":{\"fsGroup\":10001,\"fsGroupChangePolicy\":\"OnRootMismatch\",\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001,\"seccompProfile\":{\"type\":\"RuntimeDefault\"}},\"serviceAccountName\":\"qos-optimizer\",\"terminationGracePeriodSeconds\":5,\"volumes\":[{\"csi\":{\"driver\":\"csi.spiffe.io\",\"readOnly\":true},\"name\":\"spiffe-socket\"},{\"emptyDir\":{},\"name\":\"svid-data\"},{\"configMap\":{\"name\":\"qos-optimizer-profile\"},\"name\":\"xapp-profile\"}]}}}}\n"
+                },
+                "creationTimestamp": "2026-06-23T07:11:16Z",
+                "generation": 16,
+                "labels": {
+                    "app": "qos-optimizer",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "qos-optimizer",
+                "namespace": "ricxapp",
+                "resourceVersion": "3702675",
+                "uid": "348a01a4-3713-4cff-8f6a-e68b55696b9e"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 0,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "app": "qos-optimizer"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "annotations": {
+                            "kubectl.kubernetes.io/restartedAt": "2026-07-11T12:51:56+05:30",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080",
+                            "prometheus.io/scrape": "true",
+                            "zt-xguard.io/svid-logger-version": "v2-configmap"
+                        },
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "qos-optimizer",
+                            "security-status": "trusted",
+                            "zt-xguard.io/svid-enabled": "true",
+                            "zt-xguard/component": "custom-xapp",
+                            "zt-xguard/profile": "qos-optimizer"
+                        }
+                    },
+                    "spec": {
+                        "automountServiceAccountToken": false,
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "XAPP_NAME",
+                                        "value": "qos-optimizer"
+                                    },
+                                    {
+                                        "name": "XAPP_PORT",
+                                        "value": "8080"
+                                    },
+                                    {
+                                        "name": "XAPP_PROFILE_PATH",
+                                        "value": "/etc/xapp-profile/profile.json"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_CERT",
+                                        "value": "/etc/svid/svid.0.pem"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_KEY",
+                                        "value": "/etc/svid/svid.0.key"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_BUNDLE",
+                                        "value": "/etc/svid/bundle.0.pem"
+                                    }
+                                ],
+                                "image": "docker.io/library/zt-qos-optimizer:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "failureThreshold": 4,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": "http",
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 15,
+                                    "periodSeconds": 15,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "name": "qos-optimizer",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "name": "http",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 6,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": "http",
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "1",
+                                        "memory": "256Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": false,
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/etc/xapp-profile",
+                                        "name": "xapp-profile",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data",
+                                        "readOnly": true
+                                    }
+                                ]
+                            },
+                            {
+                                "args": [
+                                    "/opt/ztx/svid-renew.sh"
+                                ],
+                                "command": [
+                                    "/bin/sh"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "EXPECTED_SPIFFE_ID",
+                                        "value": "spiffe://oran.fyp.local/ns/ricxapp/sa/qos-optimizer"
+                                    },
+                                    {
+                                        "name": "RENEW_INTERVAL_SECONDS",
+                                        "value": "60"
+                                    }
+                                ],
+                                "image": "docker.io/library/zt-spire-fetcher:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "renew-svid",
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "5m",
+                                        "memory": "16Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/opt/ztx/svid-renew.sh",
+                                        "name": "svid-renew-logger",
+                                        "readOnly": true,
+                                        "subPath": "svid-renew.sh"
+                                    },
+                                    {
+                                        "mountPath": "/run/spire/sockets",
+                                        "name": "spiffe-socket",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data"
+                                    }
+                                ]
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "initContainers": [
+                            {
+                                "args": [
+                                    "SOCKET=/run/spire/sockets/spire-agent.sock\nOUTPUT=/etc/svid\n\necho \"Waiting for SPIRE socket...\"\n\nfor i in $(seq 1 60); do\n  [ -S \"$SOCKET\" ] \u0026\u0026 break\n  echo \"Socket not ready: $i/60\"\n  sleep 2\ndone\n\ntest -S \"$SOCKET\"\nmkdir -p \"$OUTPUT\"\n\necho \"Waiting for workload identity...\"\n\nfor i in $(seq 1 60); do\n  if /opt/spire/bin/spire-agent api fetch x509                      -socketPath \"$SOCKET\"                      -write \"$OUTPUT\"\n  then\n    chmod 0644 \"$OUTPUT/svid.0.pem\"\n    chmod 0600 \"$OUTPUT/svid.0.key\"\n    chmod 0644 \"$OUTPUT/bundle.0.pem\"\n\n    echo \"SVID_FETCH_OK\"\n    exit 0\n  fi\n\n  echo \"Identity not ready: $i/60\"\n  sleep 2\ndone\n\necho \"SVID_FETCH_FAILED\"\nexit 1\n"
+                                ],
+                                "command": [
+                                    "/bin/sh",
+                                    "-ec"
+                                ],
+                                "image": "docker.io/library/zt-spire-fetcher:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "fetch-svid",
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "5m",
+                                        "memory": "16Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/run/spire/sockets",
+                                        "name": "spiffe-socket",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data"
+                                    }
+                                ]
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {
+                            "fsGroup": 10001,
+                            "fsGroupChangePolicy": "OnRootMismatch",
+                            "runAsGroup": 10001,
+                            "runAsNonRoot": true,
+                            "runAsUser": 10001,
+                            "seccompProfile": {
+                                "type": "RuntimeDefault"
+                            }
+                        },
+                        "serviceAccount": "qos-optimizer",
+                        "serviceAccountName": "qos-optimizer",
+                        "terminationGracePeriodSeconds": 5,
+                        "volumes": [
+                            {
+                                "configMap": {
+                                    "defaultMode": 365,
+                                    "name": "zt-xguard-svid-renew-logger"
+                                },
+                                "name": "svid-renew-logger"
+                            },
+                            {
+                                "csi": {
+                                    "driver": "csi.spiffe.io",
+                                    "readOnly": true
+                                },
+                                "name": "spiffe-socket"
+                            },
+                            {
+                                "emptyDir": {},
+                                "name": "svid-data"
+                            },
+                            {
+                                "configMap": {
+                                    "defaultMode": 420,
+                                    "name": "qos-optimizer-profile"
+                                },
+                                "name": "xapp-profile"
+                            }
+                        ]
+                    }
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-06-23T07:11:16Z",
+                        "lastUpdateTime": "2026-07-11T07:28:27Z",
+                        "message": "ReplicaSet \"qos-optimizer-65d9ff648f\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    },
+                    {
+                        "lastTransitionTime": "2026-07-27T17:29:25Z",
+                        "lastUpdateTime": "2026-07-27T17:29:25Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    }
+                ],
+                "observedGeneration": 16
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "3",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"traffic-analyzer\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"traffic-analyzer\",\"namespace\":\"ricxapp\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"app\":\"traffic-analyzer\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"annotations\":{\"prometheus.io/path\":\"/metrics\",\"prometheus.io/port\":\"8080\",\"prometheus.io/scrape\":\"true\"},\"labels\":{\"app\":\"traffic-analyzer\",\"security-status\":\"trusted\",\"zt-xguard.io/svid-enabled\":\"true\",\"zt-xguard/component\":\"custom-xapp\",\"zt-xguard/profile\":\"traffic-analyzer\"}},\"spec\":{\"automountServiceAccountToken\":false,\"containers\":[{\"env\":[{\"name\":\"XAPP_NAME\",\"value\":\"traffic-analyzer\"},{\"name\":\"XAPP_PORT\",\"value\":\"8080\"},{\"name\":\"XAPP_PROFILE_PATH\",\"value\":\"/etc/xapp-profile/profile.json\"},{\"name\":\"XAPP_SVID_CERT\",\"value\":\"/etc/svid/svid.0.pem\"},{\"name\":\"XAPP_SVID_KEY\",\"value\":\"/etc/svid/svid.0.key\"},{\"name\":\"XAPP_SVID_BUNDLE\",\"value\":\"/etc/svid/bundle.0.pem\"}],\"image\":\"docker.io/library/zt-traffic-analyzer:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"livenessProbe\":{\"failureThreshold\":4,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":15,\"periodSeconds\":15,\"timeoutSeconds\":3},\"name\":\"traffic-analyzer\",\"ports\":[{\"containerPort\":8080,\"name\":\"http\",\"protocol\":\"TCP\"}],\"readinessProbe\":{\"failureThreshold\":6,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":5,\"periodSeconds\":10,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"256Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":false,\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/etc/xapp-profile\",\"name\":\"xapp-profile\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\",\"readOnly\":true}]},{\"args\":[\"SOCKET=/run/spire/sockets/spire-agent.sock\\nOUTPUT=/etc/svid\\nTMP=/tmp/svid-next\\n\\nwhile true; do\\n  rm -rf \\\"$TMP\\\"\\n  mkdir -p \\\"$TMP\\\"\\n\\n  if /opt/spire/bin/spire-agent api fetch x509                      -silent                      -socketPath \\\"$SOCKET\\\"                      -write \\\"$TMP\\\"\\n  then\\n    cp \\\"$TMP/svid.0.pem\\\" \\\"$OUTPUT/svid.0.pem.new\\\"\\n    cp \\\"$TMP/svid.0.key\\\" \\\"$OUTPUT/svid.0.key.new\\\"\\n    cp \\\"$TMP/bundle.0.pem\\\" \\\"$OUTPUT/bundle.0.pem.new\\\"\\n\\n    chmod 0644 \\\"$OUTPUT/svid.0.pem.new\\\"\\n    chmod 0600 \\\"$OUTPUT/svid.0.key.new\\\"\\n    chmod 0644 \\\"$OUTPUT/bundle.0.pem.new\\\"\\n\\n    mv \\\"$OUTPUT/svid.0.pem.new\\\" \\\"$OUTPUT/svid.0.pem\\\"\\n    mv \\\"$OUTPUT/svid.0.key.new\\\" \\\"$OUTPUT/svid.0.key\\\"\\n    mv \\\"$OUTPUT/bundle.0.pem.new\\\" \\\"$OUTPUT/bundle.0.pem\\\"\\n\\n    echo \\\"$(date -u +%FT%TZ) SVID_RENEW_OK\\\"\\n  else\\n    echo \\\"$(date -u +%FT%TZ) SVID_RENEW_FAILED\\\"\\n  fi\\n\\n  sleep 60\\ndone\\n\"],\"command\":[\"/bin/sh\",\"-ec\"],\"image\":\"docker.io/library/zt-spire-fetcher:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"renew-svid\",\"resources\":{\"limits\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"},\"requests\":{\"cpu\":\"5m\",\"memory\":\"16Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/run/spire/sockets\",\"name\":\"spiffe-socket\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\"}]}],\"initContainers\":[{\"args\":[\"SOCKET=/run/spire/sockets/spire-agent.sock\\nOUTPUT=/etc/svid\\n\\necho \\\"Waiting for SPIRE socket...\\\"\\n\\nfor i in $(seq 1 60); do\\n  [ -S \\\"$SOCKET\\\" ] \\u0026\\u0026 break\\n  echo \\\"Socket not ready: $i/60\\\"\\n  sleep 2\\ndone\\n\\ntest -S \\\"$SOCKET\\\"\\nmkdir -p \\\"$OUTPUT\\\"\\n\\necho \\\"Waiting for workload identity...\\\"\\n\\nfor i in $(seq 1 60); do\\n  if /opt/spire/bin/spire-agent api fetch x509                      -socketPath \\\"$SOCKET\\\"                      -write \\\"$OUTPUT\\\"\\n  then\\n    chmod 0644 \\\"$OUTPUT/svid.0.pem\\\"\\n    chmod 0600 \\\"$OUTPUT/svid.0.key\\\"\\n    chmod 0644 \\\"$OUTPUT/bundle.0.pem\\\"\\n\\n    echo \\\"SVID_FETCH_OK\\\"\\n    exit 0\\n  fi\\n\\n  echo \\\"Identity not ready: $i/60\\\"\\n  sleep 2\\ndone\\n\\necho \\\"SVID_FETCH_FAILED\\\"\\nexit 1\\n\"],\"command\":[\"/bin/sh\",\"-ec\"],\"image\":\"docker.io/library/zt-spire-fetcher:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"fetch-svid\",\"resources\":{\"limits\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"},\"requests\":{\"cpu\":\"5m\",\"memory\":\"16Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/run/spire/sockets\",\"name\":\"spiffe-socket\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\"}]}],\"securityContext\":{\"fsGroup\":10001,\"fsGroupChangePolicy\":\"OnRootMismatch\",\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001,\"seccompProfile\":{\"type\":\"RuntimeDefault\"}},\"serviceAccountName\":\"traffic-analyzer\",\"terminationGracePeriodSeconds\":5,\"volumes\":[{\"csi\":{\"driver\":\"csi.spiffe.io\",\"readOnly\":true},\"name\":\"spiffe-socket\"},{\"emptyDir\":{},\"name\":\"svid-data\"},{\"configMap\":{\"name\":\"traffic-analyzer-profile\"},\"name\":\"xapp-profile\"}]}}}}\n"
+                },
+                "creationTimestamp": "2026-06-23T07:11:17Z",
+                "generation": 24,
+                "labels": {
+                    "app": "traffic-analyzer",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "traffic-analyzer",
+                "namespace": "ricxapp",
+                "resourceVersion": "3702665",
+                "uid": "ef8ed562-4508-40b1-910c-5531d080d987"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 0,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "app": "traffic-analyzer"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "annotations": {
+                            "kubectl.kubernetes.io/restartedAt": "2026-07-11T12:51:56+05:30",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080",
+                            "prometheus.io/scrape": "true",
+                            "zt-xguard.io/svid-logger-version": "v2-configmap"
+                        },
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "traffic-analyzer",
+                            "security-status": "trusted",
+                            "zt-xguard.io/svid-enabled": "true",
+                            "zt-xguard/component": "custom-xapp",
+                            "zt-xguard/profile": "traffic-analyzer"
+                        }
+                    },
+                    "spec": {
+                        "automountServiceAccountToken": false,
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "XAPP_NAME",
+                                        "value": "traffic-analyzer"
+                                    },
+                                    {
+                                        "name": "XAPP_PORT",
+                                        "value": "8080"
+                                    },
+                                    {
+                                        "name": "XAPP_PROFILE_PATH",
+                                        "value": "/etc/xapp-profile/profile.json"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_CERT",
+                                        "value": "/etc/svid/svid.0.pem"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_KEY",
+                                        "value": "/etc/svid/svid.0.key"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_BUNDLE",
+                                        "value": "/etc/svid/bundle.0.pem"
+                                    }
+                                ],
+                                "image": "docker.io/library/zt-traffic-analyzer:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "failureThreshold": 4,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": "http",
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 15,
+                                    "periodSeconds": 15,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "name": "traffic-analyzer",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "name": "http",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 6,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": "http",
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "1",
+                                        "memory": "256Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": false,
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/etc/xapp-profile",
+                                        "name": "xapp-profile",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data",
+                                        "readOnly": true
+                                    }
+                                ]
+                            },
+                            {
+                                "args": [
+                                    "/opt/ztx/svid-renew.sh"
+                                ],
+                                "command": [
+                                    "/bin/sh"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "EXPECTED_SPIFFE_ID",
+                                        "value": "spiffe://oran.fyp.local/ns/ricxapp/sa/traffic-analyzer"
+                                    },
+                                    {
+                                        "name": "RENEW_INTERVAL_SECONDS",
+                                        "value": "60"
+                                    }
+                                ],
+                                "image": "docker.io/library/zt-spire-fetcher:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "renew-svid",
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "5m",
+                                        "memory": "16Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/opt/ztx/svid-renew.sh",
+                                        "name": "svid-renew-logger",
+                                        "readOnly": true,
+                                        "subPath": "svid-renew.sh"
+                                    },
+                                    {
+                                        "mountPath": "/run/spire/sockets",
+                                        "name": "spiffe-socket",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data"
+                                    }
+                                ]
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "initContainers": [
+                            {
+                                "args": [
+                                    "SOCKET=/run/spire/sockets/spire-agent.sock\nOUTPUT=/etc/svid\n\necho \"Waiting for SPIRE socket...\"\n\nfor i in $(seq 1 60); do\n  [ -S \"$SOCKET\" ] \u0026\u0026 break\n  echo \"Socket not ready: $i/60\"\n  sleep 2\ndone\n\ntest -S \"$SOCKET\"\nmkdir -p \"$OUTPUT\"\n\necho \"Waiting for workload identity...\"\n\nfor i in $(seq 1 60); do\n  if /opt/spire/bin/spire-agent api fetch x509                      -socketPath \"$SOCKET\"                      -write \"$OUTPUT\"\n  then\n    chmod 0644 \"$OUTPUT/svid.0.pem\"\n    chmod 0600 \"$OUTPUT/svid.0.key\"\n    chmod 0644 \"$OUTPUT/bundle.0.pem\"\n\n    echo \"SVID_FETCH_OK\"\n    exit 0\n  fi\n\n  echo \"Identity not ready: $i/60\"\n  sleep 2\ndone\n\necho \"SVID_FETCH_FAILED\"\nexit 1\n"
+                                ],
+                                "command": [
+                                    "/bin/sh",
+                                    "-ec"
+                                ],
+                                "image": "docker.io/library/zt-spire-fetcher:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "fetch-svid",
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "5m",
+                                        "memory": "16Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/run/spire/sockets",
+                                        "name": "spiffe-socket",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data"
+                                    }
+                                ]
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {
+                            "fsGroup": 10001,
+                            "fsGroupChangePolicy": "OnRootMismatch",
+                            "runAsGroup": 10001,
+                            "runAsNonRoot": true,
+                            "runAsUser": 10001,
+                            "seccompProfile": {
+                                "type": "RuntimeDefault"
+                            }
+                        },
+                        "serviceAccount": "traffic-analyzer",
+                        "serviceAccountName": "traffic-analyzer",
+                        "terminationGracePeriodSeconds": 5,
+                        "volumes": [
+                            {
+                                "configMap": {
+                                    "defaultMode": 365,
+                                    "name": "zt-xguard-svid-renew-logger"
+                                },
+                                "name": "svid-renew-logger"
+                            },
+                            {
+                                "csi": {
+                                    "driver": "csi.spiffe.io",
+                                    "readOnly": true
+                                },
+                                "name": "spiffe-socket"
+                            },
+                            {
+                                "emptyDir": {},
+                                "name": "svid-data"
+                            },
+                            {
+                                "configMap": {
+                                    "defaultMode": 420,
+                                    "name": "traffic-analyzer-profile"
+                                },
+                                "name": "xapp-profile"
+                            }
+                        ]
+                    }
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-06-23T07:11:17Z",
+                        "lastUpdateTime": "2026-07-11T07:22:41Z",
+                        "message": "ReplicaSet \"traffic-analyzer-7c5c577dc4\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    },
+                    {
+                        "lastTransitionTime": "2026-07-27T17:29:21Z",
+                        "lastUpdateTime": "2026-07-27T17:29:21Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    }
+                ],
+                "observedGeneration": 24
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "3",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"resource-optimizer\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"resource-optimizer\",\"namespace\":\"ricxapp\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"app\":\"resource-optimizer\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"annotations\":{\"prometheus.io/path\":\"/metrics\",\"prometheus.io/port\":\"8080\",\"prometheus.io/scrape\":\"true\"},\"labels\":{\"app\":\"resource-optimizer\",\"security-status\":\"trusted\",\"zt-xguard.io/svid-enabled\":\"true\",\"zt-xguard/component\":\"custom-xapp\",\"zt-xguard/profile\":\"resource-optimizer\"}},\"spec\":{\"automountServiceAccountToken\":false,\"containers\":[{\"env\":[{\"name\":\"XAPP_NAME\",\"value\":\"resource-optimizer\"},{\"name\":\"XAPP_PORT\",\"value\":\"8080\"},{\"name\":\"XAPP_PROFILE_PATH\",\"value\":\"/etc/xapp-profile/profile.json\"},{\"name\":\"XAPP_SVID_CERT\",\"value\":\"/etc/svid/svid.0.pem\"},{\"name\":\"XAPP_SVID_KEY\",\"value\":\"/etc/svid/svid.0.key\"},{\"name\":\"XAPP_SVID_BUNDLE\",\"value\":\"/etc/svid/bundle.0.pem\"}],\"image\":\"docker.io/library/zt-resource-optimizer:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"livenessProbe\":{\"failureThreshold\":4,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":15,\"periodSeconds\":15,\"timeoutSeconds\":3},\"name\":\"resource-optimizer\",\"ports\":[{\"containerPort\":8080,\"name\":\"http\",\"protocol\":\"TCP\"}],\"readinessProbe\":{\"failureThreshold\":6,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":5,\"periodSeconds\":10,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"256Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":false,\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/etc/xapp-profile\",\"name\":\"xapp-profile\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\",\"readOnly\":true}]},{\"args\":[\"SOCKET=/run/spire/sockets/spire-agent.sock\\nOUTPUT=/etc/svid\\nTMP=/tmp/svid-next\\n\\nwhile true; do\\n  rm -rf \\\"$TMP\\\"\\n  mkdir -p \\\"$TMP\\\"\\n\\n  if /opt/spire/bin/spire-agent api fetch x509                      -silent                      -socketPath \\\"$SOCKET\\\"                      -write \\\"$TMP\\\"\\n  then\\n    cp \\\"$TMP/svid.0.pem\\\" \\\"$OUTPUT/svid.0.pem.new\\\"\\n    cp \\\"$TMP/svid.0.key\\\" \\\"$OUTPUT/svid.0.key.new\\\"\\n    cp \\\"$TMP/bundle.0.pem\\\" \\\"$OUTPUT/bundle.0.pem.new\\\"\\n\\n    chmod 0644 \\\"$OUTPUT/svid.0.pem.new\\\"\\n    chmod 0600 \\\"$OUTPUT/svid.0.key.new\\\"\\n    chmod 0644 \\\"$OUTPUT/bundle.0.pem.new\\\"\\n\\n    mv \\\"$OUTPUT/svid.0.pem.new\\\" \\\"$OUTPUT/svid.0.pem\\\"\\n    mv \\\"$OUTPUT/svid.0.key.new\\\" \\\"$OUTPUT/svid.0.key\\\"\\n    mv \\\"$OUTPUT/bundle.0.pem.new\\\" \\\"$OUTPUT/bundle.0.pem\\\"\\n\\n    echo \\\"$(date -u +%FT%TZ) SVID_RENEW_OK\\\"\\n  else\\n    echo \\\"$(date -u +%FT%TZ) SVID_RENEW_FAILED\\\"\\n  fi\\n\\n  sleep 60\\ndone\\n\"],\"command\":[\"/bin/sh\",\"-ec\"],\"image\":\"docker.io/library/zt-spire-fetcher:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"renew-svid\",\"resources\":{\"limits\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"},\"requests\":{\"cpu\":\"5m\",\"memory\":\"16Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/run/spire/sockets\",\"name\":\"spiffe-socket\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\"}]}],\"initContainers\":[{\"args\":[\"SOCKET=/run/spire/sockets/spire-agent.sock\\nOUTPUT=/etc/svid\\n\\necho \\\"Waiting for SPIRE socket...\\\"\\n\\nfor i in $(seq 1 60); do\\n  [ -S \\\"$SOCKET\\\" ] \\u0026\\u0026 break\\n  echo \\\"Socket not ready: $i/60\\\"\\n  sleep 2\\ndone\\n\\ntest -S \\\"$SOCKET\\\"\\nmkdir -p \\\"$OUTPUT\\\"\\n\\necho \\\"Waiting for workload identity...\\\"\\n\\nfor i in $(seq 1 60); do\\n  if /opt/spire/bin/spire-agent api fetch x509                      -socketPath \\\"$SOCKET\\\"                      -write \\\"$OUTPUT\\\"\\n  then\\n    chmod 0644 \\\"$OUTPUT/svid.0.pem\\\"\\n    chmod 0600 \\\"$OUTPUT/svid.0.key\\\"\\n    chmod 0644 \\\"$OUTPUT/bundle.0.pem\\\"\\n\\n    echo \\\"SVID_FETCH_OK\\\"\\n    exit 0\\n  fi\\n\\n  echo \\\"Identity not ready: $i/60\\\"\\n  sleep 2\\ndone\\n\\necho \\\"SVID_FETCH_FAILED\\\"\\nexit 1\\n\"],\"command\":[\"/bin/sh\",\"-ec\"],\"image\":\"docker.io/library/zt-spire-fetcher:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"fetch-svid\",\"resources\":{\"limits\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"},\"requests\":{\"cpu\":\"5m\",\"memory\":\"16Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/run/spire/sockets\",\"name\":\"spiffe-socket\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\"}]}],\"securityContext\":{\"fsGroup\":10001,\"fsGroupChangePolicy\":\"OnRootMismatch\",\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001,\"seccompProfile\":{\"type\":\"RuntimeDefault\"}},\"serviceAccountName\":\"resource-optimizer\",\"terminationGracePeriodSeconds\":5,\"volumes\":[{\"csi\":{\"driver\":\"csi.spiffe.io\",\"readOnly\":true},\"name\":\"spiffe-socket\"},{\"emptyDir\":{},\"name\":\"svid-data\"},{\"configMap\":{\"name\":\"resource-optimizer-profile\"},\"name\":\"xapp-profile\"}]}}}}\n"
+                },
+                "creationTimestamp": "2026-06-23T07:11:17Z",
+                "generation": 6,
+                "labels": {
+                    "app": "resource-optimizer",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "resource-optimizer",
+                "namespace": "ricxapp",
+                "resourceVersion": "3693097",
+                "uid": "2d3e3f48-ec3f-4e27-a06c-1f4930f532c8"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 0,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "app": "resource-optimizer"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "annotations": {
+                            "kubectl.kubernetes.io/restartedAt": "2026-07-11T12:51:56+05:30",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080",
+                            "prometheus.io/scrape": "true",
+                            "zt-xguard.io/svid-logger-version": "v2-configmap"
+                        },
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "resource-optimizer",
+                            "security-status": "trusted",
+                            "zt-xguard.io/svid-enabled": "true",
+                            "zt-xguard/component": "custom-xapp",
+                            "zt-xguard/profile": "resource-optimizer"
+                        }
+                    },
+                    "spec": {
+                        "automountServiceAccountToken": false,
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "XAPP_NAME",
+                                        "value": "resource-optimizer"
+                                    },
+                                    {
+                                        "name": "XAPP_PORT",
+                                        "value": "8080"
+                                    },
+                                    {
+                                        "name": "XAPP_PROFILE_PATH",
+                                        "value": "/etc/xapp-profile/profile.json"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_CERT",
+                                        "value": "/etc/svid/svid.0.pem"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_KEY",
+                                        "value": "/etc/svid/svid.0.key"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_BUNDLE",
+                                        "value": "/etc/svid/bundle.0.pem"
+                                    }
+                                ],
+                                "image": "docker.io/library/zt-resource-optimizer:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "failureThreshold": 4,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": "http",
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 15,
+                                    "periodSeconds": 15,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "name": "resource-optimizer",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "name": "http",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 6,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": "http",
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "1",
+                                        "memory": "256Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": false,
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/etc/xapp-profile",
+                                        "name": "xapp-profile",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data",
+                                        "readOnly": true
+                                    }
+                                ]
+                            },
+                            {
+                                "args": [
+                                    "/opt/ztx/svid-renew.sh"
+                                ],
+                                "command": [
+                                    "/bin/sh"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "EXPECTED_SPIFFE_ID",
+                                        "value": "spiffe://oran.fyp.local/ns/ricxapp/sa/resource-optimizer"
+                                    },
+                                    {
+                                        "name": "RENEW_INTERVAL_SECONDS",
+                                        "value": "60"
+                                    }
+                                ],
+                                "image": "docker.io/library/zt-spire-fetcher:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "renew-svid",
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "5m",
+                                        "memory": "16Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/opt/ztx/svid-renew.sh",
+                                        "name": "svid-renew-logger",
+                                        "readOnly": true,
+                                        "subPath": "svid-renew.sh"
+                                    },
+                                    {
+                                        "mountPath": "/run/spire/sockets",
+                                        "name": "spiffe-socket",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data"
+                                    }
+                                ]
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "initContainers": [
+                            {
+                                "args": [
+                                    "SOCKET=/run/spire/sockets/spire-agent.sock\nOUTPUT=/etc/svid\n\necho \"Waiting for SPIRE socket...\"\n\nfor i in $(seq 1 60); do\n  [ -S \"$SOCKET\" ] \u0026\u0026 break\n  echo \"Socket not ready: $i/60\"\n  sleep 2\ndone\n\ntest -S \"$SOCKET\"\nmkdir -p \"$OUTPUT\"\n\necho \"Waiting for workload identity...\"\n\nfor i in $(seq 1 60); do\n  if /opt/spire/bin/spire-agent api fetch x509                      -socketPath \"$SOCKET\"                      -write \"$OUTPUT\"\n  then\n    chmod 0644 \"$OUTPUT/svid.0.pem\"\n    chmod 0600 \"$OUTPUT/svid.0.key\"\n    chmod 0644 \"$OUTPUT/bundle.0.pem\"\n\n    echo \"SVID_FETCH_OK\"\n    exit 0\n  fi\n\n  echo \"Identity not ready: $i/60\"\n  sleep 2\ndone\n\necho \"SVID_FETCH_FAILED\"\nexit 1\n"
+                                ],
+                                "command": [
+                                    "/bin/sh",
+                                    "-ec"
+                                ],
+                                "image": "docker.io/library/zt-spire-fetcher:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "fetch-svid",
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "5m",
+                                        "memory": "16Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/run/spire/sockets",
+                                        "name": "spiffe-socket",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data"
+                                    }
+                                ]
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {
+                            "fsGroup": 10001,
+                            "fsGroupChangePolicy": "OnRootMismatch",
+                            "runAsGroup": 10001,
+                            "runAsNonRoot": true,
+                            "runAsUser": 10001,
+                            "seccompProfile": {
+                                "type": "RuntimeDefault"
+                            }
+                        },
+                        "serviceAccount": "resource-optimizer",
+                        "serviceAccountName": "resource-optimizer",
+                        "terminationGracePeriodSeconds": 5,
+                        "volumes": [
+                            {
+                                "configMap": {
+                                    "defaultMode": 365,
+                                    "name": "zt-xguard-svid-renew-logger"
+                                },
+                                "name": "svid-renew-logger"
+                            },
+                            {
+                                "csi": {
+                                    "driver": "csi.spiffe.io",
+                                    "readOnly": true
+                                },
+                                "name": "spiffe-socket"
+                            },
+                            {
+                                "emptyDir": {},
+                                "name": "svid-data"
+                            },
+                            {
+                                "configMap": {
+                                    "defaultMode": 420,
+                                    "name": "resource-optimizer-profile"
+                                },
+                                "name": "xapp-profile"
+                            }
+                        ]
+                    }
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-06-23T07:11:17Z",
+                        "lastUpdateTime": "2026-07-11T07:22:42Z",
+                        "message": "ReplicaSet \"resource-optimizer-67c9c87446\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    },
+                    {
+                        "lastTransitionTime": "2026-07-27T16:25:20Z",
+                        "lastUpdateTime": "2026-07-27T16:25:20Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    }
+                ],
+                "observedGeneration": 6
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "3",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"security-observer\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"security-observer\",\"namespace\":\"ricxapp\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"app\":\"security-observer\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"annotations\":{\"prometheus.io/path\":\"/metrics\",\"prometheus.io/port\":\"8080\",\"prometheus.io/scrape\":\"true\"},\"labels\":{\"app\":\"security-observer\",\"security-status\":\"trusted\",\"zt-xguard.io/svid-enabled\":\"true\",\"zt-xguard/component\":\"custom-xapp\",\"zt-xguard/profile\":\"security-observer\"}},\"spec\":{\"automountServiceAccountToken\":false,\"containers\":[{\"env\":[{\"name\":\"XAPP_NAME\",\"value\":\"security-observer\"},{\"name\":\"XAPP_PORT\",\"value\":\"8080\"},{\"name\":\"XAPP_PROFILE_PATH\",\"value\":\"/etc/xapp-profile/profile.json\"},{\"name\":\"XAPP_SVID_CERT\",\"value\":\"/etc/svid/svid.0.pem\"},{\"name\":\"XAPP_SVID_KEY\",\"value\":\"/etc/svid/svid.0.key\"},{\"name\":\"XAPP_SVID_BUNDLE\",\"value\":\"/etc/svid/bundle.0.pem\"}],\"image\":\"docker.io/library/zt-security-observer:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"livenessProbe\":{\"failureThreshold\":4,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":15,\"periodSeconds\":15,\"timeoutSeconds\":3},\"name\":\"security-observer\",\"ports\":[{\"containerPort\":8080,\"name\":\"http\",\"protocol\":\"TCP\"}],\"readinessProbe\":{\"failureThreshold\":6,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":5,\"periodSeconds\":10,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"256Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":false,\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/etc/xapp-profile\",\"name\":\"xapp-profile\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\",\"readOnly\":true}]},{\"args\":[\"SOCKET=/run/spire/sockets/spire-agent.sock\\nOUTPUT=/etc/svid\\nTMP=/tmp/svid-next\\n\\nwhile true; do\\n  rm -rf \\\"$TMP\\\"\\n  mkdir -p \\\"$TMP\\\"\\n\\n  if /opt/spire/bin/spire-agent api fetch x509                      -silent                      -socketPath \\\"$SOCKET\\\"                      -write \\\"$TMP\\\"\\n  then\\n    cp \\\"$TMP/svid.0.pem\\\" \\\"$OUTPUT/svid.0.pem.new\\\"\\n    cp \\\"$TMP/svid.0.key\\\" \\\"$OUTPUT/svid.0.key.new\\\"\\n    cp \\\"$TMP/bundle.0.pem\\\" \\\"$OUTPUT/bundle.0.pem.new\\\"\\n\\n    chmod 0644 \\\"$OUTPUT/svid.0.pem.new\\\"\\n    chmod 0600 \\\"$OUTPUT/svid.0.key.new\\\"\\n    chmod 0644 \\\"$OUTPUT/bundle.0.pem.new\\\"\\n\\n    mv \\\"$OUTPUT/svid.0.pem.new\\\" \\\"$OUTPUT/svid.0.pem\\\"\\n    mv \\\"$OUTPUT/svid.0.key.new\\\" \\\"$OUTPUT/svid.0.key\\\"\\n    mv \\\"$OUTPUT/bundle.0.pem.new\\\" \\\"$OUTPUT/bundle.0.pem\\\"\\n\\n    echo \\\"$(date -u +%FT%TZ) SVID_RENEW_OK\\\"\\n  else\\n    echo \\\"$(date -u +%FT%TZ) SVID_RENEW_FAILED\\\"\\n  fi\\n\\n  sleep 60\\ndone\\n\"],\"command\":[\"/bin/sh\",\"-ec\"],\"image\":\"docker.io/library/zt-spire-fetcher:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"renew-svid\",\"resources\":{\"limits\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"},\"requests\":{\"cpu\":\"5m\",\"memory\":\"16Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/run/spire/sockets\",\"name\":\"spiffe-socket\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\"}]}],\"initContainers\":[{\"args\":[\"SOCKET=/run/spire/sockets/spire-agent.sock\\nOUTPUT=/etc/svid\\n\\necho \\\"Waiting for SPIRE socket...\\\"\\n\\nfor i in $(seq 1 60); do\\n  [ -S \\\"$SOCKET\\\" ] \\u0026\\u0026 break\\n  echo \\\"Socket not ready: $i/60\\\"\\n  sleep 2\\ndone\\n\\ntest -S \\\"$SOCKET\\\"\\nmkdir -p \\\"$OUTPUT\\\"\\n\\necho \\\"Waiting for workload identity...\\\"\\n\\nfor i in $(seq 1 60); do\\n  if /opt/spire/bin/spire-agent api fetch x509                      -socketPath \\\"$SOCKET\\\"                      -write \\\"$OUTPUT\\\"\\n  then\\n    chmod 0644 \\\"$OUTPUT/svid.0.pem\\\"\\n    chmod 0600 \\\"$OUTPUT/svid.0.key\\\"\\n    chmod 0644 \\\"$OUTPUT/bundle.0.pem\\\"\\n\\n    echo \\\"SVID_FETCH_OK\\\"\\n    exit 0\\n  fi\\n\\n  echo \\\"Identity not ready: $i/60\\\"\\n  sleep 2\\ndone\\n\\necho \\\"SVID_FETCH_FAILED\\\"\\nexit 1\\n\"],\"command\":[\"/bin/sh\",\"-ec\"],\"image\":\"docker.io/library/zt-spire-fetcher:1.0\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"fetch-svid\",\"resources\":{\"limits\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"},\"requests\":{\"cpu\":\"5m\",\"memory\":\"16Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/run/spire/sockets\",\"name\":\"spiffe-socket\",\"readOnly\":true},{\"mountPath\":\"/etc/svid\",\"name\":\"svid-data\"}]}],\"securityContext\":{\"fsGroup\":10001,\"fsGroupChangePolicy\":\"OnRootMismatch\",\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001,\"seccompProfile\":{\"type\":\"RuntimeDefault\"}},\"serviceAccountName\":\"security-observer\",\"terminationGracePeriodSeconds\":5,\"volumes\":[{\"csi\":{\"driver\":\"csi.spiffe.io\",\"readOnly\":true},\"name\":\"spiffe-socket\"},{\"emptyDir\":{},\"name\":\"svid-data\"},{\"configMap\":{\"name\":\"security-observer-profile\"},\"name\":\"xapp-profile\"}]}}}}\n"
+                },
+                "creationTimestamp": "2026-06-23T07:11:18Z",
+                "generation": 8,
+                "labels": {
+                    "app": "security-observer",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "security-observer",
+                "namespace": "ricxapp",
+                "resourceVersion": "3692505",
+                "uid": "5e3dfc3e-9dac-494b-a630-e1e1e36d96af"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 0,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "app": "security-observer"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "annotations": {
+                            "kubectl.kubernetes.io/restartedAt": "2026-07-11T12:51:56+05:30",
+                            "prometheus.io/path": "/metrics",
+                            "prometheus.io/port": "8080",
+                            "prometheus.io/scrape": "true",
+                            "zt-xguard.io/svid-logger-version": "v2-configmap"
+                        },
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "security-observer",
+                            "security-status": "trusted",
+                            "zt-xguard.io/svid-enabled": "true",
+                            "zt-xguard/component": "custom-xapp",
+                            "zt-xguard/profile": "security-observer"
+                        }
+                    },
+                    "spec": {
+                        "automountServiceAccountToken": false,
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "XAPP_NAME",
+                                        "value": "security-observer"
+                                    },
+                                    {
+                                        "name": "XAPP_PORT",
+                                        "value": "8080"
+                                    },
+                                    {
+                                        "name": "XAPP_PROFILE_PATH",
+                                        "value": "/etc/xapp-profile/profile.json"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_CERT",
+                                        "value": "/etc/svid/svid.0.pem"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_KEY",
+                                        "value": "/etc/svid/svid.0.key"
+                                    },
+                                    {
+                                        "name": "XAPP_SVID_BUNDLE",
+                                        "value": "/etc/svid/bundle.0.pem"
+                                    }
+                                ],
+                                "image": "docker.io/library/zt-security-observer:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "failureThreshold": 4,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": "http",
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 15,
+                                    "periodSeconds": 15,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "name": "security-observer",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "name": "http",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 6,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": "http",
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "1",
+                                        "memory": "256Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": false,
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/etc/xapp-profile",
+                                        "name": "xapp-profile",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data",
+                                        "readOnly": true
+                                    }
+                                ]
+                            },
+                            {
+                                "args": [
+                                    "/opt/ztx/svid-renew.sh"
+                                ],
+                                "command": [
+                                    "/bin/sh"
+                                ],
+                                "env": [
+                                    {
+                                        "name": "EXPECTED_SPIFFE_ID",
+                                        "value": "spiffe://oran.fyp.local/ns/ricxapp/sa/security-observer"
+                                    },
+                                    {
+                                        "name": "RENEW_INTERVAL_SECONDS",
+                                        "value": "60"
+                                    }
+                                ],
+                                "image": "docker.io/library/zt-spire-fetcher:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "renew-svid",
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "5m",
+                                        "memory": "16Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/opt/ztx/svid-renew.sh",
+                                        "name": "svid-renew-logger",
+                                        "readOnly": true,
+                                        "subPath": "svid-renew.sh"
+                                    },
+                                    {
+                                        "mountPath": "/run/spire/sockets",
+                                        "name": "spiffe-socket",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data"
+                                    }
+                                ]
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "initContainers": [
+                            {
+                                "args": [
+                                    "SOCKET=/run/spire/sockets/spire-agent.sock\nOUTPUT=/etc/svid\n\necho \"Waiting for SPIRE socket...\"\n\nfor i in $(seq 1 60); do\n  [ -S \"$SOCKET\" ] \u0026\u0026 break\n  echo \"Socket not ready: $i/60\"\n  sleep 2\ndone\n\ntest -S \"$SOCKET\"\nmkdir -p \"$OUTPUT\"\n\necho \"Waiting for workload identity...\"\n\nfor i in $(seq 1 60); do\n  if /opt/spire/bin/spire-agent api fetch x509                      -socketPath \"$SOCKET\"                      -write \"$OUTPUT\"\n  then\n    chmod 0644 \"$OUTPUT/svid.0.pem\"\n    chmod 0600 \"$OUTPUT/svid.0.key\"\n    chmod 0644 \"$OUTPUT/bundle.0.pem\"\n\n    echo \"SVID_FETCH_OK\"\n    exit 0\n  fi\n\n  echo \"Identity not ready: $i/60\"\n  sleep 2\ndone\n\necho \"SVID_FETCH_FAILED\"\nexit 1\n"
+                                ],
+                                "command": [
+                                    "/bin/sh",
+                                    "-ec"
+                                ],
+                                "image": "docker.io/library/zt-spire-fetcher:1.0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "fetch-svid",
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "5m",
+                                        "memory": "16Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false,
+                                    "capabilities": {
+                                        "drop": [
+                                            "ALL"
+                                        ]
+                                    },
+                                    "runAsGroup": 10001,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/run/spire/sockets",
+                                        "name": "spiffe-socket",
+                                        "readOnly": true
+                                    },
+                                    {
+                                        "mountPath": "/etc/svid",
+                                        "name": "svid-data"
+                                    }
+                                ]
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {
+                            "fsGroup": 10001,
+                            "fsGroupChangePolicy": "OnRootMismatch",
+                            "runAsGroup": 10001,
+                            "runAsNonRoot": true,
+                            "runAsUser": 10001,
+                            "seccompProfile": {
+                                "type": "RuntimeDefault"
+                            }
+                        },
+                        "serviceAccount": "security-observer",
+                        "serviceAccountName": "security-observer",
+                        "terminationGracePeriodSeconds": 5,
+                        "volumes": [
+                            {
+                                "configMap": {
+                                    "defaultMode": 365,
+                                    "name": "zt-xguard-svid-renew-logger"
+                                },
+                                "name": "svid-renew-logger"
+                            },
+                            {
+                                "csi": {
+                                    "driver": "csi.spiffe.io",
+                                    "readOnly": true
+                                },
+                                "name": "spiffe-socket"
+                            },
+                            {
+                                "emptyDir": {},
+                                "name": "svid-data"
+                            },
+                            {
+                                "configMap": {
+                                    "defaultMode": 420,
+                                    "name": "security-observer-profile"
+                                },
+                                "name": "xapp-profile"
+                            }
+                        ]
+                    }
+                }
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-06-23T07:11:18Z",
+                        "lastUpdateTime": "2026-07-11T07:22:41Z",
+                        "message": "ReplicaSet \"security-observer-fff65554f\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    },
+                    {
+                        "lastTransitionTime": "2026-07-27T16:21:49Z",
+                        "lastUpdateTime": "2026-07-27T16:21:49Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    }
+                ],
+                "observedGeneration": 8
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

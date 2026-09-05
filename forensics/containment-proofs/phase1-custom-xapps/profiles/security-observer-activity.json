@@ -1,0 +1,19 @@
+{
+  "xapp": "security-observer",
+  "role": "security-observation",
+  "state": "security-observation",
+  "uptime_sec": 418.85,
+  "heartbeat_age_sec": 3.84,
+  "heartbeat_ok": true,
+  "work_units_processed": 840,
+  "ric_activity_counter": 0,
+  "control_action_counter": 0,
+  "telemetry_samples": 0,
+  "qos_decisions": 0,
+  "traffic_reports": 0,
+  "resource_recommendations": 0,
+  "security_checks": 84,
+  "last_decision": "security_heartbeat_ok",
+  "errors": 0,
+  "time": "2026-06-05T05:51:56.100047+00:00"
+}

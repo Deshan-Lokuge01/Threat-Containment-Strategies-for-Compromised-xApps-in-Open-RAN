@@ -1,0 +1,67 @@
+{
+  "schema": "ztx-forensic-vault-v1",
+  "incident_id": "20260829T161701Z-external_egress-ricxapp-hw-go-06cdc8721f",
+  "captured_utc": "2026-08-29T16:17:03.916937+00:00",
+  "sealed_utc": "2026-08-29T16:17:11Z",
+  "captured_by": "ZT-XGuard policy-engine (automated containment)",
+  "asset": {
+    "xapp": "ricxapp-hw-go",
+    "pod": "ricxapp-hw-go-79c6d795d5-qkflw",
+    "namespace": "ricxapp"
+  },
+  "trigger": {
+    "source": "falco_event",
+    "signal": "external_egress",
+    "falco_rule": "ZTX xApp External Egress Attempt",
+    "priority": "Critical",
+    "rule_ids": [
+      "R-CRIT-04"
+    ],
+    "alert": "2026-08-29T16:17:01.426967453+0000: Critical ztx_signal=external_egress rule_id=ZTX-A8 xapp external egress attempt (user=root dest=<NA>:<NA> dest_ip=<NA> command=hw-go pod=ricxapp-hw-go-79c6d795d5-qkflw ns=ricxapp container=hw-go) container_id=1a35181b9143 container_name=hw-go container_image_repository=127.0.0.1:80/hw-go container_image_tag=latest k8s_pod_name=ricxapp-hw-go-79c6d795d5-qkflw k8s_ns_name=ricxapp"
+  },
+  "decision": {
+    "state": "ISOLATED",
+    "detection_state": "COMPROMISED",
+    "containment_required": true,
+    "containment_action": "SERVICE_ISOLATION_AND_IDENTITY_CONTAINMENT",
+    "isolation_timing": "IMMEDIATE",
+    "severity": "CRITICAL",
+    "score": 100,
+    "confidence": 0.98
+  },
+  "integrity": "sha256",
+  "artifacts": [
+    {
+      "name": "events.json",
+      "bytes": 1779,
+      "sha256": "8f25a87f7f74ffaa36535be3a6df299c3bcaaf2a4706be66d8cddcaf5cfeac05"
+    },
+    {
+      "name": "incident.json",
+      "bytes": 48841,
+      "sha256": "b5acef71eeb7cc10370969484be51bfefdfe28c900be973f65e2117cdddab64a"
+    },
+    {
+      "name": "pod-log-tail.txt",
+      "bytes": 531,
+      "sha256": "cca0660c38b2a40dcda2d6968c6cff735e95d2e8ee6babbe7ba30faf2e9171a7"
+    },
+    {
+      "name": "pod.json",
+      "bytes": 27810,
+      "sha256": "996dd5b7bfad90ec904e75ee1fda078704f900b07d5081ca0ee243e5ad50709b"
+    }
+  ],
+  "chain_of_custody": [
+    {
+      "actor": "policy-engine.forensic-capture",
+      "action": "captured",
+      "utc": "2026-08-29T16:17:03.916937+00:00"
+    },
+    {
+      "actor": "policy-engine.vault-sealer",
+      "action": "sealed+hashed",
+      "utc": "2026-08-29T16:17:11Z"
+    }
+  ]
+}

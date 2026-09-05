@@ -1,0 +1,14 @@
+pod/kpm-monitor-6b98c5654-xvbrt           1/1     Running   0          172m
+service/kpm-monitor                       ClusterIP   10.101.6.37     <none>        8092/TCP,4560/TCP   3h44m
+service/service-ricxapp-kpm-monitor-rmr   ClusterIP   10.107.17.73    <none>        8092/TCP,4560/TCP   178m
+deployment.apps/kpm-monitor          1/1     1            1           3h44m
+replicaset.apps/kpm-monitor-5b7bccb685          0         0         0       3h27m
+replicaset.apps/kpm-monitor-5bcd4c67d6          0         0         0       178m
+replicaset.apps/kpm-monitor-6949b59856          0         0         0       3h16m
+replicaset.apps/kpm-monitor-6b98c5654           1         1         1       172m
+replicaset.apps/kpm-monitor-77ff646c7d          0         0         0       3h44m
+replicaset.apps/kpm-monitor-78df79475f          0         0         0       3h15m
+replicaset.apps/kpm-monitor-7bd9486669          0         0         0       176m
+replicaset.apps/kpm-monitor-7d9d466745          0         0         0       176m
+configmap/kpm-monitor-profile          2      3h44m
+serviceaccount/kpm-monitor              0         3h44m

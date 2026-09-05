@@ -1,0 +1,52 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            91:68:af:22:1b:95:db:c0:8b:2d:dc:bd:01:48:ff:43
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C = NL, O = Example, CN = example.org
+        Validity
+            Not Before: Jun  5 16:49:51 2026 GMT
+            Not After : Jun  5 20:50:01 2026 GMT
+        Subject: C = US, O = SPIRE, x500UniqueIdentifier = 0e41b73883274df6d8c1d86890348bf9
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:43:d9:a3:17:16:14:a0:79:91:2d:bc:63:f5:f1:
+                    5b:f2:77:0b:02:97:40:68:cb:6d:bf:bd:fb:ce:fc:
+                    67:24:b5:3d:81:eb:c0:d7:a4:3c:91:9b:5a:4a:58:
+                    ab:4a:32:92:61:7e:fe:55:fb:07:fa:83:61:0f:76:
+                    61:84:c7:f7:91
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment, Key Agreement
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication, TLS Web Client Authentication
+            X509v3 Basic Constraints: critical
+                CA:FALSE
+            X509v3 Subject Key Identifier: 
+                A7:A5:D5:83:99:9A:EE:FE:E3:F0:D4:E7:32:67:E7:68:7F:00:43:D4
+            X509v3 Authority Key Identifier: 
+                8C:A3:D8:F1:8A:2F:FF:5E:CF:A6:5F:79:F4:38:C3:2E:80:7B:F0:81
+            X509v3 Subject Alternative Name: 
+                URI:spiffe://example.org/ns/ricxapp/sa/resource-optimizer
+    Signature Algorithm: sha256WithRSAEncryption
+    Signature Value:
+        cf:ff:50:ec:6e:93:4a:3a:30:74:32:e3:7e:e9:3a:b2:30:73:
+        db:2b:b6:fa:cc:f9:9f:f3:f7:8d:4c:de:46:79:a2:33:d4:01:
+        99:c8:ad:60:91:b1:8d:7e:f3:1e:ef:0a:f0:67:2b:af:1e:18:
+        b5:36:f5:09:3e:5a:e9:59:71:f6:84:1c:c9:9a:f3:c3:29:d6:
+        70:b5:e3:80:dd:56:04:32:7c:7a:c5:1b:2a:d6:61:fc:61:6c:
+        60:23:a0:fa:af:ef:f8:7f:d1:0a:47:26:44:f6:3a:a6:11:f8:
+        f8:e2:36:16:b2:54:06:f5:19:17:03:8b:4b:4a:48:6f:e8:72:
+        0b:94:71:45:c9:27:61:14:28:61:77:4d:24:af:25:22:e0:16:
+        0f:7c:b6:2c:c2:f0:4a:ce:b3:2e:52:fd:4d:e1:52:05:97:a7:
+        67:e0:89:31:6c:8c:1f:33:e8:2a:fa:67:e8:b4:bc:25:e6:1b:
+        d0:2e:da:b4:75:fc:8d:c9:95:28:32:bb:ac:1f:6e:6f:16:7a:
+        bc:e9:58:2e:92:51:a5:34:f3:07:9d:c9:3c:35:fc:78:12:fa:
+        a5:1b:ba:31:40:8e:e9:b4:85:ca:24:f8:6a:86:e1:8f:97:3c:
+        82:88:1c:69:14:22:ef:b8:c3:75:86:5a:c0:29:d8:d6:40:2c:
+        82:b0:d1:cd

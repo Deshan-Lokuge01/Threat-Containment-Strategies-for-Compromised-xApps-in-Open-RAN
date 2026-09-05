@@ -1,0 +1,19 @@
+RMR module: <module 'ricxappframe.rmr.rmr' from '/usr/local/lib/python3.8/site-packages/ricxappframe/rmr/rmr.py'>
+rmr_init = OK
+rmr_ready = OK
+rmr_set_stimeout = OK
+rmr_alloc_msg = OK
+rmr_torcv_msg = OK
+rmr_free_msg = OK
+rmr_close = OK
+RMR_MAX_RCV_BYTES = OK
+RMR_OK = OK
+
+Important constants:
+RMR_ERR_NOENDPT 2
+RMR_ERR_RETRY 10
+RMR_ERR_TIMEOUT 12
+RMR_MAX_RCV_BYTES 2048
+RMR_MS_ERRNO errno
+RMR_MS_PAYLOAD_MAX payload max size
+RMR_OK 0

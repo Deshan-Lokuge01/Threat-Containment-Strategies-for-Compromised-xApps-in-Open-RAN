@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ZT-XGuard Runtime Security Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">10</div>
+      <h1>ZT-XGuard Runtime Security Dashboard</h1>
+      <p class="subtitle">Zero-trust monitoring, detection, containment, and recovery for Near-RT RIC xApps.</p>
+    </div>
+    <div class="top-actions">
+      <a class="btn secondary" href="/attack-lab">Attack Lab</a>
+      <button id="primeAuditBtn" class="btn">Prime Audit</button>
+      <button id="refreshBtn" class="btn secondary">Refresh</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel hero">
+      <div>
+        <div class="label">Overall CSM State</div>
+        <div id="overallState" class="overall unknown">LOADING</div>
+      </div>
+      <div class="summary-grid">
+        <div class="metric"><span id="trustedCount">0</span><small>Trusted</small></div>
+        <div class="metric"><span id="suspiciousCount">0</span><small>Suspicious</small></div>
+        <div class="metric"><span id="compromisedCount">0</span><small>Compromised</small></div>
+        <div class="metric"><span id="quarantinedCount">0</span><small>Quarantined</small></div>
+        <div class="metric"><span id="unknownCount">0</span><small>Unknown</small></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <h2>xApp Trust State</h2>
+          <p>Live trust-state cache from the ZT-XGuard policy engine.</p>
+        </div>
+        <div id="lastUpdated" class="small-muted">Not updated yet</div>
+      </div>
+      <div id="xappGrid" class="xapp-grid"></div>
+    </section>
+
+    <section class="two-col">
+      <div class="panel">
+        <div class="section-head">
+          <div>
+            <h2>Containment Inspector</h2>
+            <p>Verify Service isolation, endpoint count, and quarantine marker.</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="xappSelect">xApp</label>
+          <select id="xappSelect"></select>
+          <button id="verifyBtn" class="btn secondary">Verify</button>
+          <button id="restoreBtn" class="btn danger">Restore</button>
+        </div>
+
+        <pre id="containmentBox" class="codebox">Waiting for data...</pre>
+      </div>
+
+      <div class="panel">
+        <div class="section-head">
+          <div>
+            <h2>Recent Security Events</h2>
+            <p>Latest event-driven decisions received by the CSM pipeline.</p>
+          </div>
+        </div>
+        <div id="eventsList" class="events-list"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <h2>System Notes</h2>
+          <p>Current containment model and known testbed limitation.</p>
+        </div>
+      </div>
+      <div class="notes">
+        <div><strong>Primary containment design:</strong> NetworkPolicy forensic quarantine.</div>
+        <div><strong>Current verified fallback:</strong> Service selector isolation because the current CNI accepts NetworkPolicy objects but does not enforce them.</div>
+        <div><strong>Verified behavior:</strong> compromised xApp service endpoints become empty, traffic to it fails, and healthy xApps remain reachable.</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>

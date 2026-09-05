@@ -1,0 +1,14 @@
+[
+  {
+    "name": "kpm-monitor",
+    "version": "1.0.0",
+    "description": "ZT-XGuard verified xApp: kpm-monitor v1.0.0",
+    "apiVersion": "v2",
+    "appVersion": "1.0.0",
+    "urls": [
+      "charts/kpm-monitor-1.0.0.tgz"
+    ],
+    "created": "2026-06-08T12:15:36.585630109Z",
+    "digest": "479c93a980fc7141af211016b49b80fce10dd4308f845846c83c962d1b74c5b7"
+  }
+]

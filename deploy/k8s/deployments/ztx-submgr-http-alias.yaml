@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ztx-submgr-http
+  namespace: ricplt
+  labels:
+    app: ztx-submgr-http
+    zt-xguard.io/component: submgr-http-alias
+spec:
+  type: ClusterIP
+  selector:
+    app: ricplt-submgr
+    release: r4-submgr
+  ports:
+  - name: submgr-api
+    port: 8088
+    targetPort: 8088
+    protocol: TCP
+  - name: submgr-health
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  - name: submgr-legacy
+    port: 3800
+    targetPort: 8088
+    protocol: TCP

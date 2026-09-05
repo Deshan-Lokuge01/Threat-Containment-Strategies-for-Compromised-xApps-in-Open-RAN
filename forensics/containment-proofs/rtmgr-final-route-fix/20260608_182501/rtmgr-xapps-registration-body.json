@@ -1,0 +1,24 @@
+[
+  {
+    "name": "kpm-monitor",
+    "status": "deployed",
+    "version": "1.0.0",
+    "instances": [
+      {
+        "name": "kpm-monitor",
+        "status": "deployed",
+        "ip": "service-ricxapp-kpm-monitor-rmr.ricxapp",
+        "port": 4560,
+        "txMessages": [
+          "RIC_SUB_REQ"
+        ],
+        "rxMessages": [
+          "RIC_SUB_RESP",
+          "RIC_SUB_FAILURE",
+          "RIC_INDICATION"
+        ],
+        "policies": []
+      }
+    ]
+  }
+]

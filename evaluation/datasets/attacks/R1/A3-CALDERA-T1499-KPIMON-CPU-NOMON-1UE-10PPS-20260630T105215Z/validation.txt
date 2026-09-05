@@ -1,0 +1,12 @@
+dataset=A3_CALDERA_T1499_R1_CPU_NOMON
+run_id=A3-CALDERA-T1499-KPIMON-CPU-NOMON-1UE-10PPS-20260630T105215Z
+role=caldera-orchestrated-attack-evaluation-no-monitor-traffic
+collector_return_code=0
+primary_data_ok=1
+attack_started=caldera_report_required
+stress_ng_running_at_end=0
+actuator_inactive_at_end=1
+scored_during_collection=0
+final_collection_acceptance=1
+caldera_report_required=1
+monitor_traffic_removed=1

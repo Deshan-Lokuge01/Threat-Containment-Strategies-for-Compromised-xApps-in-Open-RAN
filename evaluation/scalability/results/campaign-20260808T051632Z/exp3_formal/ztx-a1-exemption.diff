@@ -1,0 +1,19 @@
+409a410,422
+> # 2026-08-08: hw-go and hw-python ship an immutable shell PID-1 entrypoint
+> # (`sh -c /hw-go`, `sh -c run-hw-python.py`) baked into their images, which
+> # tripped ZTX-A1 as a CRITICAL false positive on every pod start. This exempts
+> # ONLY the container's PID-1 process running that EXACT command line - mirroring
+> # the existing ztx_declared_python_xapp_entrypoint / ztx_kpimon_go_own_binaries
+> # exemptions. An attacker-spawned shell runs as a non-PID-1 child with a
+> # different cmdline and therefore still matches ZTX-A1 and is still flagged.
+> - macro: ztx_declared_shell_entrypoint
+>   condition: >
+>     (proc.vpid=1 and
+>      ((container.name=hw-go and proc.cmdline="sh -c /hw-go") or
+>       (container.name=hw-python and proc.cmdline="sh -c run-hw-python.py")))
+> 
+415c428,429
+<     proc.name in (ztx_shell_binaries)
+---
+>     proc.name in (ztx_shell_binaries) and
+>     not ztx_declared_shell_entrypoint

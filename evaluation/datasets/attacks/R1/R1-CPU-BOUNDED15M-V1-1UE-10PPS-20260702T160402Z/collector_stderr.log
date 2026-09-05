@@ -1,0 +1,8 @@
+usage: collect_resources.py [-h] --pid PID --cgroup CGROUP --profile PROFILE
+                            --run-id RUN_ID [--duration DURATION]
+                            [--interval INTERVAL]
+                            [--memory-slope-window MEMORY_SLOPE_WINDOW]
+                            --metrics-url METRICS_URL [--pod-name POD_NAME]
+                            [--pod-uid POD_UID] [--container-id CONTAINER_ID]
+                            --output OUTPUT
+collect_resources.py: error: the following arguments are required: --pid, --cgroup

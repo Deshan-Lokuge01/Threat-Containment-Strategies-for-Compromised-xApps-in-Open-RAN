@@ -1,0 +1,26 @@
+{
+  "id": "zt-xguard-manual-20260608_184625",
+  "version": 1,
+  "eventType": "created",
+  "xapp": {
+    "name": "kpm-monitor",
+    "status": "DEPLOYED",
+    "version": "1.0.0",
+    "instances": [
+      {
+        "name": "kpm-monitor",
+        "status": "Running",
+        "ip": "service-ricxapp-kpm-monitor-rmr.ricxapp",
+        "port": 4560,
+        "txMessages": [
+          "RIC_SUB_REQ"
+        ],
+        "rxMessages": [
+          "RIC_SUB_RESP",
+          "RIC_INDICATION"
+        ],
+        "policies": []
+      }
+    ]
+  }
+}

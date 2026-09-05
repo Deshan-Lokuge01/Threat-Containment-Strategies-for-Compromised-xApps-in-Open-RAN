@@ -1,0 +1,103 @@
+Name:             traffic-analyzer-b8cb5d96-nfp2n
+Namespace:        ricxapp
+Priority:         0
+Service Account:  traffic-analyzer
+Node:             near-rt-ric/192.168.112.129
+Start Time:       Fri, 05 Jun 2026 17:29:09 +0530
+Labels:           app=traffic-analyzer
+                  pod-template-hash=b8cb5d96
+                  version=1.0.0
+                  zt-xguard.io/provider=sp1
+                  zt-xguard.io/verified=true
+Annotations:      <none>
+Status:           Running
+SeccompProfile:   RuntimeDefault
+IP:               10.244.0.198
+IPs:
+  IP:           10.244.0.198
+Controlled By:  ReplicaSet/traffic-analyzer-b8cb5d96
+Init Containers:
+  fetch-svid:
+    Container ID:  containerd://39aa90a22770c77ddfcd293efd20bd8edb1b0c9887134d56d94fc74abbd469b1
+    Image:         localhost:5000/spire-fetcher:1.0-nonroot
+    Image ID:      sha256:27bc2b1b240c4c264a23f1d4e535959f8515e4313a7f2ea94087386b6cad4d49
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      set -e
+      echo "Waiting for SPIRE socket..."
+      while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+      echo "Socket ready. Fetching SVID..."
+      /opt/spire/bin/spire-agent api fetch x509 \
+        -socketPath /var/run/spire/sockets/spire-agent.sock \
+        -write /svid-data
+      echo "SVID fetched successfully."
+      ls -l /svid-data || true
+      
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 05 Jun 2026 17:29:28 +0530
+      Finished:     Fri, 05 Jun 2026 17:29:29 +0530
+    Ready:          True
+    Restart Count:  2
+    Environment:    <none>
+    Mounts:
+      /svid-data from svid-data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-g8kxv (ro)
+      /var/run/spire/sockets from spiffe-socket (ro)
+Containers:
+  traffic-analyzer:
+    Container ID:   containerd://e8d64481b5a3e4a041956bb2d4e518f717750a479942a7ad93949a20b7d7e033
+    Image:          localhost:5000/zt-traffic-analyzer:1.0
+    Image ID:       sha256:8de24814f4211675687069a925db640efc17edf63d6de846e4fd541415b70e63
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Fri, 05 Jun 2026 17:29:30 +0530
+    Ready:          True
+    Restart Count:  0
+    Liveness:       http-get http://:http/health delay=10s timeout=1s period=15s #success=1 #failure=3
+    Readiness:      http-get http://:http/health delay=10s timeout=1s period=15s #success=1 #failure=3
+    Environment:
+      XAPP_PROFILE_PATH:  /etc/xapp-profile/profile.json
+      XAPP_PORT:          8080
+    Mounts:
+      /etc/svid from svid-data (ro)
+      /etc/xapp-profile from xapp-profile (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-g8kxv (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  spiffe-socket:
+    Type:              CSI (a Container Storage Interface (CSI) volume source)
+    Driver:            csi.spiffe.io
+    FSType:            
+    ReadOnly:          true
+    VolumeAttributes:  <none>
+  svid-data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  xapp-profile:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      traffic-analyzer-profile
+    Optional:  false
+  kube-api-access-g8kxv:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:                      <none>

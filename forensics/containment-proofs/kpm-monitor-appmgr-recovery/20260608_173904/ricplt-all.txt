@@ -1,0 +1,83 @@
+NAME                                                            READY   STATUS    RESTARTS   AGE
+pod/deployment-ricplt-a1mediator-f4888dfd7-sfz69                1/1     Running   0          9d
+pod/deployment-ricplt-alarmmanager-7f984cdf77-jtq7d             1/1     Running   0          9d
+pod/deployment-ricplt-appmgr-79cff89dd5-nmgp9                   1/1     Running   0          96m
+pod/deployment-ricplt-e2mgr-7d798c54b7-wpgbz                    1/1     Running   0          2d17h
+pod/deployment-ricplt-e2term-alpha-7b56999c99-69n2s             1/1     Running   0          2d17h
+pod/deployment-ricplt-o1mediator-6fb8f84c97-pzkk8               1/1     Running   0          9d
+pod/deployment-ricplt-rtmgr-698c7cb758-4cbkj                    1/1     Running   0          155m
+pod/deployment-ricplt-submgr-76b98fb9c7-c2frr                   1/1     Running   0          154m
+pod/deployment-ricplt-vespamgr-848f7bb874-bg9zn                 1/1     Running   0          9d
+pod/r4-influxdb-influxdb2-0                                     1/1     Running   0          9d
+pod/r4-infrastructure-kong-78657d8f48-qxcz6                     2/2     Running   0          9d
+pod/r4-infrastructure-prometheus-alertmanager-b9cc56766-kzn97   2/2     Running   0          9d
+pod/r4-infrastructure-prometheus-server-6476958975-vgcfh        1/1     Running   0          9d
+pod/statefulset-ricplt-dbaas-server-0                           1/1     Running   0          9d
+
+NAME                                                TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                         AGE
+service/aux-entry                                   ClusterIP      10.96.2.145      <none>        80/TCP,443/TCP                  9d
+service/r4-influxdb-influxdb2                       ClusterIP      10.108.202.251   <none>        80/TCP                          9d
+service/r4-infrastructure-kong-manager              NodePort       10.98.13.48      <none>        8002:32097/TCP,8445:30729/TCP   9d
+service/r4-infrastructure-kong-proxy                LoadBalancer   10.100.187.27    <pending>     80:32080/TCP,443:32443/TCP      9d
+service/r4-infrastructure-kong-validation-webhook   ClusterIP      10.102.131.43    <none>        443/TCP                         9d
+service/r4-infrastructure-prometheus-alertmanager   ClusterIP      10.98.6.171      <none>        80/TCP                          9d
+service/r4-infrastructure-prometheus-server         ClusterIP      10.110.113.98    <none>        80/TCP                          9d
+service/service-ricplt-a1mediator-http              ClusterIP      10.111.169.35    <none>        10000/TCP                       9d
+service/service-ricplt-a1mediator-rmr               ClusterIP      10.102.14.14     <none>        4561/TCP,4562/TCP               9d
+service/service-ricplt-alarmmanager-http            ClusterIP      10.110.105.92    <none>        8080/TCP                        9d
+service/service-ricplt-alarmmanager-rmr             ClusterIP      10.109.146.17    <none>        4560/TCP,4561/TCP               9d
+service/service-ricplt-appmgr-http                  ClusterIP      10.108.120.215   <none>        8080/TCP                        9d
+service/service-ricplt-appmgr-rmr                   ClusterIP      10.103.61.197    <none>        4561/TCP,4560/TCP               9d
+service/service-ricplt-dbaas-tcp                    ClusterIP      None             <none>        6379/TCP                        9d
+service/service-ricplt-e2mgr-http                   ClusterIP      10.108.243.89    <none>        3800/TCP                        9d
+service/service-ricplt-e2mgr-rmr                    ClusterIP      10.108.199.251   <none>        4561/TCP,3801/TCP               9d
+service/service-ricplt-e2term-prometheus-alpha      ClusterIP      10.109.240.139   <none>        8088/TCP                        9d
+service/service-ricplt-e2term-rmr-alpha             ClusterIP      10.102.233.54    <none>        4561/TCP,38000/TCP              9d
+service/service-ricplt-e2term-sctp-alpha            NodePort       10.108.117.47    <none>        36422:32222/SCTP                9d
+service/service-ricplt-o1mediator-http              ClusterIP      10.103.147.252   <none>        9001/TCP,8080/TCP,3000/TCP      9d
+service/service-ricplt-o1mediator-tcp-netconf       NodePort       10.110.82.76     <none>        830:30830/TCP                   9d
+service/service-ricplt-rtmgr-http                   ClusterIP      10.107.112.218   <none>        3800/TCP                        9d
+service/service-ricplt-rtmgr-rmr                    ClusterIP      10.110.39.186    <none>        4561/TCP,4560/TCP               9d
+service/service-ricplt-submgr-http                  ClusterIP      None             <none>        3800/TCP                        9d
+service/service-ricplt-submgr-rmr                   ClusterIP      None             <none>        4560/TCP,4561/TCP               9d
+service/service-ricplt-vespamgr-http                ClusterIP      10.100.210.94    <none>        8080/TCP,9095/TCP               9d
+service/service-ricplt-xapp-onboarder-http          ClusterIP      10.100.6.185     <none>        8080/TCP                        101m
+service/ztx-submgr-http                             ClusterIP      10.103.224.108   <none>        8088/TCP,8080/TCP,3800/TCP      5h23m
+
+NAME                                                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/deployment-ricplt-a1mediator                1/1     1            1           9d
+deployment.apps/deployment-ricplt-alarmmanager              1/1     1            1           9d
+deployment.apps/deployment-ricplt-appmgr                    1/1     1            1           9d
+deployment.apps/deployment-ricplt-e2mgr                     1/1     1            1           9d
+deployment.apps/deployment-ricplt-e2term-alpha              1/1     1            1           9d
+deployment.apps/deployment-ricplt-o1mediator                1/1     1            1           9d
+deployment.apps/deployment-ricplt-rtmgr                     1/1     1            1           9d
+deployment.apps/deployment-ricplt-submgr                    1/1     1            1           9d
+deployment.apps/deployment-ricplt-vespamgr                  1/1     1            1           9d
+deployment.apps/r4-infrastructure-kong                      1/1     1            1           9d
+deployment.apps/r4-infrastructure-prometheus-alertmanager   1/1     1            1           9d
+deployment.apps/r4-infrastructure-prometheus-server         1/1     1            1           9d
+
+NAME                                                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/deployment-ricplt-a1mediator-f4888dfd7                1         1         1       9d
+replicaset.apps/deployment-ricplt-alarmmanager-7f984cdf77             1         1         1       9d
+replicaset.apps/deployment-ricplt-appmgr-549d488cb8                   0         0         0       9d
+replicaset.apps/deployment-ricplt-appmgr-79cff89dd5                   1         1         1       96m
+replicaset.apps/deployment-ricplt-e2mgr-7d798c54b7                    1         1         1       2d17h
+replicaset.apps/deployment-ricplt-e2mgr-7d9f845865                    0         0         0       9d
+replicaset.apps/deployment-ricplt-e2term-alpha-55ff9df9d9             0         0         0       9d
+replicaset.apps/deployment-ricplt-e2term-alpha-7b56999c99             1         1         1       2d17h
+replicaset.apps/deployment-ricplt-o1mediator-6fb8f84c97               1         1         1       9d
+replicaset.apps/deployment-ricplt-rtmgr-58b966c464                    0         0         0       2d17h
+replicaset.apps/deployment-ricplt-rtmgr-668f86855f                    0         0         0       9d
+replicaset.apps/deployment-ricplt-rtmgr-698c7cb758                    1         1         1       155m
+replicaset.apps/deployment-ricplt-submgr-5b8796c997                   0         0         0       9d
+replicaset.apps/deployment-ricplt-submgr-76b98fb9c7                   1         1         1       154m
+replicaset.apps/deployment-ricplt-vespamgr-848f7bb874                 1         1         1       9d
+replicaset.apps/r4-infrastructure-kong-78657d8f48                     1         1         1       9d
+replicaset.apps/r4-infrastructure-prometheus-alertmanager-b9cc56766   1         1         1       9d
+replicaset.apps/r4-infrastructure-prometheus-server-6476958975        1         1         1       9d
+
+NAME                                               READY   AGE
+statefulset.apps/r4-influxdb-influxdb2             1/1     9d
+statefulset.apps/statefulset-ricplt-dbaas-server   1/1     9d

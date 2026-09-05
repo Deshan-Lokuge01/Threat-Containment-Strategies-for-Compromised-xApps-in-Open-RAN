@@ -1,0 +1,2 @@
+NAME                         ENDPOINTS          AGE
+service-ricplt-submgr-http   10.244.0.14:3800   9d

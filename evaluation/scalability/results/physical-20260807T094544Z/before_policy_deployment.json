@@ -1,0 +1,335 @@
+{
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+        "annotations": {
+            "deployment.kubernetes.io/revision": "95",
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"zt-xguard-policy-engine\"},\"name\":\"zt-xguard-policy-engine\",\"namespace\":\"zt-xguard\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"app\":\"zt-xguard-policy-engine\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"app\":\"zt-xguard-policy-engine\",\"zt-xguard.io/mode\":\"observation\"}},\"spec\":{\"automountServiceAccountToken\":true,\"containers\":[{\"env\":[{\"name\":\"ENGINE_VERSION\",\"value\":\"laptop-observe-v1\"},{\"name\":\"POD_NAMESPACE\",\"valueFrom\":{\"fieldRef\":{\"fieldPath\":\"metadata.namespace\"}}},{\"name\":\"XAPP_NAMESPACE\",\"value\":\"ricxapp\"},{\"name\":\"TRUST_DOMAIN\",\"value\":\"oran.fyp.local\"},{\"name\":\"TRUSTED_PROVIDER\",\"value\":\"sp1\"},{\"name\":\"APPROVED_REGISTRY_PREFIX\",\"value\":\"\"},{\"name\":\"STRICT_IMAGE_ID_MATCH\",\"value\":\"false\"},{\"name\":\"AUTO_QUARANTINE\",\"value\":\"false\"},{\"name\":\"REVOKE_SPIRE\",\"value\":\"false\"},{\"name\":\"ALLOW_DESTRUCTIVE_ACTIONS\",\"value\":\"false\"},{\"name\":\"CONTAINMENT_MODE\",\"value\":\"service\"},{\"name\":\"SPIRE_SERVER_POD\",\"value\":\"spire-server-0\"},{\"name\":\"SPIRE_NAMESPACE\",\"value\":\"spire-server\"},{\"name\":\"SPIRE_CONTAINER\",\"value\":\"spire-server\"},{\"name\":\"SPIRE_BIN\",\"value\":\"/opt/spire/bin/spire-server\"},{\"name\":\"SCAN_INTERVAL_SEC\",\"value\":\"0\"},{\"name\":\"EVIDENCE_DIR\",\"value\":\"/evidence\"},{\"name\":\"REQUEST_TIMEOUT\",\"value\":\"2.0\"},{\"name\":\"ACTIVITY_TIMEOUT\",\"value\":\"2.0\"},{\"name\":\"PROMETHEUS_URL\",\"value\":\"http://r4-infrastructure-prometheus-server.ricplt.svc.cluster.local:80\"},{\"name\":\"PROMETHEUS_TIMEOUT\",\"value\":\"2.0\"},{\"name\":\"XAPP_LIST\",\"value\":\"telemetry-monitor,qos-optimizer,traffic-analyzer, resource-optimizer,security-observer, ricxapp-hw-python,ricxapp-hw-go, ricxapp-trafficxapp,ricxapp-kpimon-go\"}],\"image\":\"docker.io/library/zt-xguard-policy-engine:laptop-observe-v1\",\"imagePullPolicy\":\"IfNotPresent\",\"livenessProbe\":{\"failureThreshold\":4,\"httpGet\":{\"path\":\"/health\",\"port\":\"http\"},\"initialDelaySeconds\":20,\"periodSeconds\":20,\"timeoutSeconds\":3},\"name\":\"policy-engine\",\"ports\":[{\"containerPort\":5000,\"name\":\"http\",\"protocol\":\"TCP\"}],\"readinessProbe\":{\"failureThreshold\":6,\"httpGet\":{\"path\":\"/ready\",\"port\":\"http\"},\"initialDelaySeconds\":8,\"periodSeconds\":10,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"1\",\"memory\":\"1Gi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"256Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":false,\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/evidence\",\"name\":\"evidence\"}]}],\"securityContext\":{\"fsGroup\":10001,\"fsGroupChangePolicy\":\"OnRootMismatch\",\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001,\"seccompProfile\":{\"type\":\"RuntimeDefault\"}},\"serviceAccountName\":\"zt-xguard-policy-engine\",\"volumes\":[{\"name\":\"evidence\",\"persistentVolumeClaim\":{\"claimName\":\"zt-xguard-evidence-pvc\"}}]}}}}\n"
+        },
+        "creationTimestamp": "2026-06-23T12:52:50Z",
+        "generation": 98,
+        "labels": {
+            "app": "zt-xguard-policy-engine"
+        },
+        "name": "zt-xguard-policy-engine",
+        "namespace": "zt-xguard",
+        "resourceVersion": "4232456",
+        "uid": "02233245-8c48-4e28-b576-d7f7b518be59"
+    },
+    "spec": {
+        "progressDeadlineSeconds": 600,
+        "replicas": 1,
+        "revisionHistoryLimit": 10,
+        "selector": {
+            "matchLabels": {
+                "app": "zt-xguard-policy-engine"
+            }
+        },
+        "strategy": {
+            "type": "Recreate"
+        },
+        "template": {
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2026-07-25T20:02:01+05:30"
+                },
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "zt-xguard-policy-engine",
+                    "zt-xguard.io/mode": "observation"
+                }
+            },
+            "spec": {
+                "automountServiceAccountToken": true,
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "ENGINE_VERSION",
+                                "value": "laptop-observe-v1"
+                            },
+                            {
+                                "name": "POD_NAMESPACE",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.namespace"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "XAPP_NAMESPACE",
+                                "value": "ricxapp"
+                            },
+                            {
+                                "name": "TRUST_DOMAIN",
+                                "value": "oran.fyp.local"
+                            },
+                            {
+                                "name": "TRUSTED_PROVIDER",
+                                "value": "sp1"
+                            },
+                            {
+                                "name": "APPROVED_REGISTRY_PREFIX"
+                            },
+                            {
+                                "name": "STRICT_IMAGE_ID_MATCH",
+                                "value": "false"
+                            },
+                            {
+                                "name": "AUTO_QUARANTINE",
+                                "value": "false"
+                            },
+                            {
+                                "name": "REVOKE_SPIRE",
+                                "value": "true"
+                            },
+                            {
+                                "name": "ALLOW_DESTRUCTIVE_ACTIONS",
+                                "value": "false"
+                            },
+                            {
+                                "name": "CONTAINMENT_MODE",
+                                "value": "service"
+                            },
+                            {
+                                "name": "SPIRE_SERVER_POD",
+                                "value": "spire-server-0"
+                            },
+                            {
+                                "name": "SPIRE_NAMESPACE",
+                                "value": "spire-server"
+                            },
+                            {
+                                "name": "SPIRE_CONTAINER",
+                                "value": "spire-server"
+                            },
+                            {
+                                "name": "SPIRE_BIN",
+                                "value": "/opt/spire/bin/spire-server"
+                            },
+                            {
+                                "name": "SCAN_INTERVAL_SEC",
+                                "value": "0"
+                            },
+                            {
+                                "name": "EVIDENCE_DIR",
+                                "value": "/evidence"
+                            },
+                            {
+                                "name": "REQUEST_TIMEOUT",
+                                "value": "2.0"
+                            },
+                            {
+                                "name": "ACTIVITY_TIMEOUT",
+                                "value": "2.0"
+                            },
+                            {
+                                "name": "PROMETHEUS_URL",
+                                "value": "http://r4-infrastructure-prometheus-server.ricplt.svc.cluster.local:80"
+                            },
+                            {
+                                "name": "PROMETHEUS_TIMEOUT",
+                                "value": "2.0"
+                            },
+                            {
+                                "name": "XAPP_LIST",
+                                "value": "telemetry-monitor,qos-optimizer,traffic-analyzer, resource-optimizer,security-observer, ricxapp-hw-python,ricxapp-hw-go, ricxapp-trafficxapp,ricxapp-kpimon-go"
+                            },
+                            {
+                                "name": "MY_FORENSICS_DIR",
+                                "value": "/evidence/forensics"
+                            },
+                            {
+                                "name": "T2_AUTO_CONTAIN",
+                                "value": "true"
+                            }
+                        ],
+                        "image": "docker.io/library/zt-xguard-policy-engine:laptop-observe-v1-20260724T201030Z",
+                        "imagePullPolicy": "IfNotPresent",
+                        "livenessProbe": {
+                            "failureThreshold": 4,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": "http",
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 20,
+                            "periodSeconds": 20,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 3
+                        },
+                        "name": "policy-engine",
+                        "ports": [
+                            {
+                                "containerPort": 5000,
+                                "name": "http",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 6,
+                            "httpGet": {
+                                "path": "/ready",
+                                "port": "http",
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 8,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 3
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "memory": "1Gi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "256Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "allowPrivilegeEscalation": false,
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "readOnlyRootFilesystem": false,
+                            "runAsGroup": 10001,
+                            "runAsNonRoot": true,
+                            "runAsUser": 10001
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/app/app.py",
+                                "name": "app-script",
+                                "subPath": "app.py"
+                            },
+                            {
+                                "mountPath": "/app/ztx_state_engine.py",
+                                "name": "app-script",
+                                "subPath": "ztx_state_engine.py"
+                            },
+                            {
+                                "mountPath": "/evidence",
+                                "name": "evidence"
+                            },
+                            {
+                                "mountPath": "/app/ztx_repeat_tracker.py",
+                                "name": "app-script",
+                                "subPath": "ztx_repeat_tracker.py"
+                            },
+                            {
+                                "mountPath": "/app/event_normalization.py",
+                                "name": "app-script",
+                                "subPath": "event_normalization.py"
+                            },
+                            {
+                                "mountPath": "/app/containment_orchestrator.py",
+                                "name": "app-script",
+                                "subPath": "containment_orchestrator.py"
+                            },
+                            {
+                                "mountPath": "/app/ztx_config.py",
+                                "name": "app-script",
+                                "subPath": "ztx_config.py"
+                            },
+                            {
+                                "mountPath": "/app/k8s_clients.py",
+                                "name": "app-script",
+                                "subPath": "k8s_clients.py"
+                            },
+                            {
+                                "mountPath": "/app/csm_shared_state.py",
+                                "name": "app-script",
+                                "subPath": "csm_shared_state.py"
+                            },
+                            {
+                                "mountPath": "/app/ztx_isolation_manager.py",
+                                "name": "app-script",
+                                "subPath": "ztx_isolation_manager.py"
+                            },
+                            {
+                                "mountPath": "/app/ztx_falco_rule_sync.py",
+                                "name": "app-script",
+                                "subPath": "ztx_falco_rule_sync.py"
+                            },
+                            {
+                                "mountPath": "/var/lib/ztx-t2-state",
+                                "name": "t2-state",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 10001,
+                    "fsGroupChangePolicy": "OnRootMismatch",
+                    "runAsGroup": 10001,
+                    "runAsNonRoot": true,
+                    "runAsUser": 10001,
+                    "seccompProfile": {
+                        "type": "RuntimeDefault"
+                    }
+                },
+                "serviceAccount": "zt-xguard-policy-engine",
+                "serviceAccountName": "zt-xguard-policy-engine",
+                "terminationGracePeriodSeconds": 30,
+                "volumes": [
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "zt-xguard-policy-engine-app"
+                        },
+                        "name": "app-script"
+                    },
+                    {
+                        "name": "evidence",
+                        "persistentVolumeClaim": {
+                            "claimName": "zt-xguard-evidence-pvc"
+                        }
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/var/lib/ztx-t2-state",
+                            "type": "DirectoryOrCreate"
+                        },
+                        "name": "t2-state"
+                    }
+                ]
+            }
+        }
+    },
+    "status": {
+        "availableReplicas": 1,
+        "conditions": [
+            {
+                "lastTransitionTime": "2026-07-24T02:11:52Z",
+                "lastUpdateTime": "2026-07-25T14:32:45Z",
+                "message": "ReplicaSet \"zt-xguard-policy-engine-6479cd5984\" has successfully progressed.",
+                "reason": "NewReplicaSetAvailable",
+                "status": "True",
+                "type": "Progressing"
+            },
+            {
+                "lastTransitionTime": "2026-08-07T09:12:07Z",
+                "lastUpdateTime": "2026-08-07T09:12:07Z",
+                "message": "Deployment has minimum availability.",
+                "reason": "MinimumReplicasAvailable",
+                "status": "True",
+                "type": "Available"
+            }
+        ],
+        "observedGeneration": 98,
+        "readyReplicas": 1,
+        "replicas": 1,
+        "updatedReplicas": 1
+    }
+}

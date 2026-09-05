@@ -1,0 +1,12 @@
+HTTP_CODE=404
+HTTP_CODE=404
+HTTP_CODE=404
+HTTP_CODE=404
+HTTP_CODE=404
+HTTP_CODE=404
+HTTP_CODE=404
+HTTP_CODE=404
+/v1/handles/xapp-handle -> HTTP_CODE=404
+/handles/xapp-handle -> HTTP_CODE=404
+wrapped /v1/handles/xapp-handle -> HTTP_CODE=404
+wrapped /handles/xapp-handle -> HTTP_CODE=404

@@ -1,0 +1,1065 @@
+{
+  "apiVersion": "v1",
+  "kind": "Pod",
+  "metadata": {
+    "annotations": {
+      "cni.projectcalico.org/containerID": "67ae7d9d5171b10bd2de155777a769508c8ab0b614c0460461324e636a2f2842",
+      "cni.projectcalico.org/podIP": "10.244.0.188/32",
+      "cni.projectcalico.org/podIPs": "10.244.0.188/32",
+      "kubectl.kubernetes.io/restartedAt": "2026-08-29T20:26:02+05:30",
+      "zt-xguard.io/expected-spiffe-id": "spiffe://oran.fyp.local/ns/ricxapp/sa/ricxapp-kpimon-go",
+      "zt-xguard.io/incident-id": "20260829T153845Z-resource_anomaly_t2-ricxapp-kpimon-go-66101cc1fa",
+      "zt-xguard.io/quarantine-reason": "t2_mewma_resource_pressure_confirmed_6of8_with_cpu_rate_gate:pressure_score=212.247",
+      "zt-xguard.io/quarantine-time": "2026-08-29T15:38:45.678881+00:00",
+      "zt-xguard.io/svid-logger-version": "v2-configmap"
+    },
+    "creationTimestamp": "2026-08-29T15:35:11+00:00",
+    "generateName": "ricxapp-kpimon-go-577cb87895-",
+    "generation": 1,
+    "labels": {
+      "app": "ricxapp-kpimon-go",
+      "kubernetes_name": "ricxapp_kpimon-go",
+      "pod-template-hash": "577cb87895",
+      "release": "kpimon-go",
+      "security-status": "quarantined",
+      "zt-xguard.io/decision": "quarantined",
+      "zt-xguard.io/identity-managed": "true",
+      "zt-xguard.io/quarantine": "true",
+      "zt-xguard.io/svid-enabled": "false"
+    },
+    "managedFields": [
+      {
+        "apiVersion": "v1",
+        "fieldsType": "FieldsV1",
+        "fieldsV1": {
+          "f:metadata": {
+            "f:annotations": {
+              ".": {},
+              "f:kubectl.kubernetes.io/restartedAt": {},
+              "f:zt-xguard.io/expected-spiffe-id": {},
+              "f:zt-xguard.io/svid-logger-version": {}
+            },
+            "f:generateName": {},
+            "f:labels": {
+              ".": {},
+              "f:app": {},
+              "f:kubernetes_name": {},
+              "f:pod-template-hash": {},
+              "f:release": {},
+              "f:zt-xguard.io/identity-managed": {}
+            },
+            "f:ownerReferences": {
+              ".": {},
+              "k:{\"uid\":\"3dfc1055-8a7c-4982-ad4b-3258238071b4\"}": {}
+            }
+          },
+          "f:spec": {
+            "f:containers": {
+              "k:{\"name\":\"kpimon-go\"}": {
+                ".": {},
+                "f:env": {
+                  ".": {},
+                  "k:{\"name\":\"DBAAS_SERVICE_HOST\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"DBAAS_SERVICE_PORT\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"OCUDU_CELL_HEX\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"OCUDU_PLMN_HEX\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"ZTX_ACTUATOR_TOKEN\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:valueFrom": {
+                      ".": {},
+                      "f:secretKeyRef": {}
+                    }
+                  }
+                },
+                "f:envFrom": {},
+                "f:image": {},
+                "f:imagePullPolicy": {},
+                "f:livenessProbe": {
+                  ".": {},
+                  "f:failureThreshold": {},
+                  "f:httpGet": {
+                    ".": {},
+                    "f:path": {},
+                    "f:port": {},
+                    "f:scheme": {}
+                  },
+                  "f:initialDelaySeconds": {},
+                  "f:periodSeconds": {},
+                  "f:successThreshold": {},
+                  "f:timeoutSeconds": {}
+                },
+                "f:name": {},
+                "f:ports": {
+                  ".": {},
+                  "k:{\"containerPort\":4560,\"protocol\":\"TCP\"}": {
+                    ".": {},
+                    "f:containerPort": {},
+                    "f:name": {},
+                    "f:protocol": {}
+                  },
+                  "k:{\"containerPort\":4561,\"protocol\":\"TCP\"}": {
+                    ".": {},
+                    "f:containerPort": {},
+                    "f:name": {},
+                    "f:protocol": {}
+                  },
+                  "k:{\"containerPort\":8080,\"protocol\":\"TCP\"}": {
+                    ".": {},
+                    "f:containerPort": {},
+                    "f:name": {},
+                    "f:protocol": {}
+                  }
+                },
+                "f:readinessProbe": {
+                  ".": {},
+                  "f:failureThreshold": {},
+                  "f:httpGet": {
+                    ".": {},
+                    "f:path": {},
+                    "f:port": {},
+                    "f:scheme": {}
+                  },
+                  "f:initialDelaySeconds": {},
+                  "f:periodSeconds": {},
+                  "f:successThreshold": {},
+                  "f:timeoutSeconds": {}
+                },
+                "f:resources": {
+                  ".": {},
+                  "f:limits": {
+                    ".": {},
+                    "f:cpu": {},
+                    "f:memory": {}
+                  },
+                  "f:requests": {
+                    ".": {},
+                    "f:cpu": {},
+                    "f:memory": {}
+                  }
+                },
+                "f:terminationMessagePath": {},
+                "f:terminationMessagePolicy": {},
+                "f:volumeMounts": {
+                  ".": {},
+                  "k:{\"mountPath\":\"/etc/svid\"}": {
+                    ".": {},
+                    "f:mountPath": {},
+                    "f:name": {},
+                    "f:readOnly": {}
+                  },
+                  "k:{\"mountPath\":\"/opt/ric/config\"}": {
+                    ".": {},
+                    "f:mountPath": {},
+                    "f:name": {}
+                  }
+                }
+              },
+              "k:{\"name\":\"renew-svid\"}": {
+                ".": {},
+                "f:args": {},
+                "f:command": {},
+                "f:env": {
+                  ".": {},
+                  "k:{\"name\":\"DBAAS_SERVICE_HOST\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"DBAAS_SERVICE_PORT\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"EXPECTED_SPIFFE_ID\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"RENEW_INTERVAL_SECONDS\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"ZTX_ACTUATOR_TOKEN\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:valueFrom": {
+                      ".": {},
+                      "f:secretKeyRef": {}
+                    }
+                  }
+                },
+                "f:image": {},
+                "f:imagePullPolicy": {},
+                "f:name": {},
+                "f:resources": {
+                  ".": {},
+                  "f:limits": {
+                    ".": {},
+                    "f:cpu": {},
+                    "f:memory": {}
+                  },
+                  "f:requests": {
+                    ".": {},
+                    "f:cpu": {},
+                    "f:memory": {}
+                  }
+                },
+                "f:securityContext": {
+                  ".": {},
+                  "f:allowPrivilegeEscalation": {},
+                  "f:capabilities": {
+                    ".": {},
+                    "f:drop": {}
+                  },
+                  "f:runAsGroup": {},
+                  "f:runAsNonRoot": {},
+                  "f:runAsUser": {}
+                },
+                "f:terminationMessagePath": {},
+                "f:terminationMessagePolicy": {},
+                "f:volumeMounts": {
+                  ".": {},
+                  "k:{\"mountPath\":\"/etc/svid\"}": {
+                    ".": {},
+                    "f:mountPath": {},
+                    "f:name": {}
+                  },
+                  "k:{\"mountPath\":\"/opt/ztx/svid-renew.sh\"}": {
+                    ".": {},
+                    "f:mountPath": {},
+                    "f:name": {},
+                    "f:readOnly": {},
+                    "f:subPath": {}
+                  },
+                  "k:{\"mountPath\":\"/run/spire/sockets\"}": {
+                    ".": {},
+                    "f:mountPath": {},
+                    "f:name": {},
+                    "f:readOnly": {}
+                  }
+                }
+              }
+            },
+            "f:dnsPolicy": {},
+            "f:enableServiceLinks": {},
+            "f:hostname": {},
+            "f:imagePullSecrets": {
+              ".": {},
+              "k:{\"name\":\"127-0-0-1-80\"}": {}
+            },
+            "f:initContainers": {
+              ".": {},
+              "k:{\"name\":\"fetch-svid\"}": {
+                ".": {},
+                "f:args": {},
+                "f:command": {},
+                "f:env": {
+                  ".": {},
+                  "k:{\"name\":\"DBAAS_SERVICE_HOST\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"DBAAS_SERVICE_PORT\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:value": {}
+                  },
+                  "k:{\"name\":\"ZTX_ACTUATOR_TOKEN\"}": {
+                    ".": {},
+                    "f:name": {},
+                    "f:valueFrom": {
+                      ".": {},
+                      "f:secretKeyRef": {}
+                    }
+                  }
+                },
+                "f:image": {},
+                "f:imagePullPolicy": {},
+                "f:name": {},
+                "f:resources": {
+                  ".": {},
+                  "f:limits": {
+                    ".": {},
+                    "f:cpu": {},
+                    "f:memory": {}
+                  },
+                  "f:requests": {
+                    ".": {},
+                    "f:cpu": {},
+                    "f:memory": {}
+                  }
+                },
+                "f:securityContext": {
+                  ".": {},
+                  "f:allowPrivilegeEscalation": {},
+                  "f:capabilities": {
+                    ".": {},
+                    "f:drop": {}
+                  },
+                  "f:runAsGroup": {},
+                  "f:runAsNonRoot": {},
+                  "f:runAsUser": {}
+                },
+                "f:terminationMessagePath": {},
+                "f:terminationMessagePolicy": {},
+                "f:volumeMounts": {
+                  ".": {},
+                  "k:{\"mountPath\":\"/etc/svid\"}": {
+                    ".": {},
+                    "f:mountPath": {},
+                    "f:name": {}
+                  },
+                  "k:{\"mountPath\":\"/run/spire/sockets\"}": {
+                    ".": {},
+                    "f:mountPath": {},
+                    "f:name": {},
+                    "f:readOnly": {}
+                  }
+                }
+              }
+            },
+            "f:restartPolicy": {},
+            "f:schedulerName": {},
+            "f:securityContext": {},
+            "f:serviceAccount": {},
+            "f:serviceAccountName": {},
+            "f:terminationGracePeriodSeconds": {},
+            "f:volumes": {
+              ".": {},
+              "k:{\"name\":\"config-volume\"}": {
+                ".": {},
+                "f:configMap": {
+                  ".": {},
+                  "f:defaultMode": {},
+                  "f:name": {}
+                },
+                "f:name": {}
+              },
+              "k:{\"name\":\"spiffe-socket\"}": {
+                ".": {},
+                "f:csi": {
+                  ".": {},
+                  "f:driver": {},
+                  "f:readOnly": {}
+                },
+                "f:name": {}
+              },
+              "k:{\"name\":\"svid-data\"}": {
+                ".": {},
+                "f:emptyDir": {},
+                "f:name": {}
+              },
+              "k:{\"name\":\"svid-renew-logger\"}": {
+                ".": {},
+                "f:configMap": {
+                  ".": {},
+                  "f:defaultMode": {},
+                  "f:name": {}
+                },
+                "f:name": {}
+              }
+            }
+          }
+        },
+        "manager": "kube-controller-manager",
+        "operation": "Update",
+        "time": "2026-08-29T15:35:11+00:00"
+      },
+      {
+        "apiVersion": "v1",
+        "fieldsType": "FieldsV1",
+        "fieldsV1": {
+          "f:metadata": {
+            "f:annotations": {
+              "f:cni.projectcalico.org/containerID": {},
+              "f:cni.projectcalico.org/podIP": {},
+              "f:cni.projectcalico.org/podIPs": {}
+            }
+          }
+        },
+        "manager": "calico",
+        "operation": "Update",
+        "subresource": "status",
+        "time": "2026-08-29T15:35:12+00:00"
+      },
+      {
+        "apiVersion": "v1",
+        "fieldsType": "FieldsV1",
+        "fieldsV1": {
+          "f:status": {
+            "f:conditions": {
+              "k:{\"type\":\"ContainersReady\"}": {
+                ".": {},
+                "f:lastProbeTime": {},
+                "f:lastTransitionTime": {},
+                "f:status": {},
+                "f:type": {}
+              },
+              "k:{\"type\":\"Initialized\"}": {
+                ".": {},
+                "f:lastProbeTime": {},
+                "f:lastTransitionTime": {},
+                "f:status": {},
+                "f:type": {}
+              },
+              "k:{\"type\":\"PodReadyToStartContainers\"}": {
+                ".": {},
+                "f:lastProbeTime": {},
+                "f:lastTransitionTime": {},
+                "f:status": {},
+                "f:type": {}
+              },
+              "k:{\"type\":\"Ready\"}": {
+                ".": {},
+                "f:lastProbeTime": {},
+                "f:lastTransitionTime": {},
+                "f:status": {},
+                "f:type": {}
+              }
+            },
+            "f:containerStatuses": {},
+            "f:hostIP": {},
+            "f:hostIPs": {},
+            "f:initContainerStatuses": {},
+            "f:phase": {},
+            "f:podIP": {},
+            "f:podIPs": {
+              ".": {},
+              "k:{\"ip\":\"10.244.0.188\"}": {
+                ".": {},
+                "f:ip": {}
+              }
+            },
+            "f:startTime": {}
+          }
+        },
+        "manager": "kubelet",
+        "operation": "Update",
+        "subresource": "status",
+        "time": "2026-08-29T15:35:36+00:00"
+      },
+      {
+        "apiVersion": "v1",
+        "fieldsType": "FieldsV1",
+        "fieldsV1": {
+          "f:metadata": {
+            "f:annotations": {
+              "f:zt-xguard.io/incident-id": {},
+              "f:zt-xguard.io/quarantine-reason": {},
+              "f:zt-xguard.io/quarantine-time": {}
+            },
+            "f:labels": {
+              "f:security-status": {},
+              "f:zt-xguard.io/decision": {},
+              "f:zt-xguard.io/quarantine": {},
+              "f:zt-xguard.io/svid-enabled": {}
+            }
+          }
+        },
+        "manager": "OpenAPI-Generator",
+        "operation": "Update",
+        "time": "2026-08-29T15:38:47+00:00"
+      }
+    ],
+    "name": "ricxapp-kpimon-go-577cb87895-fhdlw",
+    "namespace": "ricxapp",
+    "ownerReferences": [
+      {
+        "apiVersion": "apps/v1",
+        "blockOwnerDeletion": true,
+        "controller": true,
+        "kind": "ReplicaSet",
+        "name": "ricxapp-kpimon-go-577cb87895",
+        "uid": "3dfc1055-8a7c-4982-ad4b-3258238071b4"
+      }
+    ],
+    "resourceVersion": "5047146",
+    "uid": "a54d9f78-1b9e-4feb-b0f6-56e57e85dfd7"
+  },
+  "spec": {
+    "containers": [
+      {
+        "env": [
+          {
+            "name": "OCUDU_CELL_HEX",
+            "value": "00066c0000"
+          },
+          {
+            "name": "OCUDU_PLMN_HEX",
+            "value": "00f110"
+          },
+          {
+            "name": "ZTX_ACTUATOR_TOKEN",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "ZTX_ACTUATOR_TOKEN",
+                "name": "ztx-kpimon-actuator-token"
+              }
+            }
+          },
+          {
+            "name": "DBAAS_SERVICE_HOST",
+            "value": "service-ricplt-dbaas-tcp.ricplt.svc.cluster.local"
+          },
+          {
+            "name": "DBAAS_SERVICE_PORT",
+            "value": "6379"
+          }
+        ],
+        "envFrom": [
+          {
+            "configMapRef": {
+              "name": "configmap-ricxapp-kpimon-go-appenv"
+            }
+          },
+          {
+            "configMapRef": {
+              "name": "dbaas-appconfig"
+            }
+          }
+        ],
+        "image": "127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v1",
+        "imagePullPolicy": "IfNotPresent",
+        "livenessProbe": {
+          "failureThreshold": 3,
+          "httpGet": {
+            "path": "ric/v1/health/alive",
+            "port": 8080,
+            "scheme": "HTTP"
+          },
+          "initialDelaySeconds": 5,
+          "periodSeconds": 15,
+          "successThreshold": 1,
+          "timeoutSeconds": 5
+        },
+        "name": "kpimon-go",
+        "ports": [
+          {
+            "containerPort": 8080,
+            "name": "http",
+            "protocol": "TCP"
+          },
+          {
+            "containerPort": 4560,
+            "name": "rmr-data",
+            "protocol": "TCP"
+          },
+          {
+            "containerPort": 4561,
+            "name": "rmr-route",
+            "protocol": "TCP"
+          }
+        ],
+        "readinessProbe": {
+          "failureThreshold": 3,
+          "httpGet": {
+            "path": "ric/v1/health/ready",
+            "port": 8080,
+            "scheme": "HTTP"
+          },
+          "initialDelaySeconds": 5,
+          "periodSeconds": 15,
+          "successThreshold": 1,
+          "timeoutSeconds": 5
+        },
+        "resources": {
+          "limits": {
+            "cpu": "200m",
+            "memory": "64Mi"
+          },
+          "requests": {
+            "cpu": "10m",
+            "memory": "32Mi"
+          }
+        },
+        "terminationMessagePath": "/dev/termination-log",
+        "terminationMessagePolicy": "File",
+        "volumeMounts": [
+          {
+            "mountPath": "/etc/svid",
+            "name": "svid-data",
+            "readOnly": true
+          },
+          {
+            "mountPath": "/opt/ric/config",
+            "name": "config-volume"
+          },
+          {
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+            "name": "kube-api-access-qchf5",
+            "readOnly": true
+          }
+        ]
+      },
+      {
+        "args": [
+          "/opt/ztx/svid-renew.sh"
+        ],
+        "command": [
+          "/bin/sh"
+        ],
+        "env": [
+          {
+            "name": "EXPECTED_SPIFFE_ID",
+            "value": "spiffe://oran.fyp.local/ns/ricxapp/sa/ricxapp-kpimon-go"
+          },
+          {
+            "name": "RENEW_INTERVAL_SECONDS",
+            "value": "60"
+          },
+          {
+            "name": "ZTX_ACTUATOR_TOKEN",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "ZTX_ACTUATOR_TOKEN",
+                "name": "ztx-kpimon-actuator-token"
+              }
+            }
+          },
+          {
+            "name": "DBAAS_SERVICE_HOST",
+            "value": "service-ricplt-dbaas-tcp.ricplt.svc.cluster.local"
+          },
+          {
+            "name": "DBAAS_SERVICE_PORT",
+            "value": "6379"
+          }
+        ],
+        "image": "docker.io/library/zt-spire-fetcher:1.0",
+        "imagePullPolicy": "IfNotPresent",
+        "name": "renew-svid",
+        "resources": {
+          "limits": {
+            "cpu": "50m",
+            "memory": "64Mi"
+          },
+          "requests": {
+            "cpu": "5m",
+            "memory": "16Mi"
+          }
+        },
+        "securityContext": {
+          "allowPrivilegeEscalation": false,
+          "capabilities": {
+            "drop": [
+              "ALL"
+            ]
+          },
+          "runAsGroup": 10001,
+          "runAsNonRoot": true,
+          "runAsUser": 10001
+        },
+        "terminationMessagePath": "/dev/termination-log",
+        "terminationMessagePolicy": "File",
+        "volumeMounts": [
+          {
+            "mountPath": "/opt/ztx/svid-renew.sh",
+            "name": "svid-renew-logger",
+            "readOnly": true,
+            "subPath": "svid-renew.sh"
+          },
+          {
+            "mountPath": "/run/spire/sockets",
+            "name": "spiffe-socket",
+            "readOnly": true
+          },
+          {
+            "mountPath": "/etc/svid",
+            "name": "svid-data"
+          },
+          {
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+            "name": "kube-api-access-qchf5",
+            "readOnly": true
+          }
+        ]
+      }
+    ],
+    "dnsPolicy": "ClusterFirst",
+    "enableServiceLinks": true,
+    "hostname": "kpimon-go",
+    "imagePullSecrets": [
+      {
+        "name": "127-0-0-1-80"
+      }
+    ],
+    "initContainers": [
+      {
+        "args": [
+          "SOCKET=/run/spire/sockets/spire-agent.sock\nOUTPUT=/etc/svid\n\necho \"Waiting for SPIRE socket...\"\n\nfor i in $(seq 1 60); do\n  [ -S \"$SOCKET\" ] && break\n  echo \"Socket not ready: $i/60\"\n  sleep 2\ndone\n\ntest -S \"$SOCKET\"\nmkdir -p \"$OUTPUT\"\n\necho \"Waiting for workload identity...\"\n\nfor i in $(seq 1 60); do\n  if /opt/spire/bin/spire-agent api fetch x509                      -socketPath \"$SOCKET\"                      -write \"$OUTPUT\"\n  then\n    chmod 0644 \"$OUTPUT/svid.0.pem\"\n    chmod 0600 \"$OUTPUT/svid.0.key\"\n    chmod 0644 \"$OUTPUT/bundle.0.pem\"\n\n    echo \"SVID_FETCH_OK\"\n    exit 0\n  fi\n\n  echo \"Identity not ready: $i/60\"\n  sleep 2\ndone\n\necho \"SVID_FETCH_FAILED\"\nexit 1\n"
+        ],
+        "command": [
+          "/bin/sh",
+          "-ec"
+        ],
+        "env": [
+          {
+            "name": "ZTX_ACTUATOR_TOKEN",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "ZTX_ACTUATOR_TOKEN",
+                "name": "ztx-kpimon-actuator-token"
+              }
+            }
+          },
+          {
+            "name": "DBAAS_SERVICE_HOST",
+            "value": "service-ricplt-dbaas-tcp.ricplt.svc.cluster.local"
+          },
+          {
+            "name": "DBAAS_SERVICE_PORT",
+            "value": "6379"
+          }
+        ],
+        "image": "docker.io/library/zt-spire-fetcher:1.0",
+        "imagePullPolicy": "IfNotPresent",
+        "name": "fetch-svid",
+        "resources": {
+          "limits": {
+            "cpu": "50m",
+            "memory": "64Mi"
+          },
+          "requests": {
+            "cpu": "5m",
+            "memory": "16Mi"
+          }
+        },
+        "securityContext": {
+          "allowPrivilegeEscalation": false,
+          "capabilities": {
+            "drop": [
+              "ALL"
+            ]
+          },
+          "runAsGroup": 10001,
+          "runAsNonRoot": true,
+          "runAsUser": 10001
+        },
+        "terminationMessagePath": "/dev/termination-log",
+        "terminationMessagePolicy": "File",
+        "volumeMounts": [
+          {
+            "mountPath": "/run/spire/sockets",
+            "name": "spiffe-socket",
+            "readOnly": true
+          },
+          {
+            "mountPath": "/etc/svid",
+            "name": "svid-data"
+          },
+          {
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+            "name": "kube-api-access-qchf5",
+            "readOnly": true
+          }
+        ]
+      }
+    ],
+    "nodeName": "near-rt-ric",
+    "preemptionPolicy": "PreemptLowerPriority",
+    "priority": 0,
+    "restartPolicy": "Always",
+    "schedulerName": "default-scheduler",
+    "securityContext": {},
+    "serviceAccount": "ricxapp-kpimon-go",
+    "serviceAccountName": "ricxapp-kpimon-go",
+    "terminationGracePeriodSeconds": 30,
+    "tolerations": [
+      {
+        "effect": "NoExecute",
+        "key": "node.kubernetes.io/not-ready",
+        "operator": "Exists",
+        "tolerationSeconds": 300
+      },
+      {
+        "effect": "NoExecute",
+        "key": "node.kubernetes.io/unreachable",
+        "operator": "Exists",
+        "tolerationSeconds": 300
+      }
+    ],
+    "volumes": [
+      {
+        "configMap": {
+          "defaultMode": 365,
+          "name": "zt-xguard-svid-renew-logger"
+        },
+        "name": "svid-renew-logger"
+      },
+      {
+        "csi": {
+          "driver": "csi.spiffe.io",
+          "readOnly": true
+        },
+        "name": "spiffe-socket"
+      },
+      {
+        "emptyDir": {},
+        "name": "svid-data"
+      },
+      {
+        "configMap": {
+          "defaultMode": 420,
+          "name": "configmap-ricxapp-kpimon-go-appconfig"
+        },
+        "name": "config-volume"
+      },
+      {
+        "name": "kube-api-access-qchf5",
+        "projected": {
+          "defaultMode": 420,
+          "sources": [
+            {
+              "serviceAccountToken": {
+                "expirationSeconds": 3607,
+                "path": "token"
+              }
+            },
+            {
+              "configMap": {
+                "items": [
+                  {
+                    "key": "ca.crt",
+                    "path": "ca.crt"
+                  }
+                ],
+                "name": "kube-root-ca.crt"
+              }
+            },
+            {
+              "downwardAPI": {
+                "items": [
+                  {
+                    "fieldRef": {
+                      "apiVersion": "v1",
+                      "fieldPath": "metadata.namespace"
+                    },
+                    "path": "namespace"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "status": {
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-08-29T15:35:13+00:00",
+        "status": "True",
+        "type": "PodReadyToStartContainers"
+      },
+      {
+        "lastTransitionTime": "2026-08-29T15:35:18+00:00",
+        "status": "True",
+        "type": "Initialized"
+      },
+      {
+        "lastTransitionTime": "2026-08-29T15:35:36+00:00",
+        "status": "True",
+        "type": "Ready"
+      },
+      {
+        "lastTransitionTime": "2026-08-29T15:35:36+00:00",
+        "status": "True",
+        "type": "ContainersReady"
+      },
+      {
+        "lastTransitionTime": "2026-08-29T15:35:11+00:00",
+        "status": "True",
+        "type": "PodScheduled"
+      }
+    ],
+    "containerStatuses": [
+      {
+        "allocatedResources": {
+          "cpu": "10m",
+          "memory": "32Mi"
+        },
+        "containerID": "containerd://1427b55c658655cff82fe742ebfc81cf507a7d8d377a0f99c4e0992018d21ad2",
+        "image": "127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v1",
+        "imageID": "127.0.0.1:80/kpimon-ocudu-cell@sha256:47833746e5d1d1b32f339c218e9fe87b8eb180ae5ee789793a18717b00bb570a",
+        "lastState": {},
+        "name": "kpimon-go",
+        "ready": true,
+        "resources": {
+          "limits": {
+            "cpu": "200m",
+            "memory": "64Mi"
+          },
+          "requests": {
+            "cpu": "10m",
+            "memory": "32Mi"
+          }
+        },
+        "restartCount": 0,
+        "started": true,
+        "state": {
+          "running": {
+            "startedAt": "2026-08-29T15:35:18+00:00"
+          }
+        },
+        "volumeMounts": [
+          {
+            "mountPath": "/etc/svid",
+            "name": "svid-data",
+            "readOnly": true,
+            "recursiveReadOnly": "Disabled"
+          },
+          {
+            "mountPath": "/opt/ric/config",
+            "name": "config-volume"
+          },
+          {
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+            "name": "kube-api-access-qchf5",
+            "readOnly": true,
+            "recursiveReadOnly": "Disabled"
+          }
+        ]
+      },
+      {
+        "allocatedResources": {
+          "cpu": "5m",
+          "memory": "16Mi"
+        },
+        "containerID": "containerd://98c5c76f163fa0ea1003419e24fc9d9a6fd0f5d88d4a37b5a7f3f2388fa0dacf",
+        "image": "docker.io/library/zt-spire-fetcher:1.0",
+        "imageID": "sha256:9bbdbf322cd7dd145f00f60dfb1c3bd03e48bb37e23ace9728f28a03cfbb7753",
+        "lastState": {},
+        "name": "renew-svid",
+        "ready": true,
+        "resources": {
+          "limits": {
+            "cpu": "50m",
+            "memory": "64Mi"
+          },
+          "requests": {
+            "cpu": "5m",
+            "memory": "16Mi"
+          }
+        },
+        "restartCount": 0,
+        "started": true,
+        "state": {
+          "running": {
+            "startedAt": "2026-08-29T15:35:19+00:00"
+          }
+        },
+        "volumeMounts": [
+          {
+            "mountPath": "/opt/ztx/svid-renew.sh",
+            "name": "svid-renew-logger",
+            "readOnly": true,
+            "recursiveReadOnly": "Disabled"
+          },
+          {
+            "mountPath": "/run/spire/sockets",
+            "name": "spiffe-socket",
+            "readOnly": true,
+            "recursiveReadOnly": "Disabled"
+          },
+          {
+            "mountPath": "/etc/svid",
+            "name": "svid-data"
+          },
+          {
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+            "name": "kube-api-access-qchf5",
+            "readOnly": true,
+            "recursiveReadOnly": "Disabled"
+          }
+        ]
+      }
+    ],
+    "hostIP": "192.168.8.159",
+    "hostIPs": [
+      {
+        "ip": "192.168.8.159"
+      }
+    ],
+    "initContainerStatuses": [
+      {
+        "allocatedResources": {
+          "cpu": "5m",
+          "memory": "16Mi"
+        },
+        "containerID": "containerd://ae6a76dd5545c58883a4cf2548c2c6f3707a3658a8e79acc743e5224a1a8de05",
+        "image": "docker.io/library/zt-spire-fetcher:1.0",
+        "imageID": "sha256:9bbdbf322cd7dd145f00f60dfb1c3bd03e48bb37e23ace9728f28a03cfbb7753",
+        "lastState": {},
+        "name": "fetch-svid",
+        "ready": true,
+        "resources": {
+          "limits": {
+            "cpu": "50m",
+            "memory": "64Mi"
+          },
+          "requests": {
+            "cpu": "5m",
+            "memory": "16Mi"
+          }
+        },
+        "restartCount": 0,
+        "started": false,
+        "state": {
+          "terminated": {
+            "containerID": "containerd://ae6a76dd5545c58883a4cf2548c2c6f3707a3658a8e79acc743e5224a1a8de05",
+            "exitCode": 0,
+            "finishedAt": "2026-08-29T15:35:17+00:00",
+            "reason": "Completed",
+            "startedAt": "2026-08-29T15:35:13+00:00"
+          }
+        },
+        "volumeMounts": [
+          {
+            "mountPath": "/run/spire/sockets",
+            "name": "spiffe-socket",
+            "readOnly": true,
+            "recursiveReadOnly": "Disabled"
+          },
+          {
+            "mountPath": "/etc/svid",
+            "name": "svid-data"
+          },
+          {
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+            "name": "kube-api-access-qchf5",
+            "readOnly": true,
+            "recursiveReadOnly": "Disabled"
+          }
+        ]
+      }
+    ],
+    "phase": "Running",
+    "podIP": "10.244.0.188",
+    "podIPs": [
+      {
+        "ip": "10.244.0.188"
+      }
+    ],
+    "qosClass": "Burstable",
+    "startTime": "2026-08-29T15:35:11+00:00"
+  }
+}

@@ -1,0 +1,219 @@
+===== Local app.py routes =====
+9:- xApp endpoint collection: /health, /ready, /profile, /activity, /identity, /integrity, /metrics
+10:- Intent-aware scoring using xApp profile and runtime counters
+101:# Fast CSM runtime state. This is cached/event-driven and must not
+103:# cache, and Falco/runtime events update it immediately.
+215:        runtime = normalize_image_id(image_id)
+216:        if not runtime:
+219:        if runtime == annotated:
+223:        if annotated in runtime or runtime in annotated:
+340:        "health": fetch_json(xapp, "/health"),
+346:        "metrics": fetch_text(xapp, "/metrics"),
+431:    runtime_digest_match = digest_matches_annotation(annotated_image_digest, image_ids)
+436:    # Set STRICT_IMAGE_ID_MATCH=true only when the runtime imageID format is
+441:            runtime_digest_match,
+448:    score -= add_finding(findings, endpoints.get("health", {}).get("ok") and health.get("status") == "ok", "high", "health_endpoint", "/health failed or returned non-ok", 20)
+457:    score -= add_finding(findings, integrity.get("profile_sha256") == annotated_profile_hash, "critical", "profile_hash_match", f"Profile hash mismatch. runtime={integrity.get('profile_sha256')}, annotated={annotated_profile_hash}", 60)
+459:    runtime_controls = integrity.get("runtime_expected_controls", {}) or {}
+461:        score -= add_finding(findings, runtime_controls.get(ctrl) is False, "medium", f"runtime_control_{ctrl}", f"Runtime control {ctrl} is not false", 8)
+464:    score -= add_finding(findings, metrics.get("ok") is True and "xapp_work_units_processed" in metrics_body, "medium", "metrics_endpoint", "/metrics missing xapp_work_units_processed", 8)
+524:        "key_runtime_values": {
+534:            "runtime_profile_sha256": integrity.get("profile_sha256"),
+537:            "runtime_image_digest_match": runtime_digest_match,
+772:# Fallback containment for CNIs that do not enforce NetworkPolicy
+855:    """Summarize legacy Endpoints object for service containment verification."""
+934:    It preserves the original selector in a Service annotation so restore can
+1008:def restore_service_isolation(
+1012:    """Restore xApp Service selector after service-level containment.
+1020:    This avoids the previous bug where the API claimed restore=true but the
+1053:                    "restored": False,
+1060:            # This handles cases where restore is called after manual cleanup or
+1101:                "restored": False,
+1128:            app_selector_restored = selector_after and selector_after.get("app") == xapp
+1131:            if stale_selector_gone and app_selector_restored and endpoints_back:
+1134:        restored = bool(
+1144:            "restored": restored,
+1145:            "restored_selector": original_selector,
+1146:            "selector_after_restore": selector_after,
+1147:            "endpoint_summary_after_restore": ep_summary,
+1154:        "restored": any(r.get("restored") for r in results),
+1165:    """Scale deployment for hard containment or restore.
+1167:    For containment, original replicas are saved in annotation.
+1213:def restore_deployment_scale(
+1222:            "restored": False,
+1223:            "method": "deployment_scale_restore",
+1234:            "restored": False,
+1235:            "method": "deployment_scale_restore",
+1263:        "restored": True,
+1264:        "method": "deployment_scale_restore",
+1272:# fallback containment. Existing code calls apply_quarantine(), so redefining it
+1330:    # Action 3: Optional hard containment.
+1366:    # Therefore, service-mode containment is only successful if Service isolation succeeds.
+1374:    results["effective_containment_applied"] = results["applied"]
+1379:def verify_xapp_containment(xapp: str, namespace: str = XAPP_NAMESPACE) -> Dict[str, Any]:
+1427:        "containment_note": "contained=true only when service isolation is verified; pod quarantine label alone is not treated as effective containment in this CNI-limited testbed",
+1497:        "key_runtime_values": result.get("key_runtime_values", {}),
+1563:        "description": "Fast CSM state from cached audit results and runtime events; does not run full endpoint checks.",
+1620:            "Shell execution observed in an xApp whose intent profile forbids shell execution",
+1634:            "Sensitive file access observed in xApp runtime",
+1906:@APP.route("/health", methods=["GET"])
+1921:@APP.route("/ready", methods=["GET"])
+2073:    affect ZT-XGuard trust state or trigger containment.
+2077:      - falco/falcosidekick activity
+2100:@APP.route("/csm/state", methods=["GET"])
+2105:@APP.route("/csm/audit", methods=["GET", "POST"])
+2112:@APP.route("/csm/quarantine", methods=["POST"])
+2171:@APP.route("/csm/events/falco", methods=["POST"])
+2179:@APP.route("/csm/containment/apply", methods=["POST"])
+2180:def csm_containment_apply() -> Any:
+2186:    reason = payload.get("reason") or "manual_csm_containment"
+2187:    incident_id = payload.get("incident_id") or f"{utc_id()}-manual-containment-{safe_name(xapp or pod_name or 'unknown')}"
+2208:    verify = verify_xapp_containment(result.get("xapp") or xapp or "unknown", namespace)
+2212:        "containment": result,
+2218:@APP.route("/csm/containment/restore", methods=["POST"])
+2219:def csm_containment_restore() -> Any:
+2227:            "restored": False,
+2231:    service_restore = restore_service_isolation(xapp, namespace)
+2232:    scale_restore = restore_deployment_scale(xapp, namespace)
+2258:    verify = verify_xapp_containment(xapp, namespace)
+2261:        "restored": service_restore.get("restored", False) or scale_restore.get("restored", False) or any(p.get("labels_removed") for p in pod_results),
+2264:        "service_restore": service_restore,
+2265:        "scale_restore": scale_restore,
+2266:        "pod_label_restore": pod_results,
+2267:        "verification_after_restore": verify,
+2272:@APP.route("/csm/containment/verify", methods=["GET", "POST"])
+2273:def csm_containment_verify() -> Any:
+2285:    return jsonify(verify_xapp_containment(xapp, namespace))
+2287:@APP.route("/trust-state", methods=["GET"])
+2294:@APP.route("/scan", methods=["POST", "GET"])
+2300:@APP.route("/last-report", methods=["GET"])
+2308:@APP.route("/incidents", methods=["GET"])
+2320:@APP.route("/falco-webhook", methods=["POST"])
+2324:    # full xApp audit before containment.
+2352:@APP.route("/", methods=["GET"])
+2353:@APP.route("/dashboard", methods=["GET"])
+2358:@APP.route("/attack-lab", methods=["GET"])
+2363:@APP.route("/csm/scenario/falco-shell", methods=["POST"])
+2369:      event -> detection -> decision -> containment -> verification.
+2449:    verify = verify_xapp_containment(xapp, namespace)
+2475:        "quarantine_effective": quarantine.get("effective_containment_applied"),
+2497:    # verification = containment verification
+2517:        "category": "runtime_exploitation",
+2522:        "expected_containment": True,
+2530:        "category": "runtime_exploitation",
+2535:        "expected_containment": True,
+2548:        "expected_containment": True,
+2561:        "expected_containment": False,
+2564:        "description": "Resource usage becomes inconsistent with the xApp intent profile.",
+2569:        "category": "benign_intent_aware_control",
+2574:        "expected_containment": False,
+2587:        "expected_containment": True,
+2600:        "expected_containment": False,
+2613:        "expected_containment": True,
+2626:        "expected_containment": False,
+2629:        "description": "Analytics or recommendation behavior deviates from declared xApp intent.",
+2639:        "expected_containment": True,
+2652:        "expected_containment": False,
+2665:        "expected_containment": False,
+2668:        "description": "Normal telemetry heartbeat should not trigger containment.",
+2678:        "expected_containment": False,
+2681:        "description": "Normal QoS recommendation generation should not trigger containment.",
+2700:    verify = verify_xapp_containment(xapp, namespace)
+2794:def ztx_apply_scenario_containment_if_required(scenario, xapp, namespace, event_result):
+2797:    if not scenario.get("expected_containment"):
+2800:            "reason": "containment_not_expected_for_scenario",
+2802:            "containment": None,
+2810:            "containment": None,
+2823:        containment = apply_quarantine(xapp, namespace, incident_id, reason)
+2826:            "reason": "scenario_policy_containment",
+2828:            "containment": containment,
+2834:            "reason": "scenario_policy_containment_failed",
+2837:            "containment": None,
+2862:    containment_action = {
+2865:        "containment": None,
+2868:    # Benign/control scenarios must not inject malicious runtime events.
+2880:        if scenario.get("expected_containment") and not verify_mid.get("contained"):
+2881:            containment_action = ztx_apply_scenario_containment_if_required(
+2888:            "decision_source": "benign_intent_control",
+2889:            "reason": "profile_consistent_behavior_no_containment",
+2895:    expected_containment = bool(scenario.get("expected_containment"))
+2896:    actual_containment = bool(post.get("contained"))
+2898:    if actual_containment:
+2921:    containment_pass = expected_containment == actual_containment
+2928:    passed = bool(state_pass and containment_pass)
+2944:        "expected_containment": expected_containment,
+2945:        "actual_containment": actual_containment,
+2949:        "containment_pass": containment_pass,
+2964:        "containment_action": containment_action,
+3017:@APP.route("/scenario-console", methods=["GET"])
+3022:@APP.route("/evaluation", methods=["GET"])
+3027:@APP.route("/csm/scenarios", methods=["GET"])
+3037:@APP.route("/csm/scenarios/<scenario_id>/run", methods=["POST"])
+3044:@APP.route("/csm/evaluation/summary", methods=["GET"])
+3049:@APP.route("/csm/evaluation/clear", methods=["POST"])
+3058:# k9s-style xApp runtime table API
+3061:def ztx_runtime_xapp_names_v3():
+3079:def ztx_runtime_pod_summary_v3(pod):
+3105:def ztx_runtime_service_for_xapp_v3(xapp, services):
+3123:def ztx_runtime_trust_index_v3():
+3125:    # Instead, fall back safely. The frontend also merges /csm/state directly.
+3129:@APP.route("/csm/xapps/runtime", methods=["GET"])
+3130:def ztx_xapps_runtime_table_api_v3():
+3133:    xapps = ztx_runtime_xapp_names_v3()
+3170:        pod_summary = ztx_runtime_pod_summary_v3(pod) if pod else {
+3187:        svc = ztx_runtime_service_for_xapp_v3(xapp, services)
+3204:            verify = verify_xapp_containment(xapp, namespace)
+3224:            "containment": {
+3354:        "expected_containment": True,
+3356:        "mode": "intent-signal",
+3365:        "expected_containment": True,
+3367:        "mode": "intent-signal",
+3376:        "expected_containment": True,
+3378:        "mode": "intent-signal",
+3387:        "expected_containment": False,
+3389:        "mode": "intent-signal",
+3390:        "description": "Resource behavior inconsistent with the xApp intent profile.",
+3398:        "expected_containment": False,
+3400:        "mode": "intent-signal",
+3409:        "expected_containment": False,
+3411:        "mode": "intent-signal",
+3420:        "expected_containment": False,
+3422:        "mode": "intent-signal",
+3431:        "expected_containment": True,
+3433:        "mode": "intent-signal",
+3442:        "expected_containment": False,
+3444:        "mode": "intent-signal",
+3445:        "description": "xApp output or activity deviates from its declared intent.",
+3453:        "expected_containment": True,
+3455:        "mode": "intent-signal",
+3464:        "expected_containment": False,
+3466:        "mode": "intent-signal",
+3475:        "expected_containment": False,
+3477:        "mode": "intent-signal",
+3486:        "expected_containment": False,
+3488:        "mode": "intent-signal",
+3489:        "description": "Normal QoS optimizer activity should not trigger containment.",
+3656:        hit("L3_behavior", "xapp_output_or_activity_deviates_from_declared_intent", 35)
+3779:def ztx_v4_process_signal(xapp, signal, evidence=None, namespace=None, source="intent_signal"):
+3788:    containment = {
+3790:        "effective_containment_applied": False,
+3802:        containment = ztx_v4_apply_quarantine_compat(xapp, namespace, incident_id, reason)
+3805:        if containment.get("effective_containment_applied") or containment.get("service_isolation_applied") or containment.get("applied"):
+3811:        verify = verify_xapp_containment(xapp, namespace)
+3818:        "mode": "intent_aware_trust_engine_v4",
+3832:        "quarantine": containment,
+3851:            "mode": "intent_aware_trust_engine_v4",
+3873:@APP.route("/csm/intent/evaluate", methods=["POST"])
+3874:def ztx_v4_intent_evaluate_api():
+3893:@APP.route("/csm/intent/ingest", methods=["POST"])
+3894:def ztx_v4_intent_ingest_api():
+3911:        source=payload.get("source") or "manual_intent_signal",
+3957:    expected_containment = bool(scenario.get("expected_containment"))
+3961:    actual_containment = bool(
+3963:        or ((result.get("quarantine") or {}).get("effective_containment_applied") is True)
+3986:    containment_pass = actual_containment == expected_containment
+3987:    passed = bool(state_pass and containment_pass)
+3998:        "expected_containment": expected_containment,
+3999:        "actual_containment": actual_containment,
+4003:        "containment_pass": containment_pass,
+4032:# ztx_run_scenario above is enough for current /csm/scenarios/<id>/run.

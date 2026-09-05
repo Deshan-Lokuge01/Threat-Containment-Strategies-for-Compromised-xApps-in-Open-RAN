@@ -1,0 +1,67 @@
+{
+  "schema": "ztx-forensic-vault-v1",
+  "incident_id": "20260827T063527Z-unexpected_shell-ricxapp-hw-go-c4024f6587",
+  "captured_utc": "2026-08-27T06:35:28.891070+00:00",
+  "sealed_utc": "2026-08-27T06:35:30Z",
+  "captured_by": "ZT-XGuard policy-engine (automated containment)",
+  "asset": {
+    "xapp": "ricxapp-hw-go",
+    "pod": "ricxapp-hw-go-79c6d795d5-hx9b6",
+    "namespace": "ricxapp"
+  },
+  "trigger": {
+    "source": "falco_event",
+    "signal": "unexpected_shell",
+    "falco_rule": "ZTX xApp Unexpected Shell",
+    "priority": "Critical",
+    "rule_ids": [
+      "R-CRIT-01"
+    ],
+    "alert": "2026-08-27T06:35:23.430445744+0000: Critical ztx_signal=unexpected_shell rule_id=ZTX-A1 xapp shell spawned (user=root command=sh -c head -c1 /run/containerd/containerd.sock 2>/dev/null; head -c1 /var/run/docker.sock 2>/dev/null; head -c1 /var/run/crio/crio.sock 2>/dev/null; true pod=ricxapp-hw-go-79c6d795d5-hx9b6 ns=ricxapp container=hw-go image=127.0.0.1:80/hw-go) container_id=cea9f46ee7c9 container_name=hw-go container_image_repository=127.0.0.1:80/hw-go container_image_tag=latest k8s_pod_name=ricxapp-hw-go-79c6d795d5-hx9b6 k8s_ns_name=ricxapp"
+  },
+  "decision": {
+    "state": "ISOLATED",
+    "detection_state": "COMPROMISED",
+    "containment_required": true,
+    "containment_action": "SERVICE_ISOLATION_AND_IDENTITY_CONTAINMENT",
+    "isolation_timing": "IMMEDIATE",
+    "severity": "CRITICAL",
+    "score": 100,
+    "confidence": 0.98
+  },
+  "integrity": "sha256",
+  "artifacts": [
+    {
+      "name": "events.json",
+      "bytes": 24126,
+      "sha256": "36db7ee64a521cbb6c510f6fac430a2aa185893207e958f57038ec1c2d539b5b"
+    },
+    {
+      "name": "incident.json",
+      "bytes": 72754,
+      "sha256": "060039d3d2929799c07f8948bd39072dbcd1a3ddd476d789ec6d9de2b00991e3"
+    },
+    {
+      "name": "pod-log-tail.txt",
+      "bytes": 531,
+      "sha256": "510456b4697c5a869ffde5ef6b7265fed211be0ede3c64be6cabf57e64668f36"
+    },
+    {
+      "name": "pod.json",
+      "bytes": 27812,
+      "sha256": "9508c78aafbc0010c9a9fc8615a5eabe63522f6aae889c5e1920cc2ff5312d8a"
+    }
+  ],
+  "chain_of_custody": [
+    {
+      "actor": "policy-engine.forensic-capture",
+      "action": "captured",
+      "utc": "2026-08-27T06:35:28.891070+00:00"
+    },
+    {
+      "actor": "policy-engine.vault-sealer",
+      "action": "sealed+hashed",
+      "utc": "2026-08-27T06:35:30Z"
+    }
+  ]
+}

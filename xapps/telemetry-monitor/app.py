@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+import random
+from ztx_common.runtime import XAppRuntime
+DEFAULT_PROFILE = {"xapp":"telemetry-monitor","role":"telemetry-monitoring","expected_cpu_class":"low","expected_memory_class":"low","expected_external_egress":False,"expected_cross_xapp_comm":False,"expected_ric_activity":True,"expected_control_activity":False,"expected_shell":False,"expected_sensitive_file_access":False,"heartbeat_period_sec":5,"workload_intensity":"low","allowed_ric_services":["appmgr","e2mgr","prometheus"],"max_api_rate_per_min":60}
+def behavior(runtime):
+    runtime.state["mode"]="telemetry-monitoring"; runtime.check_ric_services(); runtime.check_ric_context()
+    samples=random.randint(5,20); runtime.state["telemetry_samples"]+=samples; runtime.state["work_units_processed"]+=samples
+    runtime.state["last_decision"]=f"collected_{samples}_telemetry_samples"
+if __name__ == "__main__": XAppRuntime(DEFAULT_PROFILE, behavior).start()

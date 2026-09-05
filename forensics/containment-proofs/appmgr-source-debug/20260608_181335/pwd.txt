@@ -1,0 +1,1 @@
+/home/near-ric/Desktop/O-RAN-Testbed-Automation/RAN_Intelligent_Controllers/Near-Real-Time-RIC/appmgr

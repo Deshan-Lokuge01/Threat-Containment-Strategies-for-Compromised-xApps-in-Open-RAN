@@ -1,0 +1,23 @@
+NAME              	NAMESPACE   	REVISION	UPDATED                                  	STATUS  	CHART                   	APP VERSION
+falco             	falco       	1       	2026-06-01 09:59:05.128283298 +0530 +0530	deployed	falco-9.0.0             	0.44.0     
+grafana           	monitoring  	1       	2026-06-01 10:20:25.647291939 +0530 +0530	deployed	grafana-10.5.15         	12.3.1     
+kpm-monitor       	ricxapp     	1       	2026-06-08 18:02:22.37201634 +0530 +0530 	deployed	kpm-monitor-1.0.0       	1.0.0      
+prometheus        	monitoring  	1       	2026-06-01 10:18:31.483858371 +0530 +0530	deployed	prometheus-29.9.0       	v3.12.0    
+qos-optimizer     	ricxapp     	1       	2026-06-05 22:19:33.484181377 +0530 +0530	deployed	qos-optimizer-1.0.0     	1.0.0      
+r4-a1mediator     	ricplt      	1       	2026-05-30 11:17:32.727057297 +0530 +0530	deployed	a1mediator-3.0.0        	1.0        
+r4-alarmmanager   	ricplt      	1       	2026-05-30 11:18:07.379174921 +0530 +0530	deployed	alarmmanager-5.0.0      	1.0        
+r4-appmgr         	ricplt      	1       	2026-05-30 11:16:57.511150933 +0530 +0530	deployed	appmgr-3.0.0            	1.0        
+r4-dbaas          	ricplt      	1       	2026-05-30 11:16:48.782023919 +0530 +0530	deployed	dbaas-2.0.0             	1.0        
+r4-e2mgr          	ricplt      	1       	2026-05-30 11:17:15.152182434 +0530 +0530	deployed	e2mgr-3.0.0             	1.0        
+r4-e2term         	ricplt      	1       	2026-05-30 11:17:23.98292319 +0530 +0530 	deployed	e2term-3.0.0            	1.0        
+r4-influxdb       	ricplt      	1       	2026-05-30 14:44:25.710049412 +0530 +0530	deployed	influxdb2-2.1.0         	2.2.0      
+r4-infrastructure 	ricplt      	1       	2026-05-30 11:16:36.937897829 +0530 +0530	deployed	infrastructure-3.0.0    	1.0        
+r4-o1mediator     	ricplt      	1       	2026-05-30 11:17:58.73449312 +0530 +0530 	deployed	o1mediator-3.0.0        	1.0        
+r4-rtmgr          	ricplt      	1       	2026-05-30 11:17:06.496832647 +0530 +0530	deployed	rtmgr-3.0.0             	1.0        
+r4-submgr         	ricplt      	1       	2026-05-30 11:17:41.365330121 +0530 +0530	deployed	submgr-3.0.0            	1.0        
+r4-vespamgr       	ricplt      	1       	2026-05-30 11:17:50.103008854 +0530 +0530	deployed	vespamgr-3.0.0          	1.0        
+resource-optimizer	ricxapp     	1       	2026-06-05 22:19:57.168856174 +0530 +0530	deployed	resource-optimizer-1.0.0	1.0.0      
+security-observer 	ricxapp     	1       	2026-06-05 22:20:38.32273233 +0530 +0530 	deployed	security-observer-1.0.0 	1.0.0      
+spire             	spire-system	1       	2026-05-30 14:08:22.254528294 +0530 +0530	deployed	spire-0.13.0            	1.7.2      
+telemetry-monitor 	ricxapp     	1       	2026-06-05 22:14:52.417649006 +0530 +0530	deployed	telemetry-monitor-1.0.0 	1.0.0      
+traffic-analyzer  	ricxapp     	6       	2026-06-05 21:32:35.381818509 +0530 +0530	deployed	traffic-analyzer-1.0.0  	1.0.0      

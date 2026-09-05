@@ -1,0 +1,38 @@
+{
+  "schema": "ztx-n5-v2-freeze-binding-v1",
+  "created_utc": "2026-06-29T03:34:04Z",
+  "project_root": "/home/nearric/Desktop/FYP/zt-xguard",
+  "evaluation_dataset": {
+    "dataset": "N5",
+    "role": "untouched-final-clean-evaluation-for-v2",
+    "ground_truth": "clean_normal",
+    "collected": false,
+    "scored": false
+  },
+  "frozen_model": {
+    "directory": "/home/nearric/Desktop/FYP/zt-xguard/models/frozen/step45-20260629T030502Z",
+    "archive": "/home/nearric/Desktop/FYP/zt-xguard/models/frozen/ztx-step45-v2-frozen-model.tar.gz",
+    "archive_sha256": "47d631da4dd165b7f0527a8749443e54e90c3284215b0aec7358e3f364fe7856"
+  },
+  "frozen_configuration": {
+    "window_seconds": 8,
+    "half_life_seconds": 3,
+    "lambda": 0.206299,
+    "warning_limit": 12.858651313374208,
+    "upper_control_limit": 25.58879353054043,
+    "persistence_required_k": 12,
+    "persistence_history_l": 16,
+    "features": [
+      "M1_log1p",
+      "M4_identity",
+      "M5_log1p",
+      "M6_log1p"
+    ]
+  },
+  "immutability_policy": {
+    "N5_may_be_used_for_refitting": false,
+    "N5_may_be_used_for_threshold_selection": false,
+    "model_parameters_may_change_after_binding": false
+  },
+  "status": "verified-and-frozen-before-N5"
+}

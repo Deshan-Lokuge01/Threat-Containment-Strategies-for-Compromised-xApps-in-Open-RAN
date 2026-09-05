@@ -1,0 +1,13 @@
+{
+  "endpoint_errors": 4,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/attacks/A4/A4-CALDERA-T1499-COMPOSITE-SAFE900-1UE-10PPS-20260702T043046Z/raw_metrics.csv",
+  "profile": "ATTACK_CALDERA_T1499_COMPOSITE_SAFE900_1UE_10PPS",
+  "resource_counter_resets": 0,
+  "rows_written": 2100,
+  "run_id": "A4-CALDERA-T1499-COMPOSITE-SAFE900-1UE-10PPS-20260702T043046Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 2100,
+  "timing_errors": 103
+}

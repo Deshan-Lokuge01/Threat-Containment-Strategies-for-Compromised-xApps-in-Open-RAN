@@ -1,0 +1,39 @@
+# Build-context excludes — keep the image small and reproducible.
+# The new Dockerfile does `COPY . /app/`, so anything not needed at runtime
+# must be excluded here.
+
+# Local virtualenvs (must never be baked into the image)
+.t2-collector-venv/
+*-venv/
+venv/
+.venv/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+.ruff_cache/
+.pytest_cache/
+
+# Editor/OS cruft
+.DS_Store
+
+# Timestamped backups and one-off patch scripts (not runtime code)
+*.bak
+*.bak-*
+*.before-*
+*.save
+templates/*.bak*
+templates/*.before-*
+static/*.bak*
+static/*.before-*
+apply_*_patch.py
+hotfix_*.py
+
+# Model artifacts / large data not needed by the policy engine at runtime
+ztx_model_artifacts/
+ztx_model/
+
+# Test + tooling files
+test_*.py
+requirements-t2-collector.txt

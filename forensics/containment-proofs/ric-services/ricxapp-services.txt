@@ -1,0 +1,17 @@
+NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE     SELECTOR
+aux-entry                         ClusterIP   10.107.82.56     <none>        80/TCP,443/TCP      6d      <none>
+qos-optimizer                     ClusterIP   10.109.11.126    <none>        8080/TCP            65m     app=qos-optimizer
+resource-optimizer                ClusterIP   10.108.62.194    <none>        8080/TCP            65m     app=resource-optimizer
+security-observer                 ClusterIP   10.111.24.103    <none>        8080/TCP            65m     app=security-observer
+service-ricxapp-hw-go-http        ClusterIP   10.96.252.54     <none>        8080/TCP            6d      app=ricxapp-hw-go,release=hw-go
+service-ricxapp-hw-go-rmr         ClusterIP   10.109.116.225   <none>        4560/TCP,4561/TCP   6d      app=ricxapp-hw-go,release=hw-go
+service-ricxapp-hw-python-http    ClusterIP   10.101.48.132    <none>        8080/TCP            5d1h    app=ricxapp-hw-python,release=hw-python
+service-ricxapp-hw-python-rmr     ClusterIP   10.103.219.204   <none>        4560/TCP,4561/TCP   5d1h    app=ricxapp-hw-python,release=hw-python
+service-ricxapp-kpimon-go-http    ClusterIP   10.101.243.188   <none>        8080/TCP            4d22h   app=ricxapp-kpimon-go,release=kpimon-go
+service-ricxapp-kpimon-go-rmr     ClusterIP   10.97.238.12     <none>        4560/TCP,4561/TCP   4d22h   app=ricxapp-kpimon-go,release=kpimon-go
+service-ricxapp-rc-grpc-server    ClusterIP   10.108.137.164   <none>        7777/TCP            5d1h    app=ricxapp-rc,release=rc
+service-ricxapp-rc-http           ClusterIP   10.96.182.114    <none>        8080/TCP            5d1h    app=ricxapp-rc,release=rc
+service-ricxapp-rc-rmr            ClusterIP   10.101.91.78     <none>        4560/TCP,4561/TCP   5d1h    app=ricxapp-rc,release=rc
+service-ricxapp-trafficxapp-rmr   ClusterIP   10.97.64.185     <none>        4560/TCP,4561/TCP   5d1h    app=ricxapp-trafficxapp,release=trafficxapp
+telemetry-monitor                 ClusterIP   10.102.87.42     <none>        8080/TCP            65m     app=telemetry-monitor
+traffic-analyzer                  ClusterIP   10.111.214.130   <none>        8080/TCP            65m     app=traffic-analyzer

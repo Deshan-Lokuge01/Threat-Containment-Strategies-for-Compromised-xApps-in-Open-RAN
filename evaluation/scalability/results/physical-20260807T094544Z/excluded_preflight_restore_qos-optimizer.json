@@ -1,0 +1,235 @@
+{
+  "http_code": 200,
+  "response": {
+    "namespace": "ricxapp",
+    "pod_label_restore": [
+      {
+        "direct_network_restore": {
+          "actions": [
+            {
+              "already_absent": true,
+              "direction": "egress"
+            },
+            {
+              "already_absent": true,
+              "direction": "ingress"
+            }
+          ],
+          "attempted": true,
+          "blocked": false,
+          "pod_ip": "10.244.0.18",
+          "verification": {
+            "blocked": false,
+            "checked": true,
+            "egress_blocked": false,
+            "ingress_blocked": false
+          }
+        },
+        "identity_restore": {
+          "attempted": true,
+          "method": "svid_enabled_label_true",
+          "restored": true
+        },
+        "labels_removed": true,
+        "pod": "qos-optimizer-65d9ff648f-9xztz",
+        "removed_count": 1
+      }
+    ],
+    "pod_recreation": {
+      "attempted": true,
+      "delete_errors": [],
+      "deleted_pods": [
+        "qos-optimizer-65d9ff648f-mzwvx"
+      ],
+      "new_pod_ready": true,
+      "ready_pod_names": [
+        "qos-optimizer-65d9ff648f-9xztz"
+      ],
+      "waited_seconds": 22.21
+    },
+    "restored": true,
+    "scale_restore": {
+      "deployment": "qos-optimizer",
+      "method": "deployment_scale_restore",
+      "reason": "no_original_replicas_annotation",
+      "restored": false,
+      "xapp": "qos-optimizer"
+    },
+    "service_restore": {
+      "namespace": "ricxapp",
+      "restored": true,
+      "services": [
+        {
+          "endpoint_summary_after_restore": {
+            "addresses": [
+              "10.244.0.18"
+            ],
+            "endpoint_count": 1,
+            "error": null,
+            "has_endpoints": true,
+            "patch5b_v3": true,
+            "ports": [
+              {
+                "name": "http",
+                "port": 8080,
+                "protocol": "TCP"
+              }
+            ],
+            "service": "qos-optimizer",
+            "source": "endpoints"
+          },
+          "restored": true,
+          "restored_selector": {
+            "app": "qos-optimizer"
+          },
+          "selector_after_restore": {
+            "app": "qos-optimizer"
+          },
+          "selector_patch_used": [
+            {
+              "op": "remove",
+              "path": "/spec/selector/zt-xguard.io~1service-isolated"
+            },
+            {
+              "op": "replace",
+              "path": "/spec/selector/app",
+              "value": "qos-optimizer"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1original-service-selector"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1service-isolated"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1service-isolated-incident"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1service-isolated-time"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1service-isolated-reason"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1service-isolated-selector-token"
+            },
+            {
+              "op": "remove",
+              "path": "/metadata/annotations/zt-xguard.io~1xapp"
+            }
+          ],
+          "service": "qos-optimizer"
+        }
+      ],
+      "xapp": "qos-optimizer"
+    },
+    "time": "2026-08-07T09:54:28.964254+00:00",
+    "verification_after_restore": {
+      "contained": false,
+      "containment_note": "Patch5B v3: contained=true when quarantine-labelled pod is paired with service isolation, OR when direct node-level iptables blocking is verified active (independent mechanism, does not depend on Calico/Felix)",
+      "direct_network_isolated": false,
+      "namespace": "ricxapp",
+      "patch5b_v3": true,
+      "pod_labelled_quarantined": false,
+      "pods": [
+        {
+          "direct_network_isolation": {
+            "blocked": false,
+            "checked": true,
+            "egress_blocked": false,
+            "ingress_blocked": false
+          },
+          "labels": {
+            "app": "qos-optimizer",
+            "pod-template-hash": "65d9ff648f",
+            "zt-xguard.io/svid-enabled": "true",
+            "zt-xguard/component": "custom-xapp",
+            "zt-xguard/profile": "qos-optimizer"
+          },
+          "phase": "Running",
+          "pod": "qos-optimizer-65d9ff648f-9xztz",
+          "quarantine_label": false,
+          "ready": true
+        }
+      ],
+      "quarantine_marked": false,
+      "service_isolated": false,
+      "services": [
+        {
+          "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"qos-optimizer\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"qos-optimizer\",\"namespace\":\"ricxapp\"},\"spec\":{\"ports\":[{\"name\":\"http\",\"port\":8080,\"protocol\":\"TCP\",\"targetPort\":\"http\"}],\"selector\":{\"app\":\"qos-optimizer\"},\"type\":\"ClusterIP\"}}\n"
+          },
+          "endpoint_summary": {
+            "addresses": [
+              "10.244.0.18"
+            ],
+            "endpoint_count": 1,
+            "error": null,
+            "has_endpoints": true,
+            "patch5b_v3": true,
+            "ports": [
+              {
+                "name": "http",
+                "port": 8080,
+                "protocol": "TCP"
+              }
+            ],
+            "service": "qos-optimizer",
+            "source": "endpoints"
+          },
+          "endpoints_empty": false,
+          "patch5b_v3": true,
+          "selector": {
+            "app": "qos-optimizer"
+          },
+          "service": "qos-optimizer",
+          "service_isolated": false
+        }
+      ],
+      "time": "2026-08-07T09:54:28.964137+00:00",
+      "verification_unknown": false,
+      "xapp": "qos-optimizer"
+    },
+    "xapp": "qos-optimizer",
+    "ztx_surgical_containment_fix_v2": true,
+    "ztx_v2_state_after_restore": {
+      "confidence": 0.97,
+      "containment_action": "SERVICE_ISOLATION_AND_LATERAL_MOVEMENT_CONTAINMENT",
+      "containment_required": false,
+      "containment_verified": false,
+      "decision_state": "ISOLATED",
+      "detection_state": "COMPROMISED",
+      "downgrade_blocked": false,
+      "findings": [],
+      "key_runtime_values": {},
+      "last_signal": "restore",
+      "last_source": "containment_restore",
+      "last_update": "2026-08-07T09:54:28.964730+00:00",
+      "namespace": "ricxapp",
+      "pod": null,
+      "previous_state": "NORMAL",
+      "raw_state": "RESTORED",
+      "reasons": [
+        "known_attack_tool_or_technique_executed_inside_controlled_xapp"
+      ],
+      "risk_score": 0,
+      "rule_ids": [
+        "ZTX-LM-02"
+      ],
+      "score": 0,
+      "score_type": "risk_score_0_to_100_higher_means_riskier",
+      "service_account": null,
+      "state": "NORMAL",
+      "trust_score": 100,
+      "xapp": "qos-optimizer",
+      "ztx_surgical_containment_fix_v2": true,
+      "ztx_surgical_policy_fix_v1": true
+    }
+  }
+}

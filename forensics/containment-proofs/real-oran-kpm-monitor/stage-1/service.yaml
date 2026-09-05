@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: kpm-monitor
+    meta.helm.sh/release-namespace: ricxapp
+  creationTimestamp: "2026-06-08T08:42:27Z"
+  labels:
+    app: kpm-monitor
+    app.kubernetes.io/managed-by: Helm
+    zt-xguard.io/verified: "true"
+  name: kpm-monitor
+  namespace: ricxapp
+  resourceVersion: "1452375"
+  uid: 048b6310-bfd8-40bf-aa9b-b690c8b47462
+spec:
+  clusterIP: 10.101.6.37
+  clusterIPs:
+  - 10.101.6.37
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 8092
+    protocol: TCP
+    targetPort: http
+  - name: rmr
+    port: 4562
+    protocol: TCP
+    targetPort: rmr
+  selector:
+    app: kpm-monitor
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

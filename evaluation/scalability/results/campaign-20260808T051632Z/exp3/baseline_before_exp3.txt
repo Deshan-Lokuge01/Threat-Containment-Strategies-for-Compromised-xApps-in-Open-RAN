@@ -1,0 +1,9 @@
+utc=2026-08-08T06:42:00Z
+T2_AUTO_CONTAIN=false
+--- pods ---
+ricxapp-hw-go-79c6d795d5-jdczk 2/2 Running 10.244.0.194
+ricxapp-hw-python-fbbd5f54-zdml9 2/2 Running 10.244.0.186
+ricxapp-kpimon-go-79c564f9b5-txpst 2/2 Running 10.244.0.192
+ricxapp-trafficxapp-5d44655dcb-qkw9n 2/2 Running 10.244.0.183
+--- iptables ---
+2

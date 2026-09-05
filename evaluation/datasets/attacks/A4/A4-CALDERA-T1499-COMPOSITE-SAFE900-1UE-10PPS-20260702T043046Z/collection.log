@@ -1,0 +1,93 @@
+============================================================
+ STEP 52A: OFFICIAL A4 CALDERA T1499 COMPOSITE SAFE900 COLLECTION
+============================================================
+Run ID: A4-CALDERA-T1499-COMPOSITE-SAFE900-1UE-10PPS-20260702T043046Z
+Output: /home/nearric/Desktop/FYP/zt-xguard/data/attacks/A4/A4-CALDERA-T1499-COMPOSITE-SAFE900-1UE-10PPS-20260702T043046Z
+Started UTC: 2026-07-02T04:30:46Z
+
+--- 1. Verify one 10 PPS ping ---
+  46894   46893 ping            ping -i 0.1 10.45.1.1
+PASS: Clean workload verified.
+--- 2. Resolve KPIMON ---
+pod=ricxapp-kpimon-go-55b569bccd-r5mt6
+pod_uid=6f2d64e4-b8cb-43f1-a516-d73c70fe6c0b
+pod_ip=10.244.0.37
+host_pid=47668
+cgroup=/sys/fs/cgroup/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod6f2d64e4_b8cb_43f1_a516_d73c70fe6c0b.slice/cri-containerd-42a7507673c0d14da0fa6fe2c1915f7e4053614bf9f7e26d5a31e5ca40bba950.scope
+metrics_url=http://10.244.0.37:9090/ztx/metrics
+--- 3. Verify CALDERA agent and actuator once only ---
+{"active":false}
+
+--- 4. Start collector ---
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LAUNCH CALDERA OPERATION NOW
+Name: ZTX-T1499-KPIMON-Composite-CPU-IO-Safe900-Official-A4
+Group: ztx-cluster-lab
+Adversary: ZT-XGuard T1499 KPIMON Composite CPU-IO Safe900
+Planner: atomic | Autonomous: yes | Run immediately: yes | plain-text
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+{
+  "endpoint_errors": 4,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/attacks/A4/A4-CALDERA-T1499-COMPOSITE-SAFE900-1UE-10PPS-20260702T043046Z/raw_metrics.csv",
+  "profile": "ATTACK_CALDERA_T1499_COMPOSITE_SAFE900_1UE_10PPS",
+  "resource_counter_resets": 0,
+  "rows_written": 2100,
+  "run_id": "A4-CALDERA-T1499-COMPOSITE-SAFE900-1UE-10PPS-20260702T043046Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 2100,
+  "timing_errors": 103
+}
+{
+  "dataset": "A4_CALDERA_T1499_COMPOSITE_SAFE900",
+  "endpoint_errors": 4,
+  "expected_rows": 2100,
+  "resource_counter_resets": 0,
+  "rows": 2100,
+  "runtime_counter_resets": 0,
+  "sample_interval_seconds": {
+    "maximum": 9.582641,
+    "mean": 1.00000245,
+    "p95": 1.00563485,
+    "p99": 1.9500904199999884
+  },
+  "sample_lag_ms": {
+    "maximum": 8590.345,
+    "mean": 88.72739523809524,
+    "p95": 42.378549999999926,
+    "p99": 2777.012079999992
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 73,
+    "metrics_endpoint": 1,
+    "metrics_endpoint;memory_slope_warmup": 2,
+    "ok": 1921,
+    "timing": 99,
+    "timing;memory_slope_warmup": 3,
+    "timing;metrics_endpoint": 1
+  },
+  "schema": "ztx-step52a-attack-quality-v1",
+  "timing_errors": 103
+}
+dataset=A4_CALDERA_T1499_COMPOSITE_SAFE900
+run_id=A4-CALDERA-T1499-COMPOSITE-SAFE900-1UE-10PPS-20260702T043046Z
+role=official-caldera-composite-safe900-attack-evaluation
+pre_attack_seconds=600
+attack_seconds=900
+post_attack_seconds=600
+collector_return_code=0
+primary_data_ok=0
+attack_started=caldera_report_required
+stress_ng_running_at_end=0
+actuator_inactive_at_end=1
+scored_during_collection=0
+final_collection_acceptance=0
+caldera_report_required=1
+monitor_traffic_removed=1
+============================================================
+RESULT: STEP 52A A4 SAFE900 DATASET COLLECTED; CALDERA REPORT REQUIRED
+/home/nearric/Desktop/FYP/zt-xguard/data/attacks/A4/A4-CALDERA-T1499-COMPOSITE-SAFE900-1UE-10PPS-20260702T043046Z
+============================================================

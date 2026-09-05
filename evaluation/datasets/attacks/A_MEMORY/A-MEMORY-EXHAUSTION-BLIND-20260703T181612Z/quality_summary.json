@@ -1,0 +1,27 @@
+{
+  "dataset": "A_MEMORY_EXHAUSTION_BLIND",
+  "collector_return_code": 0,
+  "rows": 2700,
+  "expected_rows": 2700,
+  "endpoint_errors": 5,
+  "timing_errors": 0,
+  "kpimon_restart_delta": 0,
+  "sample_interval_seconds": {
+    "mean": 1.000000698777325,
+    "maximum": 1.1365030000000047,
+    "p95": 1.0036919000000126,
+    "p99": 1.0114721799995914
+  },
+  "sample_lag_ms": {
+    "mean": 3.3612244444444443,
+    "maximum": 249.121,
+    "p95": 6.253399999999992,
+    "p99": 13.931549999999893
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 28,
+    "ok": 2667,
+    "metrics_endpoint": 5
+  },
+  "final_collection_acceptance": 0
+}

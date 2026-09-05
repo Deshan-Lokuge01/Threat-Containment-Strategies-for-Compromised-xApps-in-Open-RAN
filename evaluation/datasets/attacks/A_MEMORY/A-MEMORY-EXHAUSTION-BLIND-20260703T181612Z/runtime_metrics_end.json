@@ -1,0 +1,1 @@
+{"timestamp_utc":"2026-07-03T19:01:37.327835127Z","uptime_seconds":8799,"heartbeat_total":8799,"rmr_rx_total":110,"rmr_tx_total":0,"ric_indication_total":110,"work_units_total":110,"last_rmr_rx_unix_nano":1783105291333026756,"last_work_unix_nano":1783105291333567061,"rmr_tx_status":"no_normal_outbound_rmr_path"}

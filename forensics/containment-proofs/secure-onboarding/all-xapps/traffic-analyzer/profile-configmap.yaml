@@ -1,0 +1,117 @@
+apiVersion: v1
+data:
+  profile.json: |2-
+
+    {
+      "xapp": "traffic-analyzer",
+      "role": "traffic-analytics",
+      "controls": {
+        "expected_cpu_class": "high",
+        "expected_memory_class": "medium",
+        "expected_ric_activity": true,
+        "expected_control_activity": false,
+        "expected_shell": false,
+        "expected_sensitive_file_access": false,
+        "expected_external_egress": false,
+        "heartbeat_period_sec": 5,
+        "workload_intensity": "high",
+        "allowed_ric_services": [
+          "e2mgr",
+          "rtmgr",
+          "prometheus"
+        ],
+        "max_api_rate_per_min": 120
+      },
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "traffic-analyzer",
+            "port": 8080,
+            "description": "HTTP REST API for xApp runtime status"
+          }
+        ]
+      },
+      "security_monitoring": {
+        "compromise_indicators": [
+          "unexpected_shell_spawn",
+          "sensitive_file_access",
+          "service_account_token_access",
+          "unexpected_external_egress",
+          "high_cpu_without_ric_activity",
+          "stale_heartbeat"
+        ],
+        "containment_actions": [
+          "label_as_quarantined",
+          "deny_all_network_policy",
+          "preserve_pod_for_forensics"
+        ]
+      }
+    }
+  xapp-descriptor.json: |2-
+
+    {
+      "name": "traffic-analyzer",
+      "version": "1.0.0",
+      "provider": "sp1",
+      "containers": [
+        {
+          "name": "traffic-analyzer",
+          "image": {
+            "registry": "localhost:5000",
+            "name": "zt-traffic-analyzer",
+            "tag": "1.0",
+            "digest": "sha256:6486a85f6129dc067c7f1c380fe5123eed755168fb4b08f418f52b229cf90ec5",
+            "reference": "localhost:5000/zt-traffic-analyzer:1.0",
+            "immutable_reference": "localhost:5000/zt-traffic-analyzer@sha256:6486a85f6129dc067c7f1c380fe5123eed755168fb4b08f418f52b229cf90ec5"
+          }
+        }
+      ],
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "traffic-analyzer",
+            "port": 8080,
+            "description": "HTTP API for health, profile, activity, RIC reachability, and metrics"
+          }
+        ]
+      },
+      "livenessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "readinessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "security": {
+        "serviceAccount": "traffic-analyzer",
+        "spiffeID": "spiffe://example.org/ns/ricxapp/sa/traffic-analyzer",
+        "requiresSVID": true,
+        "runAsNonRoot": true,
+        "allowPrivilegeEscalation": false
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: traffic-analyzer
+    meta.helm.sh/release-namespace: ricxapp
+  creationTimestamp: "2026-06-05T11:51:04Z"
+  labels:
+    app: traffic-analyzer
+    app.kubernetes.io/managed-by: Helm
+    zt-xguard.io/verified: "true"
+  name: traffic-analyzer-profile
+  namespace: ricxapp
+  resourceVersion: "993949"
+  uid: f0a85ce5-3d45-4224-b16e-9e1ad560ade3

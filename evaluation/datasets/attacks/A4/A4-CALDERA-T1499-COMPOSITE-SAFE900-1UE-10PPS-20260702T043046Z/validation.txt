@@ -1,0 +1,15 @@
+dataset=A4_CALDERA_T1499_COMPOSITE_SAFE900
+run_id=A4-CALDERA-T1499-COMPOSITE-SAFE900-1UE-10PPS-20260702T043046Z
+role=official-caldera-composite-safe900-attack-evaluation
+pre_attack_seconds=600
+attack_seconds=900
+post_attack_seconds=600
+collector_return_code=0
+primary_data_ok=0
+attack_started=caldera_report_required
+stress_ng_running_at_end=0
+actuator_inactive_at_end=1
+scored_during_collection=0
+final_collection_acceptance=0
+caldera_report_required=1
+monitor_traffic_removed=1

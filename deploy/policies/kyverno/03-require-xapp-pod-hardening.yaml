@@ -1,0 +1,62 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: ztx-require-xapp-pod-hardening
+  annotations:
+    policies.kyverno.io/title: Require xApp Pod Hardening
+    policies.kyverno.io/category: ZT-XGuard
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: require-dedicated-service-account
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - ricxapp
+      validate:
+        message: "xApps must use a dedicated ServiceAccount and not the default ServiceAccount."
+        pattern:
+          spec:
+            serviceAccountName: "!default"
+
+    - name: deny-host-access
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - ricxapp
+      validate:
+        message: "xApps must not use hostNetwork, hostPID, hostIPC, or hostPath volumes."
+        pattern:
+          spec:
+            X(hostNetwork): "false"
+            X(hostPID): "false"
+            X(hostIPC): "false"
+            =(volumes):
+              - X(hostPath): "null"
+
+    - name: require-container-security-context
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - ricxapp
+      validate:
+        message: "xApp containers must disable privilege escalation and drop all capabilities."
+        foreach:
+          - list: "request.object.spec.containers"
+            pattern:
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL

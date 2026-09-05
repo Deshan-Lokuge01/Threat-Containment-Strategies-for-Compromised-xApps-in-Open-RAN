@@ -1,0 +1,28 @@
+{
+  "dataset": "R1_CPU_BOUNDED15M_V1",
+  "collector_return_code": 0,
+  "rows": 2100,
+  "expected_rows": 2100,
+  "endpoint_errors": 3,
+  "timing_errors": 13,
+  "kpimon_restart_delta": 0,
+  "sample_interval_seconds": {
+    "mean": 1.000000121486422,
+    "maximum": 3.9586950000000343,
+    "p95": 1.0032001000000037,
+    "p99": 1.0187320200000296
+  },
+  "sample_lag_ms": {
+    "mean": 9.24973238095238,
+    "maximum": 2978.822,
+    "p95": 5.648899999999996,
+    "p99": 41.592019999999884
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 32,
+    "ok": 2052,
+    "timing": 13,
+    "metrics_endpoint": 3
+  },
+  "final_collection_acceptance": 0
+}

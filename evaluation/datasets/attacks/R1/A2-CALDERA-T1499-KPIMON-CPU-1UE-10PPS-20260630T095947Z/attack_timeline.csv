@@ -1,0 +1,5 @@
+event,planned_elapsed_s,duration_seconds,timestamp_utc,source
+caldera_actuator_active_first_seen,424.286,60.0,2026-06-30T10:06:53.536Z,actuator_status_monitor
+caldera_actuator_active_last_seen,483.5,0,2026-06-30T10:07:52.750Z,actuator_status_monitor
+attack_start_request,424.286,60.0,2026-06-30T10:06:53.536Z,derived_from_actuator_monitor
+attack_cleanup_check,558.5,0,2026-06-30T10:07:52.750Z,derived_placeholder_use_caldera_report_for_exact_cleanup

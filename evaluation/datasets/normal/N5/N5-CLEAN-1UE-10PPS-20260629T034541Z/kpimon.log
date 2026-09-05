@@ -1,0 +1,12 @@
+2026-06-29T09:15:44.903541174+05:30 {"ts":1782704744903,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-29T03:45:44"},"msg":"restapi: method=GET url=/ric/v1/health/alive"}
+2026-06-29T09:15:44.953139526+05:30 {"ts":1782704744952,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-29T03:45:44"},"msg":"Message received: name=RIC_INDICATION meid=gnbd_001_001_00019b_0 subId=1 txid=   659911575299 len=430"}
+2026-06-29T09:15:44.953439227+05:30 {"ts":1782704744952,"crit":"DEBUG","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-29T03:45:44"},"msg":"Received message type: 12050"}
+2026-06-29T09:15:44.954254200+05:30 2026/06/29 03:45:44 RIC Indication message from {gnbd_001_001_00019b_0} received
+2026-06-29T09:15:44.954580000+05:30 2026/06/29 03:45:44 Indication Header format = 1
+2026-06-29T09:15:44.954825321+05:30  parsing for cell metrics
+2026-06-29T09:15:44.954967322+05:30  
+2026-06-29T09:15:44.954987035+05:30  No of cell = 1
+2026-06-29T09:15:44.954994174+05:30  
+2026-06-29T09:15:44.954997061+05:30  No of cell metrics = 15
+2026-06-29T09:15:44.955278650+05:30 Wrong Data TypeWrong Data TypeWrong Data Typemap[DRB.AirIfDelayUl:30 DRB.RlcSduTransmittedVolumeDL:0 DRB.RlcSduTransmittedVolumeUL:0 DRB.UEThpDl:0 DRB.UEThpUl:0 RACH.PreambleDedCell:0 RRU.PrbAvailDl:106 RRU.PrbAvailUl:105 RRU.PrbTotDl:0 RRU.PrbTotUl:0 RRU.PrbUsedDl:0 RRU.PrbUsedUl:1]
+2026-06-29T09:15:44.976233566+05:30 Parsing Cell Metric Done{"ts":1782704744974,"crit":"INFO","id":"kpimon","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"8","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-29T03:45:44"},"msg":"Wrote Cell Metrics to InfluxDB"}

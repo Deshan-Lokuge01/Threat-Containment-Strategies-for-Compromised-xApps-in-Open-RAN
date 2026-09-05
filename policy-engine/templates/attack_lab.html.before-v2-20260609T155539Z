@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ZT-XGuard Attack Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">Controlled FYP Scenarios</div>
+      <h1>ZT-XGuard Attack Lab</h1>
+      <p class="subtitle">Trigger controlled security scenarios and watch automatic containment in the dashboard.</p>
+    </div>
+    <div class="top-actions">
+      <a class="btn secondary" href="/dashboard">Runtime Dashboard</a>
+      <button id="refreshBtn" class="btn secondary">Refresh</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel warning-panel">
+      <h2>Lab Safety Notice</h2>
+      <p>This page runs controlled FYP test scenarios against your own xApps. The shell scenario injects a Falco-style event into the ZT-XGuard event pipeline. Real Falco testing is still performed using <code>kubectl exec</code>.</p>
+    </section>
+
+    <section class="two-col">
+      <div class="panel">
+        <h2>Scenario Launcher</h2>
+        <div class="form-row vertical">
+          <label for="xappSelect">Target xApp</label>
+          <select id="xappSelect"></select>
+
+          <button id="runShellScenarioBtn" class="btn danger wide">Run Controlled Shell-Spawn Scenario</button>
+          <button id="restoreBtn" class="btn secondary wide">Restore Selected xApp</button>
+          <button id="primeAuditBtn" class="btn secondary wide">Prime Audit</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Scenario Result</h2>
+        <pre id="scenarioBox" class="codebox">No scenario executed yet.</pre>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <h2>Live xApp State</h2>
+          <p>Auto-refreshing trust-state view.</p>
+        </div>
+        <div id="lastUpdated" class="small-muted">Not updated yet</div>
+      </div>
+      <div id="xappGrid" class="xapp-grid"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Current Containment</h2>
+      <pre id="containmentBox" class="codebox">Waiting for data...</pre>
+    </section>
+  </main>
+
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>

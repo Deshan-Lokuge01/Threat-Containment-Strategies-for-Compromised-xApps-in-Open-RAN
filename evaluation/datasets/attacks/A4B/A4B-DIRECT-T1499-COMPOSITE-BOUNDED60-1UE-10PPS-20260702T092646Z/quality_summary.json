@@ -1,0 +1,24 @@
+{
+  "dataset": "A4B_DIRECT_T1499_COMPOSITE_BOUNDED60",
+  "endpoint_errors": 0,
+  "expected_rows": 1260,
+  "rows": 1260,
+  "sample_interval_seconds": {
+    "maximum": 1.032873,
+    "mean": 1.000001419047619,
+    "p95": 1.0034414,
+    "p99": 1.00885914
+  },
+  "sample_lag_ms": {
+    "maximum": 34.849,
+    "mean": 3.123079365079365,
+    "p95": 6.6781,
+    "p99": 12.284890000000019
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 28,
+    "ok": 1232
+  },
+  "schema": "ztx-step53a-direct-attack-quality-v1",
+  "timing_errors": 0
+}

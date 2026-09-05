@@ -1,0 +1,55 @@
+{
+  "cgroup_path": "/sys/fs/cgroup/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pode577ccc2_ab4d_4a07_b5c9_33bbdcc1779b.slice/cri-containerd-2af6b668afa9e5f2fecf1250b37b48e09805c63c8e0d2096e714f19ed050260f.scope",
+  "container": "kpimon-go",
+  "container_id": "2af6b668afa9e5f2fecf1250b37b48e09805c63c8e0d2096e714f19ed050260f",
+  "dataset": "N6",
+  "deployment": "ricxapp-kpimon-go",
+  "evaluation_policy": {
+    "N6_scored_during_collection": false,
+    "model_refitting_allowed": false,
+    "threshold_reselection_allowed": false
+  },
+  "frozen_configuration": {
+    "features": [
+      "M1_log1p",
+      "M4_identity",
+      "M5_log1p",
+      "M6_log1p"
+    ],
+    "half_life_seconds": 3,
+    "lambda": 0.206299,
+    "persistence_history_l": 16,
+    "persistence_required_k": 12,
+    "upper_control_limit": 25.58879353054043,
+    "warning_limit": 12.858651313374208,
+    "window_seconds": 8
+  },
+  "frozen_model_archive_sha256": "47d631da4dd165b7f0527a8749443e54e90c3284215b0aec7358e3f364fe7856",
+  "ground_truth": "clean_normal",
+  "host": {
+    "architecture": "x86_64",
+    "hostname": "near-rt-ric",
+    "kernel": "6.17.0-29-generic"
+  },
+  "host_pid": 45199,
+  "image_id": "127.0.0.1:80/kpimon-ocudu-cell@sha256:bbc43f0d77461721815ce2cee2e12c4a39a62b418d262a9d146938dde00c678f",
+  "memory_slope_window_seconds": 30,
+  "namespace": "ricxapp",
+  "ping_interval_seconds": 0.1,
+  "ping_pid": 44572,
+  "planned_duration_seconds": 1800,
+  "pod_ip": "10.244.0.110",
+  "pod_name": "ricxapp-kpimon-go-687d9645b6-snlkl",
+  "pod_uid": "e577ccc2-ab4d-4a07-b5c9-33bbdcc1779b",
+  "role": "untouched-final-clean-evaluation-for-v2",
+  "run_id": "N6-ACTUATOR-CLEAN-1UE-10PPS-20260630T034419Z",
+  "sampling_interval_seconds": 1,
+  "schema": "ztx-normal-run-metadata-v1",
+  "start_unix_ns": 1782791061676554759,
+  "start_utc": "2026-06-30T03:44:21Z",
+  "status": "collecting",
+  "step48b_readiness_directory": "/home/nearric/Desktop/FYP/zt-xguard/data/normal/N6/readiness/N6-ACTUATOR-READINESS-20260630T034113Z",
+  "traffic_destination": "10.45.1.1",
+  "traffic_pps": 10,
+  "ue_count": 1
+}

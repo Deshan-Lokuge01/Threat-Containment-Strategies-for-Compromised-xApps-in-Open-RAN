@@ -1,0 +1,19 @@
+{
+  "xapp": "qos-optimizer",
+  "role": "qos-optimization",
+  "state": "qos-optimization",
+  "uptime_sec": 409.9,
+  "heartbeat_age_sec": 4.89,
+  "heartbeat_ok": true,
+  "work_units_processed": 9120,
+  "ric_activity_counter": 76,
+  "control_action_counter": 76,
+  "telemetry_samples": 0,
+  "qos_decisions": 76,
+  "traffic_reports": 0,
+  "resource_recommendations": 0,
+  "security_checks": 0,
+  "last_decision": "qos_score=0.707",
+  "errors": 0,
+  "time": "2026-06-05T05:51:46.943284+00:00"
+}

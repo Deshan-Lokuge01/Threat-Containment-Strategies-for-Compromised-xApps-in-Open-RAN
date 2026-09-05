@@ -1,0 +1,53 @@
+--- python version ---
+Python 3.8.20
+--- installed packages ---
+Name: ricxappframe
+Version: 2.2.0
+Summary: Xapp and RMR framework for Python
+Home-page: https://gerrit.o-ran-sc.org/r/admin/repos/ric-plt/xapp-frame-py
+Author: O-RAN Software Community
+Author-email: 
+License: Apache 2.0
+Location: /usr/local/lib/python3.8/site-packages
+Requires: inotify-simple, mdclogpy, msgpack, protobuf, requests, ricsdl
+Required-by: hw-python
+---
+Name: mdclogpy
+Version: 1.1.4
+Summary: Structured logging library with Mapped Diagnostic Context
+Home-page: https://gerrit.o-ran-sc.org/r/admin/repos/com/pylog
+Author: kturunen
+Author-email: kturunen@nokia.com
+License: Apache Software License
+Location: /usr/local/lib/python3.8/site-packages
+Requires: inotify
+Required-by: ricxappframe
+---
+Name: ricsdl
+Version: 3.1.3
+Summary: Shared Data Layer (SDL) provides a high-speed interface to access shared storage
+Home-page: https://gerrit.o-ran-sc.org/r/admin/repos/ric-plt/sdlpy
+Author: Timo Tietavainen
+Author-email: timo.tietavainen@nokia.com
+License: Apache 2.0
+Location: /usr/local/lib/python3.8/site-packages
+Requires: hiredis, redis, setuptools
+Required-by: ricxappframe
+--- RMR libraries ---
+/usr/local/lib/python3.8/site-packages/ricxappframe/rmr
+/usr/local/lib/python3.8/site-packages/ricxappframe/rmr/__pycache__/rmr.cpython-38.pyc
+/usr/local/lib/python3.8/site-packages/ricxappframe/rmr/rmr.py
+/usr/local/lib/python3.8/site-packages/ricxappframe/rmr/rmrclib
+/usr/local/lib/python3.8/site-packages/ricxappframe/rmr/rmrclib/__pycache__/rmrclib.cpython-38.pyc
+/usr/local/lib/python3.8/site-packages/ricxappframe/rmr/rmrclib/rmrclib.py
+/usr/local/lib/python3.8/site-packages/ricxappframe/rmr/rmr_mocks
+/usr/local/lib/python3.8/site-packages/ricxappframe/rmr/rmr_mocks/__pycache__/rmr_mocks.cpython-38.pyc
+/usr/local/lib/python3.8/site-packages/ricxappframe/rmr/rmr_mocks/rmr_mocks.py
+/usr/local/lib/python3.8/site-packages/ricxappframe/__pycache__/xapp_rmr.cpython-38.pyc
+/usr/local/lib/python3.8/site-packages/ricxappframe/xapp_rmr.py
+/usr/local/lib64/librmr_si.a
+/usr/local/lib64/librmr_si.so.4.0.5
+/usr/local/lib64/librmr_si.so.4
+/usr/local/lib64/librmr_si.so
+--- E2AP libraries ---
+/usr/local/lib/python3.8/site-packages/ricxappframe/e2ap

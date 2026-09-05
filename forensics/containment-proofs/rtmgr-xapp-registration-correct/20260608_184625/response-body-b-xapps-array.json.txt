@@ -1,0 +1,1 @@
+{"code":400,"message":"parsing xappCallbackData body from \"\" failed, because json: cannot unmarshal array into Go struct field XappCallbackData.xApps of type string"}

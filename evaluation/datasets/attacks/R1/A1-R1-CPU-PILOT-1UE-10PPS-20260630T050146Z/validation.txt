@@ -1,0 +1,11 @@
+dataset=A1_R1
+run_id=A1-R1-CPU-PILOT-1UE-10PPS-20260630T050146Z
+role=controlled-r1-cpu-pilot-attack-evaluation
+collector_return_code=0
+primary_data_ok=0
+attack_started=1
+stress_ng_seen_during_attack=1
+stress_ng_running_at_end=0
+actuator_inactive_at_end=1
+final_acceptance=0
+scored_during_collection=0

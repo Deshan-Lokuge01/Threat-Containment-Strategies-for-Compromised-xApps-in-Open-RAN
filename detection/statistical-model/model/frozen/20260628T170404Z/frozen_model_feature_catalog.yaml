@@ -1,0 +1,37 @@
+schema: ztx-step37-model-feature-catalog-v1
+step: 37
+fitting_datasets:
+- N1
+- N2
+calibration_dataset: N3_NOT_LOADED
+features:
+- feature_id: M1_log1p
+  metric_id: M1
+  source_column: m1_cpu_millicores
+  selected_transform: log1p
+  center_scope: pooled_n1_n2_transformed_values
+  enters_step38_covariance_candidate_set: true
+- feature_id: M3_run_pod_centered
+  metric_id: M3
+  source_column: m3_memory_working_set_bytes
+  selected_transform: identity
+  center_scope: per_run_pod_offset_then_pooled_residual_median
+  enters_step38_covariance_candidate_set: true
+- feature_id: M4_identity
+  metric_id: M4
+  source_column: m4_memory_growth_bytes_per_s
+  selected_transform: identity
+  center_scope: pooled_n1_n2_transformed_values
+  enters_step38_covariance_candidate_set: true
+- feature_id: M5_log1p
+  metric_id: M5
+  source_column: m5_network_rx_bytes_per_s
+  selected_transform: log1p
+  center_scope: pooled_n1_n2_transformed_values
+  enters_step38_covariance_candidate_set: true
+- feature_id: M6_log1p
+  metric_id: M6
+  source_column: m6_network_tx_bytes_per_s
+  selected_transform: log1p
+  center_scope: pooled_n1_n2_transformed_values
+  enters_step38_covariance_candidate_set: true

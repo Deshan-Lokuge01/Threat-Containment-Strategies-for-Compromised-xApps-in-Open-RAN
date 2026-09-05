@@ -1,0 +1,31 @@
+pkg/restful/restful.go:358:				go r.rh.PublishSubscription(*result, models.EventTypeUndeployed)
+pkg/restful/restful.go:572:func (r *Restful) GetApps() (xapps models.AllDeployedXapps, err error) {
+pkg/restful/restful.go:573:	xapps = models.AllDeployedXapps{}
+pkg/restful/restful.go:622:			XappList         models.AllDeployedXapps `json:"xappList"`
+pkg/helm/helm_test.go:253:func TestInstallSuccess(t *testing.T) {
+pkg/helm/helm_test.go:272:func TestInstallReturnsErrorIfHelmRepoUpdateFails(t *testing.T) {
+pkg/helm/helm_test.go:358:	var str models.AllDeployableXapps
+pkg/helm/helm_test.go:561:func TestGetInstallArgs(t *testing.T) {
+pkg/helm/helm.go:131:func (h *Helm) Install(m models.XappDescriptor) (xapp models.Xapp, err error) {
+pkg/helm/helm.go:165:func (h *Helm) StatusAll() (xapps models.AllDeployedXapps, err error) {
+pkg/helm/helm.go:186:func (h *Helm) SearchAll() models.AllDeployableXapps {
+pkg/helm/helm.go:354:func (h *Helm) parseAllStatus(names []string) (xapps models.AllDeployedXapps, err error) {
+pkg/helm/helm.go:355:        xapps = models.AllDeployedXapps{}
+pkg/helm/helm.go:382:func (h *Helm) GetInstallArgs(x models.XappDescriptor, cmOverride bool) (args string) {
+pkg/resthooks/resthooks_test.go:153:	rh.NotifyClients(models.AllDeployedXapps{}, models.EventTypeUndeployed)
+pkg/resthooks/resthooks_test.go:168:	err := rh.notify(models.AllDeployedXapps{&xapp}, models.EventTypeUndeployed, v.(SubscriptionInfo), 1)
+pkg/resthooks/resthooks_test.go:184:	err := rh.notify(models.AllDeployedXapps{&xapp}, models.EventTypeUndeployed, v.(SubscriptionInfo), 1)
+pkg/resthooks/resthooks_test.go:198:	err := rh.notify(models.AllDeployedXapps{&xapp}, models.EventTypeUndeployed, v.(SubscriptionInfo), 1)
+pkg/resthooks/resthooks_test.go:542:	rh.PublishSubscription(xapp, models.EventTypeUndeployed)
+pkg/resthooks/resthooks.go:126:	rh.NotifyClients(models.AllDeployedXapps{&x}, et)
+pkg/resthooks/resthooks.go:129:func (rh *Resthook) NotifyClients(xapps models.AllDeployedXapps, et models.EventType) {
+pkg/resthooks/resthooks.go:141:func (rh *Resthook) notify(xapps models.AllDeployedXapps, et models.EventType, s SubscriptionInfo, seq int64) error {
+pkg/appmgr/types.go:57:	Install(m models.XappDescriptor) (xapp models.Xapp, err error)
+pkg/appmgr/types.go:59:	StatusAll() (xapps models.AllDeployedXapps, err error)
+api/appmgr_rest_api.yaml:86:            $ref: '#/definitions/AllDeployedXapps'
+api/appmgr_rest_api.yaml:101:            $ref: '#/definitions/AllDeployableXapps'
+api/appmgr_rest_api.yaml:130:      summary: Undeploy an existing xapp
+api/appmgr_rest_api.yaml:395:  AllDeployableXapps:
+api/appmgr_rest_api.yaml:399:  AllDeployedXapps:
+api/appmgr_rest_api.yaml:479:        description: JSON string of override file for 'helm install' command
+api/appmgr_rest_api.yaml:594:        $ref: '#/definitions/AllDeployedXapps'

@@ -1,0 +1,240 @@
+#define _GNU_SOURCE
+#include <arpa/inet.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <time.h>
+#include <unistd.h>
+
+static pid_t child_pid = -1;
+static char active_scenario[96] = "";
+static char started_utc[64] = "";
+static int active_duration_seconds = 0;
+
+static void reply(int fd, int code, const char *body) {
+    char header[512];
+    int n = snprintf(header, sizeof(header),
+        "HTTP/1.1 %d OK\r\nContent-Type: application/json\r\nContent-Length: %zu\r\nConnection: close\r\n\r\n",
+        code, strlen(body));
+    (void)write(fd, header, n);
+    (void)write(fd, body, strlen(body));
+}
+
+static void now_utc(char *buf, size_t n) {
+    time_t t = time(NULL);
+    struct tm tm;
+    gmtime_r(&t, &tm);
+    strftime(buf, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
+}
+
+static void clear_active(void) {
+    child_pid = -1;
+    active_scenario[0] = 0;
+    started_utc[0] = 0;
+    active_duration_seconds = 0;
+}
+
+static void reap_child(void) {
+    if (child_pid > 0) {
+        int status = 0;
+        pid_t r = waitpid(child_pid, &status, WNOHANG);
+        if (r == child_pid) {
+            clear_active();
+        }
+    }
+}
+
+static int token_ok(const char *req) {
+    const char *expected = getenv("ZTX_ACTUATOR_TOKEN");
+    if (!expected || expected[0] == 0) return 0;
+
+    const char *h = strcasestr(req, "X-ZTX-Token:");
+    if (!h) return 0;
+    h += strlen("X-ZTX-Token:");
+    while (*h == ' ') h++;
+
+    size_t len = strcspn(h, "\r\n");
+    return strlen(expected) == len && strncmp(h, expected, len) == 0;
+}
+
+static int request_has(const char *req, const char *needle) {
+    return strstr(req, needle) != NULL;
+}
+
+static void start_stress(int client, const char *req) {
+    if (!token_ok(req)) {
+        reply(client, 401, "{\"error\":\"unauthorized\"}\n");
+        return;
+    }
+
+    const char *scenario = NULL;
+    int duration = 0;
+    int composite = 0;
+
+    if (request_has(req, "R1_CPU_PILOT_SAFE")) {
+        scenario = "R1_CPU_PILOT_SAFE";
+        duration = 60;
+        composite = 0;
+    } else if (request_has(req, "T1499_COMPOSITE_RESOURCE_EXHAUSTION_PILOT_60S")) {
+        scenario = "T1499_COMPOSITE_RESOURCE_EXHAUSTION_PILOT_60S";
+        duration = 60;
+        composite = 1;
+    } else if (request_has(req, "T1499_COMPOSITE_RESOURCE_EXHAUSTION_SAFE")) {
+        scenario = "T1499_COMPOSITE_RESOURCE_EXHAUSTION_SAFE";
+        duration = 900;
+        composite = 1;
+    } else {
+        reply(client, 400, "{\"error\":\"unsupported_scenario\"}\n");
+        return;
+    }
+
+    reap_child();
+    if (child_pid > 0) {
+        reply(client, 409, "{\"error\":\"run_already_active\"}\n");
+        return;
+    }
+
+    pid_t p = fork();
+    if (p < 0) {
+        reply(client, 500, "{\"error\":\"fork_failed\"}\n");
+        return;
+    }
+
+    if (p == 0) {
+        setsid();
+
+        char timeout_arg[32];
+        snprintf(timeout_arg, sizeof(timeout_arg), "%ds", duration);
+
+        if (composite) {
+            execlp("stress-ng", "stress-ng",
+                   "--cpu", "1",
+                   "--cpu-load", "20",
+                   "--hdd", "1",
+                   "--hdd-bytes", "16M",
+                   "--temp-path", "/tmp",
+                   "--timeout", timeout_arg,
+                   "--metrics-brief",
+                   (char *)NULL);
+        } else {
+            execlp("stress-ng", "stress-ng",
+                   "--cpu", "1",
+                   "--cpu-load", "20",
+                   "--timeout", timeout_arg,
+                   "--metrics-brief",
+                   (char *)NULL);
+        }
+
+        _exit(127);
+    }
+
+    child_pid = p;
+    snprintf(active_scenario, sizeof(active_scenario), "%s", scenario);
+    now_utc(started_utc, sizeof(started_utc));
+    active_duration_seconds = duration;
+
+    char body[512];
+    int vm_workers = 0;
+    const char *vm_bytes = "0";
+    int hdd_workers = composite ? 1 : 0;
+    const char *hdd_bytes = composite ? "16M" : "0";
+
+    snprintf(body, sizeof(body),
+        "{\"active\":true,\"scenario\":\"%s\",\"pid\":%d,\"duration_seconds\":%d,"
+        "\"cpu_workers\":1,\"cpu_load_percent\":20,"
+        "\"vm_workers\":%d,\"vm_bytes\":\"%s\",\"hdd_workers\":%d,\"hdd_bytes\":\"%s\","
+        "\"started_utc\":\"%s\"}\n",
+        active_scenario,
+        child_pid,
+        active_duration_seconds,
+        vm_workers,
+        vm_bytes,
+        hdd_workers,
+        hdd_bytes,
+        started_utc);
+
+
+    reply(client, 202, body);
+}
+
+static void stop_run(int client, const char *req) {
+    if (!token_ok(req)) {
+        reply(client, 401, "{\"error\":\"unauthorized\"}\n");
+        return;
+    }
+
+    if (child_pid > 0) {
+        kill(-child_pid, SIGTERM);
+        sleep(1);
+        kill(-child_pid, SIGKILL);
+        waitpid(child_pid, NULL, WNOHANG);
+    }
+
+    clear_active();
+    reply(client, 200, "{\"stopped\":true}\n");
+}
+
+int main(void) {
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int opt = 1;
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    addr.sin_port = htons(18080);
+
+    if (bind(server_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) return 1;
+    if (listen(server_fd, 8) < 0) return 1;
+
+    for (;;) {
+        reap_child();
+
+        int client = accept(server_fd, NULL, NULL);
+        if (client < 0) continue;
+
+        char req[4096];
+        int n = read(client, req, sizeof(req) - 1);
+        if (n <= 0) {
+            close(client);
+            continue;
+        }
+        req[n] = 0;
+
+        if (strncmp(req, "GET /ztx-test/v1/health ", 24) == 0) {
+            reply(client, 200, "{\"ok\":true,\"service\":\"ztx-kpimon-actuator-c\",\"version\":\"step51-v5-composite-cpu-io-safe-r2\"}\n");
+        } else if (strncmp(req, "GET /ztx-test/v1/scenarios ", 27) == 0) {
+            reply(client, 200,
+                "{\"scenarios\":["
+                "{\"name\":\"R1_CPU_PILOT_SAFE\",\"duration_seconds\":60},"
+                "{\"name\":\"T1499_COMPOSITE_RESOURCE_EXHAUSTION_PILOT_60S\",\"duration_seconds\":60},"
+                "{\"name\":\"T1499_COMPOSITE_RESOURCE_EXHAUSTION_SAFE\",\"duration_seconds\":900}"
+                "]}\n");
+        } else if (strncmp(req, "GET /ztx-test/v1/status ", 24) == 0) {
+            reap_child();
+            if (child_pid > 0) {
+                char body[512];
+                snprintf(body, sizeof(body),
+                    "{\"active\":true,\"scenario\":\"%s\",\"pid\":%d,\"duration_seconds\":%d,\"started_utc\":\"%s\"}\n",
+                    active_scenario, child_pid, active_duration_seconds, started_utc);
+                reply(client, 200, body);
+            } else {
+                reply(client, 200, "{\"active\":false}\n");
+            }
+        } else if (strncmp(req, "POST /ztx-test/v1/runs ", 23) == 0) {
+            start_stress(client, req);
+        } else if (strncmp(req, "POST /ztx-test/v1/stop ", 23) == 0) {
+            stop_run(client, req);
+        } else {
+            reply(client, 404, "{\"error\":\"not_found\"}\n");
+        }
+
+        close(client);
+    }
+}

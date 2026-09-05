@@ -1,0 +1,5 @@
+{
+  "allowed_ric_services": [],
+  "allowed_peers": ["telemetry-monitor"],
+  "expected_external_egress": false
+}

@@ -1,0 +1,7 @@
+{
+  "time": "2026-06-05T15:26:48Z",
+  "provider": "sp1",
+  "payload": "traffic-analyzer-tampered-descriptor.tar.gz",
+  "result": "REJECTED",
+  "reason": "GPG signature verification failed"
+}

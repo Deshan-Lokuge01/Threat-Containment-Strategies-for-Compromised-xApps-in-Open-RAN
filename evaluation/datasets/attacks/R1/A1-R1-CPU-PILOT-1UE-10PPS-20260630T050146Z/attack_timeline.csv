@@ -1,0 +1,6 @@
+event,planned_elapsed_s,timestamp_utc,scenario,duration_seconds,details
+collection_start,0,2026-06-30T05:02:19Z,R1_CPU_PILOT_SAFE,60,collector_start
+attack_planned,300,,R1_CPU_PILOT_SAFE,60,cpu_workers=1 cpu_load_percent=20
+attack_start_request,300,2026-06-30T05:07:19Z,R1_CPU_PILOT_SAFE,60,request_sent
+attack_cleanup_check,375,2026-06-30T05:08:35Z,R1_CPU_PILOT_SAFE,60,cleanup_checked
+collection_end,1800,2026-06-30T05:32:24Z,R1_CPU_PILOT_SAFE,60,collector_end

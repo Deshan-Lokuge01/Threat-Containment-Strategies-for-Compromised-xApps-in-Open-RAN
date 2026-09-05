@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+import random
+from ztx_common.runtime import XAppRuntime, cpu_work
+DEFAULT_PROFILE = {"xapp":"qos-optimizer","role":"qos-optimization","expected_cpu_class":"medium","expected_memory_class":"medium","expected_external_egress":False,"expected_cross_xapp_comm":False,"expected_ric_activity":True,"expected_control_activity":True,"expected_shell":False,"expected_sensitive_file_access":False,"heartbeat_period_sec":5,"workload_intensity":"medium","allowed_ric_services":["e2mgr","appmgr","prometheus"],"max_api_rate_per_min":120}
+def behavior(runtime):
+    runtime.state["mode"]="qos-optimization"; cpu_work(0.4,400); runtime.check_peers()
+    qos_score=random.uniform(0.70,0.99); runtime.state["qos_decisions"]+=1; runtime.state["work_units_processed"]+=120; runtime.state["control_action_counter"]+=1
+    runtime.state["last_decision"]=f"qos_score={qos_score:.3f}"
+if __name__ == "__main__": XAppRuntime(DEFAULT_PROFILE, behavior).start()

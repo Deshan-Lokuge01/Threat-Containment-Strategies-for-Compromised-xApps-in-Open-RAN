@@ -1,0 +1,47 @@
+[2026-06-08T13:01:09.744634+00:00] Starting kpm-monitor real O-RAN xApp
+[2026-06-08T13:01:09.744686+00:00] POD_IP=10.244.0.219, SERVICE_HTTP_HOST=service-ricxapp-kpm-monitor-rmr.ricxapp, SUBMGR_URI=http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1
+[2026-06-08T13:01:09.744700+00:00] E2_NODE_ID=gnbd_001_001_00019b_0, RAN_FUNCTION_ID=2, KPM_METRICS=['DRB.UEThpUl', 'DRB.UEThpDl']
+[2026-06-08T13:01:09.745510+00:00] Starting RMR listener on port 4560
+1780923669 1/RMR [INFO] ric message routing library on SI95/g mv=3 flg=00 (f25dc7f 4.0.5 built: May  7 2020)
+[2026-06-08T13:01:09.747280+00:00] HTTP server listening on 0.0.0.0:8092
+[2026-06-08T13:01:10.747767+00:00] RMR listener is ready
+1780923670 1/RMR [INFO] sends: ts=1780923670 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923670 1/RMR [INFO] sends: ts=1780923670 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:01:24.752507+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+1780923701 1/RMR [INFO] sends: ts=1780923701 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923701 1/RMR [INFO] sends: ts=1780923701 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:01:59.786726+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+1780923732 1/RMR [INFO] sends: ts=1780923732 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923732 1/RMR [INFO] sends: ts=1780923732 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:02:34.807570+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+1780923763 1/RMR [INFO] sends: ts=1780923763 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923763 1/RMR [INFO] sends: ts=1780923763 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:03:09.813725+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+1780923794 1/RMR [INFO] sends: ts=1780923794 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923794 1/RMR [INFO] sends: ts=1780923794 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:03:44.853056+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+1780923825 1/RMR [INFO] sends: ts=1780923825 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923825 1/RMR [INFO] sends: ts=1780923825 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923856 1/RMR [INFO] sends: ts=1780923856 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923856 1/RMR [INFO] sends: ts=1780923856 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:04:19.890354+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+1780923887 1/RMR [INFO] sends: ts=1780923887 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923887 1/RMR [INFO] sends: ts=1780923887 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:04:54.908788+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+1780923918 1/RMR [INFO] sends: ts=1780923918 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923918 1/RMR [INFO] sends: ts=1780923918 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:05:29.933576+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+1780923949 1/RMR [INFO] sends: ts=1780923949 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923949 1/RMR [INFO] sends: ts=1780923949 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:06:04.968670+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+1780923980 1/RMR [INFO] sends: ts=1780923980 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780923980 1/RMR [INFO] sends: ts=1780923980 src=kpm-monitor-85b6775fc9-cqvrk:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:06:39.983626+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+[2026-06-08T13:07:15.009866+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+[2026-06-08T13:07:50.044492+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+[2026-06-08T13:08:25.079086+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+[2026-06-08T13:08:55.422800+00:00] Sending KPM subscription request to http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1/subscriptions
+[2026-06-08T13:08:55.422849+00:00] Target E2 node=gnbd_001_001_00019b_0, RANFunctionID=2, metrics=['DRB.UEThpUl', 'DRB.UEThpDl']
+[2026-06-08T13:08:55.443073+00:00] Subscription accepted. HTTP=201, SubscriptionId=3Er62j6lEw0UkfoFkQdjqVzjoC9, body={"SubscriptionId":"3Er62j6lEw0UkfoFkQdjqVzjoC9","SubscriptionInstances":null}
+
+[2026-06-08T13:08:55.447496+00:00] HTTP callback received path=/ric/v1/subscriptions/response body={"SubscriptionId":"3Er62j6lEw0UkfoFkQdjqVzjoC9","SubscriptionInstances":[{"E2EventInstanceId":0,"ErrorCause":"CREATE routeinfo(4/[service-ricxapp-kpm-monitor-rmr.ricxapp:4560]) failed with error: [POST /handles/xapp-subscription-handle][400] provideXappSubscriptionHandleBadRequest ","ErrorSource":"RTMGR","XappEventInstanceId":1234}]}

@@ -1,0 +1,2 @@
+kube-system          kube-scheduler-near-rt-ric                                  1/1     Running   5            9d      192.168.112.129   near-rt-ric   <none>           <none>
+ricxapp              security-observer-9f84cf9bd-4rg9z                           1/1     Running   0            2d19h   10.244.0.202      near-rt-ric   <none>           <none>

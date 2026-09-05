@@ -1,0 +1,2 @@
+NAME                              ENDPOINTS                                               AGE
+service-ricxapp-kpm-monitor-rmr   10.244.0.219:8092,10.244.0.219:4561,10.244.0.219:4560   44m

@@ -1,0 +1,673 @@
+
+----- configmap/alarm-appconfig -----
+apiVersion: v1
+data:
+  ALARM_MGR_SERVICE_NAME: service-ricplt-alarmmanager-rmr.ricplt
+  ALARM_MGR_SERVICE_PORT: "4560"
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: r4-alarmmanager
+    meta.helm.sh/release-namespace: ricplt
+  creationTimestamp: "2026-05-30T05:48:07Z"
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: alarm-appconfig
+  namespace: ricxapp
+  resourceVersion: "1232"
+  uid: 366dfb42-1b0b-4f4e-811e-00fe3207dd5a
+
+----- configmap/kube-root-ca.crt -----
+apiVersion: v1
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDBTCCAe2gAwIBAgIIUv+z/MkollkwDQYJKoZIhvcNAQELBQAwFTETMBEGA1UE
+    AxMKa3ViZXJuZXRlczAeFw0yNjA1MzAwNTM5MTZaFw0zNjA1MjcwNTQ0MTZaMBUx
+    EzARBgNVBAMTCmt1YmVybmV0ZXMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+    AoIBAQD6JhAQD5mPvzPO2m9Gn+nq+ljBXom6TM6OKbzDJCAiD8qCLzQ01bpNc8yZ
+    ClYsNmEABrFNTQYADOalyg891i1NiRfLNflQsFz7dXD5f9fk6H0LQH1RBgcN8EJu
+    vPQWsFz8GW1TkDK7euSrL1+jnUqwJxjL1GRGbzF8GCfaQgm8rNhwRMPCqPjyo/ar
+    H1bX0p+fC2bacaazagsF684ujrdMmAnG2P4/kBOII/whO30S0D1nbrc4a1FqTpwB
+    lmK5KdPEOLtUSNoo5gbwZs80YlyU7ES3SeBy8JSVJjVXMZ1zlgyy3LEMPdLJOQZA
+    8TILJ5X9kc2493uxyKOkc3Iuhgq9AgMBAAGjWTBXMA4GA1UdDwEB/wQEAwICpDAP
+    BgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQQRzslv7FnCWTMXG07BLXoUhYunzAV
+    BgNVHREEDjAMggprdWJlcm5ldGVzMA0GCSqGSIb3DQEBCwUAA4IBAQBfP3T7tnid
+    vb+pPBE9c3L7zHJydVo78gY7yeKut3VOy3EjMVmYMYJHF3q9DFBz+baFYeencSss
+    BiJO0WFz8gcX5aE2S3gZo/68o1IIGXfSN95Z8YsWJFdls+VBRMeLyc93yDr+4LaJ
+    UsgDUk1Xm/hxHfc+fLa15TB0iSpLpNtQzrhONxMDagKS/E9rzM5yC6jJ6Lg3Wi+2
+    hAvaYJ2X2bl1YiEGLY+/U6/eV79yXzrZzKonCQsC/mDueL7Q7dNLk73cIWRD5etG
+    Ah780Z6oFV5qZBrL/OjXVzVQ3NJxRf2jjtjSFkPTiVcgZ60DRQgAaM8p/CUvd47D
+    H5YSwXxXW7rb
+    -----END CERTIFICATE-----
+kind: ConfigMap
+metadata:
+  annotations:
+    kubernetes.io/description: Contains a CA bundle that can be used to verify the
+      kube-apiserver when using internal endpoints such as the internal service IP
+      or kubernetes.default.svc. No other usage is guaranteed across distributions
+      of Kubernetes clusters.
+  creationTimestamp: "2026-05-30T05:46:33Z"
+  name: kube-root-ca.crt
+  namespace: ricxapp
+  resourceVersion: "600"
+  uid: 6d4e2da1-d974-4cd1-9e01-f429100b8e29
+
+----- configmap/qos-optimizer-profile -----
+apiVersion: v1
+data:
+  profile.json: |2-
+
+    {
+      "xapp": "qos-optimizer",
+      "role": "qos-optimization",
+      "controls": {
+        "expected_cpu_class": "medium",
+        "expected_memory_class": "medium",
+        "expected_ric_activity": true,
+        "expected_control_activity": true,
+        "expected_shell": false,
+        "expected_sensitive_file_access": false,
+        "expected_external_egress": false,
+        "heartbeat_period_sec": 5,
+        "workload_intensity": "medium",
+        "allowed_ric_services": [
+          "e2mgr",
+          "rtmgr",
+          "a1mediator",
+          "prometheus"
+        ],
+        "max_api_rate_per_min": 120
+      },
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "qos-optimizer",
+            "port": 8080,
+            "description": "HTTP REST API for xApp runtime status"
+          }
+        ]
+      },
+      "security_monitoring": {
+        "compromise_indicators": [
+          "unexpected_shell_spawn",
+          "sensitive_file_access",
+          "service_account_token_access",
+          "unexpected_external_egress",
+          "high_cpu_without_ric_activity",
+          "stale_heartbeat"
+        ],
+        "containment_actions": [
+          "label_as_quarantined",
+          "deny_all_network_policy",
+          "preserve_pod_for_forensics"
+        ]
+      },
+      "runtime_counters": {
+        "telemetry_samples": false,
+        "qos_decisions": true,
+        "traffic_reports": false,
+        "resource_recommendations": false,
+        "security_checks": false
+      }
+    }
+  xapp-descriptor.json: |2-
+
+    {
+      "name": "qos-optimizer",
+      "version": "1.0.0",
+      "provider": "sp1",
+      "containers": [
+        {
+          "name": "qos-optimizer",
+          "image": {
+            "registry": "localhost:5000",
+            "name": "zt-qos-optimizer",
+            "tag": "1.0",
+            "digest": "sha256:dab0c01ee0ae4eb7a092781d9d391647b222cadc7adea9fee6299415956c1b3c",
+            "reference": "localhost:5000/zt-qos-optimizer:1.0",
+            "immutable_reference": "localhost:5000/zt-qos-optimizer@sha256:dab0c01ee0ae4eb7a092781d9d391647b222cadc7adea9fee6299415956c1b3c"
+          }
+        }
+      ],
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "qos-optimizer",
+            "port": 8080,
+            "description": "HTTP API for health, profile, activity, RIC reachability, and metrics"
+          }
+        ]
+      },
+      "livenessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "readinessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "security": {
+        "serviceAccount": "qos-optimizer",
+        "spiffeID": "spiffe://example.org/ns/ricxapp/sa/qos-optimizer",
+        "requiresSVID": true,
+        "runAsNonRoot": true,
+        "allowPrivilegeEscalation": false
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: qos-optimizer
+    meta.helm.sh/release-namespace: ricxapp
+  creationTimestamp: "2026-06-05T16:49:33Z"
+  labels:
+    app: qos-optimizer
+    app.kubernetes.io/managed-by: Helm
+    zt-xguard.io/verified: "true"
+  name: qos-optimizer-profile
+  namespace: ricxapp
+  resourceVersion: "1027172"
+  uid: 64dcfc3d-15fb-478d-8d6c-f4e8cab1ab41
+
+----- configmap/resource-optimizer-profile -----
+apiVersion: v1
+data:
+  profile.json: |2-
+
+    {
+      "xapp": "resource-optimizer",
+      "role": "resource-optimization",
+      "controls": {
+        "expected_cpu_class": "medium",
+        "expected_memory_class": "medium",
+        "expected_ric_activity": true,
+        "expected_control_activity": true,
+        "expected_shell": false,
+        "expected_sensitive_file_access": false,
+        "expected_external_egress": false,
+        "heartbeat_period_sec": 5,
+        "workload_intensity": "medium",
+        "allowed_ric_services": [
+          "e2mgr",
+          "rtmgr",
+          "prometheus"
+        ],
+        "max_api_rate_per_min": 120
+      },
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "resource-optimizer",
+            "port": 8080,
+            "description": "HTTP REST API for xApp runtime status"
+          }
+        ]
+      },
+      "security_monitoring": {
+        "compromise_indicators": [
+          "unexpected_shell_spawn",
+          "sensitive_file_access",
+          "service_account_token_access",
+          "unexpected_external_egress",
+          "high_cpu_without_ric_activity",
+          "stale_heartbeat"
+        ],
+        "containment_actions": [
+          "label_as_quarantined",
+          "deny_all_network_policy",
+          "preserve_pod_for_forensics"
+        ]
+      },
+      "runtime_counters": {
+        "telemetry_samples": false,
+        "qos_decisions": false,
+        "traffic_reports": false,
+        "resource_recommendations": true,
+        "security_checks": false
+      }
+    }
+  xapp-descriptor.json: |2-
+
+    {
+      "name": "resource-optimizer",
+      "version": "1.0.0",
+      "provider": "sp1",
+      "containers": [
+        {
+          "name": "resource-optimizer",
+          "image": {
+            "registry": "localhost:5000",
+            "name": "zt-resource-optimizer",
+            "tag": "1.0",
+            "digest": "sha256:97f5c147a2d3d016916da5d968545b495f19ca4fe2c77b10c60dfa11bba50ce1",
+            "reference": "localhost:5000/zt-resource-optimizer:1.0",
+            "immutable_reference": "localhost:5000/zt-resource-optimizer@sha256:97f5c147a2d3d016916da5d968545b495f19ca4fe2c77b10c60dfa11bba50ce1"
+          }
+        }
+      ],
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "resource-optimizer",
+            "port": 8080,
+            "description": "HTTP API for health, profile, activity, RIC reachability, and metrics"
+          }
+        ]
+      },
+      "livenessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "readinessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "security": {
+        "serviceAccount": "resource-optimizer",
+        "spiffeID": "spiffe://example.org/ns/ricxapp/sa/resource-optimizer",
+        "requiresSVID": true,
+        "runAsNonRoot": true,
+        "allowPrivilegeEscalation": false
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: resource-optimizer
+    meta.helm.sh/release-namespace: ricxapp
+  creationTimestamp: "2026-06-05T16:49:57Z"
+  labels:
+    app: resource-optimizer
+    app.kubernetes.io/managed-by: Helm
+    zt-xguard.io/verified: "true"
+  name: resource-optimizer-profile
+  namespace: ricxapp
+  resourceVersion: "1027256"
+  uid: c57897aa-a189-45fa-a735-4fdd6d1d8b9b
+
+----- configmap/security-observer-profile -----
+apiVersion: v1
+data:
+  profile.json: |2-
+
+    {
+      "xapp": "security-observer",
+      "role": "security-observation",
+      "controls": {
+        "expected_cpu_class": "low",
+        "expected_memory_class": "low",
+        "expected_ric_activity": false,
+        "expected_control_activity": false,
+        "expected_shell": false,
+        "expected_sensitive_file_access": false,
+        "expected_external_egress": false,
+        "heartbeat_period_sec": 5,
+        "workload_intensity": "low",
+        "allowed_ric_services": [],
+        "max_api_rate_per_min": 30
+      },
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "security-observer",
+            "port": 8080,
+            "description": "HTTP REST API for xApp runtime status"
+          }
+        ]
+      },
+      "security_monitoring": {
+        "compromise_indicators": [
+          "unexpected_shell_spawn",
+          "sensitive_file_access",
+          "service_account_token_access",
+          "unexpected_external_egress",
+          "high_cpu_without_ric_activity",
+          "stale_heartbeat"
+        ],
+        "containment_actions": [
+          "label_as_quarantined",
+          "deny_all_network_policy",
+          "preserve_pod_for_forensics"
+        ]
+      },
+      "runtime_counters": {
+        "telemetry_samples": false,
+        "qos_decisions": false,
+        "traffic_reports": false,
+        "resource_recommendations": false,
+        "security_checks": true
+      }
+    }
+  xapp-descriptor.json: |2-
+
+    {
+      "name": "security-observer",
+      "version": "1.0.0",
+      "provider": "sp1",
+      "containers": [
+        {
+          "name": "security-observer",
+          "image": {
+            "registry": "localhost:5000",
+            "name": "zt-security-observer",
+            "tag": "1.0",
+            "digest": "sha256:8935f5c1f5632ccd1cf73cebd9f88f1aca4f2fff97ec3fb5da9836555e69ab13",
+            "reference": "localhost:5000/zt-security-observer:1.0",
+            "immutable_reference": "localhost:5000/zt-security-observer@sha256:8935f5c1f5632ccd1cf73cebd9f88f1aca4f2fff97ec3fb5da9836555e69ab13"
+          }
+        }
+      ],
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "security-observer",
+            "port": 8080,
+            "description": "HTTP API for health, profile, activity, RIC reachability, and metrics"
+          }
+        ]
+      },
+      "livenessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "readinessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "security": {
+        "serviceAccount": "security-observer",
+        "spiffeID": "spiffe://example.org/ns/ricxapp/sa/security-observer",
+        "requiresSVID": true,
+        "runAsNonRoot": true,
+        "allowPrivilegeEscalation": false
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: security-observer
+    meta.helm.sh/release-namespace: ricxapp
+  creationTimestamp: "2026-06-05T16:50:38Z"
+  labels:
+    app: security-observer
+    app.kubernetes.io/managed-by: Helm
+    zt-xguard.io/verified: "true"
+  name: security-observer-profile
+  namespace: ricxapp
+  resourceVersion: "1027388"
+  uid: 48a5865e-62a0-4238-9be5-3427bfae4e06
+
+----- configmap/telemetry-monitor-profile -----
+apiVersion: v1
+data:
+  profile.json: |2-
+
+    {
+      "xapp": "telemetry-monitor",
+      "role": "telemetry-monitoring",
+      "controls": {
+        "expected_cpu_class": "low",
+        "expected_memory_class": "low",
+        "expected_ric_activity": true,
+        "expected_control_activity": false,
+        "expected_shell": false,
+        "expected_sensitive_file_access": false,
+        "expected_external_egress": false,
+        "heartbeat_period_sec": 5,
+        "workload_intensity": "low",
+        "allowed_ric_services": [
+          "e2mgr",
+          "prometheus"
+        ],
+        "max_api_rate_per_min": 90
+      },
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "telemetry-monitor",
+            "port": 8080,
+            "description": "HTTP REST API for xApp runtime status"
+          }
+        ]
+      },
+      "security_monitoring": {
+        "compromise_indicators": [
+          "unexpected_shell_spawn",
+          "sensitive_file_access",
+          "service_account_token_access",
+          "unexpected_external_egress",
+          "high_cpu_without_ric_activity",
+          "stale_heartbeat"
+        ],
+        "containment_actions": [
+          "label_as_quarantined",
+          "deny_all_network_policy",
+          "preserve_pod_for_forensics"
+        ]
+      },
+      "runtime_counters": {
+        "telemetry_samples": true,
+        "qos_decisions": false,
+        "traffic_reports": false,
+        "resource_recommendations": false,
+        "security_checks": false
+      }
+    }
+  xapp-descriptor.json: |2-
+
+    {
+      "name": "telemetry-monitor",
+      "version": "1.0.0",
+      "provider": "sp1",
+      "containers": [
+        {
+          "name": "telemetry-monitor",
+          "image": {
+            "registry": "localhost:5000",
+            "name": "zt-telemetry-monitor",
+            "tag": "1.0",
+            "digest": "sha256:84c1c9d0e19248d048a908edc5307f1f8d429fce238e5ecb175a8a1e32aa38eb",
+            "reference": "localhost:5000/zt-telemetry-monitor:1.0",
+            "immutable_reference": "localhost:5000/zt-telemetry-monitor@sha256:84c1c9d0e19248d048a908edc5307f1f8d429fce238e5ecb175a8a1e32aa38eb"
+          }
+        }
+      ],
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "telemetry-monitor",
+            "port": 8080,
+            "description": "HTTP API for health, profile, activity, RIC reachability, and metrics"
+          }
+        ]
+      },
+      "livenessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "readinessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "security": {
+        "serviceAccount": "telemetry-monitor",
+        "spiffeID": "spiffe://example.org/ns/ricxapp/sa/telemetry-monitor",
+        "requiresSVID": true,
+        "runAsNonRoot": true,
+        "allowPrivilegeEscalation": false
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: telemetry-monitor
+    meta.helm.sh/release-namespace: ricxapp
+  creationTimestamp: "2026-06-05T16:44:52Z"
+  labels:
+    app: telemetry-monitor
+    app.kubernetes.io/managed-by: Helm
+    zt-xguard.io/verified: "true"
+  name: telemetry-monitor-profile
+  namespace: ricxapp
+  resourceVersion: "1026603"
+  uid: 8bc9931d-720e-4783-a408-d7e5ac68de13
+
+----- configmap/traffic-analyzer-profile -----
+apiVersion: v1
+data:
+  profile.json: |2-
+
+    {
+      "xapp": "traffic-analyzer",
+      "role": "traffic-analytics",
+      "controls": {
+        "expected_cpu_class": "high",
+        "expected_memory_class": "medium",
+        "expected_ric_activity": true,
+        "expected_control_activity": false,
+        "expected_shell": false,
+        "expected_sensitive_file_access": false,
+        "expected_external_egress": false,
+        "heartbeat_period_sec": 5,
+        "workload_intensity": "high",
+        "allowed_ric_services": [
+          "e2mgr",
+          "rtmgr",
+          "prometheus"
+        ],
+        "max_api_rate_per_min": 120
+      },
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "traffic-analyzer",
+            "port": 8080,
+            "description": "HTTP REST API for xApp runtime status"
+          }
+        ]
+      },
+      "security_monitoring": {
+        "compromise_indicators": [
+          "unexpected_shell_spawn",
+          "sensitive_file_access",
+          "service_account_token_access",
+          "unexpected_external_egress",
+          "high_cpu_without_ric_activity",
+          "stale_heartbeat"
+        ],
+        "containment_actions": [
+          "label_as_quarantined",
+          "deny_all_network_policy",
+          "preserve_pod_for_forensics"
+        ]
+      }
+    }
+  xapp-descriptor.json: |2-
+
+    {
+      "name": "traffic-analyzer",
+      "version": "1.0.0",
+      "provider": "sp1",
+      "containers": [
+        {
+          "name": "traffic-analyzer",
+          "image": {
+            "registry": "localhost:5000",
+            "name": "zt-traffic-analyzer",
+            "tag": "1.0",
+            "digest": "sha256:6486a85f6129dc067c7f1c380fe5123eed755168fb4b08f418f52b229cf90ec5",
+            "reference": "localhost:5000/zt-traffic-analyzer:1.0",
+            "immutable_reference": "localhost:5000/zt-traffic-analyzer@sha256:6486a85f6129dc067c7f1c380fe5123eed755168fb4b08f418f52b229cf90ec5"
+          }
+        }
+      ],
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "traffic-analyzer",
+            "port": 8080,
+            "description": "HTTP API for health, profile, activity, RIC reachability, and metrics"
+          }
+        ]
+      },
+      "livenessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "readinessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "security": {
+        "serviceAccount": "traffic-analyzer",
+        "spiffeID": "spiffe://example.org/ns/ricxapp/sa/traffic-analyzer",
+        "requiresSVID": true,
+        "runAsNonRoot": true,
+        "allowPrivilegeEscalation": false
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: traffic-analyzer
+    meta.helm.sh/release-namespace: ricxapp
+  creationTimestamp: "2026-06-05T11:51:04Z"
+  labels:
+    app: traffic-analyzer
+    app.kubernetes.io/managed-by: Helm
+    zt-xguard.io/verified: "true"
+  name: traffic-analyzer-profile
+  namespace: ricxapp
+  resourceVersion: "993949"
+  uid: f0a85ce5-3d45-4224-b16e-9e1ad560ade3

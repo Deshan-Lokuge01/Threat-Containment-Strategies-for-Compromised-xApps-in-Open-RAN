@@ -1,0 +1,2 @@
+1768
+root        1768  0.0  0.0  37920  4780 ?        RL   02:52   0:00 stress-ng --cpu 1 --cpu-load 100 --timeout 20s --metrics-brief

@@ -1,0 +1,26 @@
+{
+  "dataset": "A5_BENIGN_ELEVATED_FRESH_BLIND",
+  "collector_return_code": 0,
+  "rows": 1500,
+  "expected_rows": 1500,
+  "endpoint_errors": 0,
+  "timing_errors": 0,
+  "kpimon_restart_delta": 0,
+  "sample_interval_seconds": {
+    "mean": 1.000000887258172,
+    "maximum": 1.0233090000000402,
+    "p95": 1.0027504000001044,
+    "p99": 1.0060269199999987
+  },
+  "sample_lag_ms": {
+    "mean": 2.7109513333333335,
+    "maximum": 25.346,
+    "p95": 5.135199999999999,
+    "p99": 8.783939999999998
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 28,
+    "ok": 1472
+  },
+  "final_collection_acceptance": 1
+}

@@ -1,0 +1,67 @@
+{
+  "schema": "ztx-forensic-vault-v1",
+  "incident_id": "20260903T172834Z-unexpected_shell-ricxapp-kpimon-go-6116861ad0",
+  "captured_utc": "2026-09-03T17:28:37.642760+00:00",
+  "sealed_utc": "2026-09-03T17:28:43Z",
+  "captured_by": "ZT-XGuard policy-engine (automated containment)",
+  "asset": {
+    "xapp": "ricxapp-kpimon-go",
+    "pod": "ricxapp-kpimon-go-56bf4984b-g7z2j",
+    "namespace": "ricxapp"
+  },
+  "trigger": {
+    "source": "falco_event",
+    "signal": "unexpected_shell",
+    "falco_rule": "ZTX xApp Unexpected Shell",
+    "priority": "Critical",
+    "rule_ids": [
+      "R-CRIT-01"
+    ],
+    "alert": "2026-09-03T17:28:34.577424432+0000: Critical ztx_signal=unexpected_shell rule_id=ZTX-A1 xapp shell spawned (user=root command=sh -c sleep 0.5 pod=ricxapp-kpimon-go-56bf4984b-g7z2j ns=ricxapp container=kpimon-go image=127.0.0.1:80/kpimon-ocudu-cell) container_id=ba146b12d27c container_name=kpimon-go container_image_repository=127.0.0.1:80/kpimon-ocudu-cell container_image_tag=ztx-experiment-v1 k8s_pod_name=ricxapp-kpimon-go-56bf4984b-g7z2j k8s_ns_name=ricxapp"
+  },
+  "decision": {
+    "state": "ISOLATED",
+    "detection_state": "COMPROMISED",
+    "containment_required": true,
+    "containment_action": "SERVICE_ISOLATION_AND_IDENTITY_CONTAINMENT",
+    "isolation_timing": "IMMEDIATE",
+    "severity": "CRITICAL",
+    "score": 100,
+    "confidence": 0.98
+  },
+  "integrity": "sha256",
+  "artifacts": [
+    {
+      "name": "events.json",
+      "bytes": 20701,
+      "sha256": "08bac166d56fce4ab2b4f97a8eec4c109bfda239f72368b4743d4342556ef9e0"
+    },
+    {
+      "name": "incident.json",
+      "bytes": 76596,
+      "sha256": "c3999a2d29e4a80df51e5754a965ce4faad781c8fb6b57b6e9b0f963ff9d0429"
+    },
+    {
+      "name": "pod-log-tail.txt",
+      "bytes": 538,
+      "sha256": "97bed2e9eab74afaf86726c1dd1cc938b1566638f1a0887e08a70ee2729b2207"
+    },
+    {
+      "name": "pod.json",
+      "bytes": 32186,
+      "sha256": "8bcb53480eb8c441f86c63075ffa8b097996a15f1335493b30e85acd5a51dec9"
+    }
+  ],
+  "chain_of_custody": [
+    {
+      "actor": "policy-engine.forensic-capture",
+      "action": "captured",
+      "utc": "2026-09-03T17:28:37.642760+00:00"
+    },
+    {
+      "actor": "policy-engine.vault-sealer",
+      "action": "sealed+hashed",
+      "utc": "2026-09-03T17:28:43Z"
+    }
+  ]
+}

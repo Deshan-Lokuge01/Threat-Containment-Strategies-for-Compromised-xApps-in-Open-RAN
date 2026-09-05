@@ -1,0 +1,261 @@
+const XAPPS_DEFAULT = [
+  "telemetry-monitor",
+  "qos-optimizer",
+  "traffic-analyzer",
+  "resource-optimizer",
+  "security-observer",
+];
+
+const $ = (id) => document.getElementById(id);
+
+let currentXapps = [...XAPPS_DEFAULT];
+
+async function apiJson(url, options = {}) {
+  const res = await fetch(url, options);
+  const text = await res.text();
+  try {
+    const data = JSON.parse(text);
+    if (!res.ok) {
+      return { ok: false, status: res.status, error: data };
+    }
+    return data;
+  } catch (err) {
+    return { ok: false, status: res.status, error: "non_json_response", body: text.slice(0, 800) };
+  }
+}
+
+function stateClass(state) {
+  const s = String(state || "UNKNOWN").toLowerCase();
+  if (s.includes("healthy")) return "healthy";
+  if (s.includes("contained")) return "contained";
+  if (s.includes("compromised")) return "compromised";
+  if (s.includes("degraded") || s.includes("suspicious")) return "degraded";
+  return "unknown";
+}
+
+function xappStateClass(state) {
+  return String(state || "unknown").toLowerCase();
+}
+
+function formatJson(obj) {
+  return JSON.stringify(obj, null, 2);
+}
+
+function updateSelects() {
+  const selects = document.querySelectorAll("#xappSelect");
+  selects.forEach((sel) => {
+    const old = sel.value;
+    sel.innerHTML = "";
+    currentXapps.forEach((x) => {
+      const opt = document.createElement("option");
+      opt.value = x;
+      opt.textContent = x;
+      sel.appendChild(opt);
+    });
+    if (old && currentXapps.includes(old)) sel.value = old;
+  });
+}
+
+function renderSummary(state) {
+  const summary = state.summary || {};
+
+  if ($("overallState")) {
+    $("overallState").textContent = state.overall_state || "UNKNOWN";
+    $("overallState").className = `overall ${stateClass(state.overall_state)}`;
+  }
+
+  const setText = (id, value) => {
+    const el = $(id);
+    if (el) el.textContent = value ?? 0;
+  };
+
+  setText("trustedCount", summary.TRUSTED);
+  setText("suspiciousCount", summary.SUSPICIOUS);
+  setText("compromisedCount", summary.COMPROMISED);
+  setText("quarantinedCount", summary.QUARANTINED);
+  setText("unknownCount", summary.UNKNOWN);
+
+  if ($("lastUpdated")) {
+    $("lastUpdated").textContent = `Updated ${new Date().toLocaleTimeString()}`;
+  }
+}
+
+function renderXapps(state) {
+  const grid = $("xappGrid");
+  if (!grid) return;
+
+  const xapps = state.xapps || [];
+  if (xapps.length) {
+    currentXapps = xapps.map((x) => x.xapp).filter(Boolean);
+    updateSelects();
+  }
+
+  grid.innerHTML = "";
+
+  xapps.forEach((x) => {
+    const card = document.createElement("div");
+    const cls = xappStateClass(x.state);
+    card.className = `xapp-card ${cls}`;
+
+    card.innerHTML = `
+      <div class="xapp-name">${x.xapp}</div>
+      <span class="badge state-${cls}">${x.state || "UNKNOWN"}</span>
+      <div class="card-row"><span>Score</span><strong>${x.score ?? "n/a"}</strong></div>
+      <div class="card-row"><span>Last source</span><strong>${x.last_source || "n/a"}</strong></div>
+      <div class="card-row"><span>Findings</span><strong>${(x.findings || []).length}</strong></div>
+    `;
+    grid.appendChild(card);
+  });
+
+  if (!xapps.length) {
+    grid.innerHTML = `<div class="small-muted">No xApp state available. Run Prime Audit.</div>`;
+  }
+}
+
+function renderEvents(state) {
+  const list = $("eventsList");
+  if (!list) return;
+
+  const events = state.recent_events || [];
+  list.innerHTML = "";
+
+  if (!events.length) {
+    list.innerHTML = `<div class="small-muted">No recent events.</div>`;
+    return;
+  }
+
+  events.slice(0, 10).forEach((ev) => {
+    const div = document.createElement("div");
+    div.className = "event-item";
+    div.innerHTML = `
+      <div class="event-title">${ev.rule || ev.signal || "event"}</div>
+      <div class="event-meta">
+        xApp: ${ev.xapp || "n/a"} · pod: ${ev.pod || ev.pod_name || "n/a"} · state: ${ev.state || "n/a"}
+      </div>
+      <div class="event-meta">
+        ${ev.time || ""} ${ev.reason ? "· " + ev.reason : ""}
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+async function refreshState() {
+  const state = await apiJson("/csm/state");
+  if (state && !state.error) {
+    renderSummary(state);
+    renderXapps(state);
+    renderEvents(state);
+  }
+  await verifySelected();
+}
+
+async function primeAudit() {
+  const result = await apiJson("/csm/audit?persist=true");
+  const box = $("scenarioBox") || $("containmentBox");
+  if (box) box.textContent = formatJson(result);
+  await refreshState();
+}
+
+async function verifySelected() {
+  const sel = $("xappSelect");
+  const box = $("containmentBox");
+  if (!sel || !box) return;
+
+  const xapp = sel.value || currentXapps[0] || "telemetry-monitor";
+  const data = await apiJson(`/csm/containment/verify?xapp=${encodeURIComponent(xapp)}`);
+
+  const compact = {
+    xapp,
+    contained: data.contained,
+    service_isolated: data.service_isolated,
+    quarantine_marked: data.quarantine_marked,
+    selector: data.services?.[0]?.selector,
+    endpoints: data.services?.[0]?.endpoint_summary?.endpoint_count,
+    note: data.containment_note,
+  };
+
+  box.textContent = formatJson(compact);
+}
+
+async function restoreSelected() {
+  const sel = $("xappSelect");
+  const xapp = sel?.value || currentXapps[0] || "telemetry-monitor";
+
+  const result = await apiJson("/csm/containment/restore", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ xapp }),
+  });
+
+  const box = $("scenarioBox") || $("containmentBox");
+  if (box) {
+    box.textContent = formatJson({
+      action: "restore",
+      xapp,
+      restored: result.restored,
+      contained: result.verification_after_restore?.contained,
+      selector: result.verification_after_restore?.services?.[0]?.selector,
+      endpoints: result.verification_after_restore?.services?.[0]?.endpoint_summary?.endpoint_count,
+      raw: result,
+    });
+  }
+
+  await refreshState();
+}
+
+async function runShellScenario() {
+  const sel = $("xappSelect");
+  const xapp = sel?.value || currentXapps[0] || "telemetry-monitor";
+  const box = $("scenarioBox");
+  if (box) box.textContent = `Running controlled shell-spawn scenario for ${xapp}...`;
+
+  const result = await apiJson("/csm/scenario/falco-shell", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ xapp }),
+  });
+
+  const compact = {
+    ok: result.ok,
+    scenario: result.scenario,
+    xapp: result.xapp,
+    pod: result.pod,
+    state: result.result?.state,
+    signal: result.result?.findings?.[0]?.signal,
+    score: result.result?.score,
+    timing: result.result?.timing,
+    quarantine: {
+      applied: result.result?.quarantine?.applied,
+      effective: result.result?.quarantine?.effective_containment_applied,
+      service_isolation: result.result?.quarantine?.service_isolation_applied,
+      duration_ms: result.result?.quarantine?.duration_ms,
+    },
+    verification: {
+      contained: result.verification?.contained,
+      service_isolated: result.verification?.service_isolated,
+      quarantine_marked: result.verification?.quarantine_marked,
+      endpoints: result.verification?.services?.[0]?.endpoint_summary?.endpoint_count,
+      selector: result.verification?.services?.[0]?.selector,
+    },
+  };
+
+  if (box) box.textContent = formatJson(compact);
+  await refreshState();
+}
+
+function bindActions() {
+  $("refreshBtn")?.addEventListener("click", refreshState);
+  $("primeAuditBtn")?.addEventListener("click", primeAudit);
+  $("verifyBtn")?.addEventListener("click", verifySelected);
+  $("restoreBtn")?.addEventListener("click", restoreSelected);
+  $("runShellScenarioBtn")?.addEventListener("click", runShellScenario);
+  $("xappSelect")?.addEventListener("change", verifySelected);
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  updateSelects();
+  bindActions();
+  await refreshState();
+  setInterval(refreshState, 1500);
+});

@@ -1,0 +1,176 @@
+{
+  "schema": "zt-xguard-physical-concurrency-summary-v1",
+  "levels": {
+    "1": {
+      "cells": 3,
+      "attempts": 3,
+      "successes": 3,
+      "success_rate": 1.0,
+      "max_launch_skew_ms": 0.0,
+      "quarantine_label_ms": {
+        "n": 3,
+        "mean": 6427.551,
+        "median": 8632.973,
+        "p95": 9719.736,
+        "max": 9840.487
+      },
+      "identity_disabled_ms": {
+        "n": 3,
+        "mean": 7484.607,
+        "median": 10009.718,
+        "p95": 10641.911,
+        "max": 10712.155
+      },
+      "service_isolated_ms": {
+        "n": 3,
+        "mean": 6586.699,
+        "median": 9110.415,
+        "p95": 9767.48,
+        "max": 9840.487
+      },
+      "endpoints_empty_ms": {
+        "n": 3,
+        "mean": 6427.551,
+        "median": 8632.973,
+        "p95": 9719.736,
+        "max": 9840.487
+      },
+      "contained_verified_ms": {
+        "n": 3,
+        "mean": 6586.699,
+        "median": 9110.415,
+        "p95": 9767.48,
+        "max": 9840.487
+      },
+      "direct_packet_filter_ms": {
+        "n": 3,
+        "mean": 7673.529,
+        "median": 10184.801,
+        "p95": 10843.541,
+        "max": 10916.734
+      },
+      "network_unreachable_ms": {
+        "n": 3,
+        "mean": 7837.711,
+        "median": 10337.41,
+        "p95": 10998.069,
+        "max": 11071.476
+      }
+    },
+    "3": {
+      "cells": 3,
+      "attempts": 9,
+      "successes": 9,
+      "success_rate": 1.0,
+      "max_launch_skew_ms": 1.763,
+      "quarantine_label_ms": {
+        "n": 9,
+        "mean": 10247.059,
+        "median": 9831.475,
+        "p95": 12642.536,
+        "max": 13288.565
+      },
+      "identity_disabled_ms": {
+        "n": 9,
+        "mean": 11458.083,
+        "median": 11214.109,
+        "p95": 13935.885,
+        "max": 14286.096
+      },
+      "service_isolated_ms": {
+        "n": 9,
+        "mean": 10447.987,
+        "median": 10053.1,
+        "p95": 12898.086,
+        "max": 13288.565
+      },
+      "endpoints_empty_ms": {
+        "n": 9,
+        "mean": 10447.987,
+        "median": 10053.1,
+        "p95": 12898.086,
+        "max": 13288.565
+      },
+      "contained_verified_ms": {
+        "n": 9,
+        "mean": 10447.987,
+        "median": 10053.1,
+        "p95": 12898.086,
+        "max": 13288.565
+      },
+      "direct_packet_filter_ms": {
+        "n": 9,
+        "mean": 13842.288,
+        "median": 13833.904,
+        "p95": 14688.844,
+        "max": 14689.131
+      },
+      "network_unreachable_ms": {
+        "n": 9,
+        "mean": 14014.108,
+        "median": 13944.428,
+        "p95": 14852.602,
+        "max": 14853.817
+      }
+    },
+    "5": {
+      "cells": 3,
+      "attempts": 15,
+      "successes": 15,
+      "success_rate": 1.0,
+      "max_launch_skew_ms": 2.61,
+      "quarantine_label_ms": {
+        "n": 15,
+        "mean": 11538.629,
+        "median": 11275.937,
+        "p95": 16430.779,
+        "max": 16464.296
+      },
+      "identity_disabled_ms": {
+        "n": 15,
+        "mean": 12560.512,
+        "median": 12259.273,
+        "p95": 16847.151,
+        "max": 17852.202
+      },
+      "service_isolated_ms": {
+        "n": 15,
+        "mean": 11627.4,
+        "median": 11275.937,
+        "p95": 16430.779,
+        "max": 16464.296
+      },
+      "endpoints_empty_ms": {
+        "n": 15,
+        "mean": 11627.4,
+        "median": 11275.937,
+        "p95": 16430.779,
+        "max": 16464.296
+      },
+      "contained_verified_ms": {
+        "n": 15,
+        "mean": 11627.4,
+        "median": 11275.937,
+        "p95": 16430.779,
+        "max": 16464.296
+      },
+      "direct_packet_filter_ms": {
+        "n": 15,
+        "mean": 16371.61,
+        "median": 17411.375,
+        "p95": 18119.936,
+        "max": 18121.081
+      },
+      "network_unreachable_ms": {
+        "n": 15,
+        "mean": 16512.844,
+        "median": 17599.884,
+        "p95": 18234.203,
+        "max": 18236.863
+      }
+    }
+  },
+  "total_attempts": 27,
+  "total_successes": 27,
+  "generated_utc": "2026-08-07T11:23:52.440097+00:00"
+}

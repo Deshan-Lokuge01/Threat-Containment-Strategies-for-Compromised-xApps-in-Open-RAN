@@ -1,0 +1,55 @@
+{
+  "cgroup_path": "/sys/fs/cgroup/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod3b6ea7a0_506e_48ff_95ec_099cd1d33564.slice/cri-containerd-c7eaa3df148c01f03a4f12501f69940621e4f1d9ae7efa9df4b170ea58b324d6.scope",
+  "container": "kpimon-go",
+  "container_id": "c7eaa3df148c01f03a4f12501f69940621e4f1d9ae7efa9df4b170ea58b324d6",
+  "dataset": "N5",
+  "deployment": "ricxapp-kpimon-go",
+  "evaluation_policy": {
+    "N5_scored_during_collection": false,
+    "model_refitting_allowed": false,
+    "threshold_reselection_allowed": false
+  },
+  "frozen_configuration": {
+    "features": [
+      "M1_log1p",
+      "M4_identity",
+      "M5_log1p",
+      "M6_log1p"
+    ],
+    "half_life_seconds": 3,
+    "lambda": 0.206299,
+    "persistence_history_l": 16,
+    "persistence_required_k": 12,
+    "upper_control_limit": 25.58879353054043,
+    "warning_limit": 12.858651313374208,
+    "window_seconds": 8
+  },
+  "frozen_model_archive_sha256": "47d631da4dd165b7f0527a8749443e54e90c3284215b0aec7358e3f364fe7856",
+  "ground_truth": "clean_normal",
+  "host": {
+    "architecture": "x86_64",
+    "hostname": "near-rt-ric",
+    "kernel": "6.17.0-29-generic"
+  },
+  "host_pid": 185998,
+  "image_id": "127.0.0.1:80/kpimon-ocudu-cell@sha256:47833746e5d1d1b32f339c218e9fe87b8eb180ae5ee789793a18717b00bb570a",
+  "memory_slope_window_seconds": 30,
+  "namespace": "ricxapp",
+  "ping_interval_seconds": 0.1,
+  "ping_pid": 189109,
+  "planned_duration_seconds": 1800,
+  "pod_ip": "10.244.0.21",
+  "pod_name": "ricxapp-kpimon-go-8554c49c64-5v8sd",
+  "pod_uid": "3b6ea7a0-506e-48ff-95ec-099cd1d33564",
+  "role": "untouched-final-clean-evaluation-for-v2",
+  "run_id": "N5-CLEAN-1UE-10PPS-20260629T034541Z",
+  "sampling_interval_seconds": 1,
+  "schema": "ztx-normal-run-metadata-v1",
+  "start_unix_ns": 1782704744097613497,
+  "start_utc": "2026-06-29T03:45:44Z",
+  "status": "collecting",
+  "step45e_readiness_directory": "/home/nearric/Desktop/FYP/zt-xguard/data/normal/N5/readiness/N5-READINESS-20260629T034310Z",
+  "traffic_destination": "10.45.1.1",
+  "traffic_pps": 10,
+  "ue_count": 1
+}

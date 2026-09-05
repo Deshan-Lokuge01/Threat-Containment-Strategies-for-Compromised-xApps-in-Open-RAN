@@ -1,0 +1,205 @@
+35-        "expected_cross_xapp_comm": false,
+36-        "heartbeat_period_sec": 5,
+37-        "workload_intensity": "medium",
+38-        "allowed_ric_services": [
+39-          "e2mgr",
+40:          "submgr",
+41-          "prometheus"
+42-        ],
+43-        "allowed_e2_nodes": [
+44-          "gnbd_001_001_00019b_0"
+45-        ],
+--
+54-        "kpm_report_style": 1,
+55-        "metrics": [
+56-          "DRB.UEThpUl",
+57-          "DRB.UEThpDl"
+58-        ],
+59:        "submgr_uri": "http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1",
+60-        "e2mgr_nodeb_states_url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800/v1/nodeb/states"
+61-      },
+62-      "messaging": {
+63:        "ports": [
+64-          {
+65-            "name": "http_service",
+66-            "container": "kpm-monitor",
+67:            "port": 8092,
+68-            "description": "HTTP REST API for runtime status and metrics"
+69-          },
+70-          {
+71:            "name": "rmr_data",
+72-            "container": "kpm-monitor",
+73-            "port": 4562,
+74:            "description": "RMR data port for RIC indications and subscription messages"
+75-          }
+76-        ]
+77-      },
+78-      "runtime_counters": {
+79-        "e2_node_state": true,
+80-        "subscription_attempts": true,
+81-        "subscription_success": true,
+82-        "subscription_failures": true,
+83:        "rmr_messages_total": true,
+84:        "rmr_indications_total": true
+85-      },
+86-      "security_monitoring": {
+87-        "compromise_indicators": [
+88-          "unexpected_shell_spawn",
+89-          "sensitive_file_access",
+90-          "service_account_token_access",
+91-          "unexpected_external_egress",
+92-          "high_cpu_without_ric_activity",
+93-          "stale_heartbeat",
+94:          "unexpected_rmr_traffic",
+95:          "unexpected_submgr_subscription_behavior"
+96-        ],
+97-        "containment_actions": [
+98-          "label_as_quarantined",
+99-          "deny_all_network_policy",
+100-          "preserve_pod_for_forensics"
+--
+120-            "immutable_reference": "localhost:5000/zt-kpm-monitor@sha256:ad33e4066862da37731a118b170832ec29a51aac3c3433095d8a32b4582913fe"
+121-          }
+122-        }
+123-      ],
+124-      "messaging": {
+125:        "ports": [
+126-          {
+127-            "name": "http_service",
+128-            "container": "kpm-monitor",
+129:            "port": 8092,
+130-            "description": "HTTP API for health, profile, activity, RIC/E2 checks, subscription status, and metrics"
+131-          },
+132-          {
+133:            "name": "rmr_data",
+134-            "container": "kpm-monitor",
+135-            "port": 4562,
+136:            "description": "RMR data port for O-RAN RIC indications, subscription responses, and failures"
+137-          }
+138-        ],
+139:        "rmr": {
+140-          "enabled": true,
+141-          "port": 4562,
+142-          "rxMessages": [
+143-            "RIC_SUB_RESP",
+144-            "RIC_SUB_FAILURE",
+--
+154-      "oran": {
+155-        "xappType": "real-kpm-monitor",
+156-        "serviceModel": "E2SM-KPM",
+157-        "e2NodeId": "gnbd_001_001_00019b_0",
+158-        "ranFunctionId": 2,
+159:        "kpmReportStyle": 1,
+160-        "metrics": [
+161-          "DRB.UEThpUl",
+162-          "DRB.UEThpDl"
+163-        ],
+164:        "submgrUri": "http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1",
+165-        "e2mgrNodebStatesUrl": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800/v1/nodeb/states"
+166-      },
+167-      "livenessProbe": {
+168-        "httpGet": {
+169-          "path": "/health",
+170:          "port": 8092
+171-        },
+172-        "initialDelaySeconds": 15,
+173-        "periodSeconds": 15
+174-      },
+175-      "readinessProbe": {
+176-        "httpGet": {
+177-          "path": "/health",
+178:          "port": 8092
+179-        },
+180-        "initialDelaySeconds": 15,
+181-        "periodSeconds": 15
+182-      },
+183-      "security": {
+--
+187-        "runAsNonRoot": true,
+188-        "allowPrivilegeEscalation": false
+189-      }
+190-    }
+191----
+192:# Source: kpm-monitor/templates/rmr-service.yaml
+193-apiVersion: v1
+194-kind: Service
+195-metadata:
+196:  name: service-ricxapp-kpm-monitor-rmr
+197-  namespace: ricxapp
+198-  labels:
+199-    app: kpm-monitor
+200-    zt-xguard.io/verified: "true"
+201:    zt-xguard.io/rmr: "true"
+202-spec:
+203-  type: ClusterIP
+204-  selector:
+205-    app: kpm-monitor
+206:  ports:
+207-    - name: http
+208:      port: 8092
+209:      targetPort: http
+210-      protocol: TCP
+211:    - name: rmr-data
+212:      port: 4560
+213:      targetPort: rmr
+214-      protocol: TCP
+215----
+216-# Source: kpm-monitor/templates/service.yaml
+217-apiVersion: v1
+218-kind: Service
+--
+224-    zt-xguard.io/verified: "true"
+225-spec:
+226-  type: ClusterIP
+227-  selector:
+228-    app: kpm-monitor
+229:  ports:
+230-    - name: http
+231:      port: 8092
+232:      targetPort: http
+233-      protocol: TCP
+234:    - name: rmr
+235:      port: 4560
+236:      targetPort: rmr
+237-      protocol: TCP
+238----
+239-# Source: kpm-monitor/templates/deployment.yaml
+240-apiVersion: apps/v1
+241-kind: Deployment
+--
+310-              mountPath: /svid-data
+311-      containers:
+312-        - name: kpm-monitor
+313-          image: localhost:5000/zt-kpm-monitor:1.0
+314-          imagePullPolicy: IfNotPresent
+315:          ports:
+316-            - name: http
+317:              containerPort: 8092
+318-              protocol: TCP
+319:            - name: rmr
+320:              containerPort: 4560
+321-              protocol: TCP
+322-          env:
+323-            - name: XAPP_PROFILE_PATH
+324-              value: /etc/xapp-profile/profile.json
+325-            - name: XAPP_PORT
+326:              value: "8092"
+327-            - name: POD_IP
+328-              valueFrom:
+329-                fieldRef:
+330-                  fieldPath: status.podIP
+331:            - name: SERVICE_HTTP_HOST
+332:              value: "kpm-monitor.ricxapp"
+333-            - name: SERVICE_HTTP_PORT
+334:              value: "8092"
+335-            - name: HTTP_PORT
+336:              value: "8092"
+337:            - name: RMR_PORT
+338:              value: "4560"
+339:            - name: SUBMGR_URI
+340:              value: "http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1"
+341-            - name: E2MGR_NODEB_STATES_URL
+342-              value: "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800/v1/nodeb/states"
+343-            - name: E2_NODE_ID
+344-              value: "gnbd_001_001_00019b_0"
+345-            - name: RAN_FUNCTION_ID

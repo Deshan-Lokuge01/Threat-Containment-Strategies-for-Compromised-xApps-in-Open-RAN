@@ -1,0 +1,67 @@
+{
+  "schema": "ztx-forensic-vault-v1",
+  "incident_id": "20260828T095651Z-unexpected_shell-ricxapp-trafficxapp-1e81392815",
+  "captured_utc": "2026-08-28T09:56:52.917711+00:00",
+  "sealed_utc": "2026-08-28T09:56:55Z",
+  "captured_by": "ZT-XGuard policy-engine (automated containment)",
+  "asset": {
+    "xapp": "ricxapp-trafficxapp",
+    "pod": "ricxapp-trafficxapp-656f95dfd4-vn647",
+    "namespace": "ricxapp"
+  },
+  "trigger": {
+    "source": "falco_event",
+    "signal": "unexpected_shell",
+    "falco_rule": "ZTX xApp Unexpected Shell",
+    "priority": "Critical",
+    "rule_ids": [
+      "R-CRIT-01"
+    ],
+    "alert": "2026-08-28T09:56:51.000021079+0000: Critical ztx_signal=unexpected_shell rule_id=ZTX-A1 xapp shell spawned (user=root command=sh -c cat /etc/svid/svid.0.pem 2>/dev/null || cat /run/spire/sockets/* 2>/dev/null || cat /spiffe-workload-api/* 2>/dev/null pod=ricxapp-trafficxapp-656f95dfd4-vn647 ns=ricxapp container=trafficxapp image=127.0.0.1:80/trafficxapp) container_id=8f6dcd0e6308 container_name=trafficxapp container_image_repository=127.0.0.1:80/trafficxapp container_image_tag=latest k8s_pod_name=ricxapp-trafficxapp-656f95dfd4-vn647 k8s_ns_name=ricxapp"
+  },
+  "decision": {
+    "state": "ISOLATED",
+    "detection_state": "COMPROMISED",
+    "containment_required": true,
+    "containment_action": "SERVICE_ISOLATION_AND_IDENTITY_CONTAINMENT",
+    "isolation_timing": "IMMEDIATE",
+    "severity": "CRITICAL",
+    "score": 100,
+    "confidence": 0.98
+  },
+  "integrity": "sha256",
+  "artifacts": [
+    {
+      "name": "events.json",
+      "bytes": 18945,
+      "sha256": "7dfbb0a07077b8e3587e259288c3f9384f12096716762eae5396b295275d2a09"
+    },
+    {
+      "name": "incident.json",
+      "bytes": 63839,
+      "sha256": "55aa5ba6feffca4089149c750925cd01700c3c937a799124e301916aff4ce276"
+    },
+    {
+      "name": "pod-log-tail.txt",
+      "bytes": 543,
+      "sha256": "6af895bb87d2e41fc96ee9a453583adc6c65d51c291684d2ee26ab3de53a12fb"
+    },
+    {
+      "name": "pod.json",
+      "bytes": 26497,
+      "sha256": "8199456f4bfff0808da68538af4efb4284ed474cd7c513b57755eb552dc14340"
+    }
+  ],
+  "chain_of_custody": [
+    {
+      "actor": "policy-engine.forensic-capture",
+      "action": "captured",
+      "utc": "2026-08-28T09:56:52.917711+00:00"
+    },
+    {
+      "actor": "policy-engine.vault-sealer",
+      "action": "sealed+hashed",
+      "utc": "2026-08-28T09:56:55Z"
+    }
+  ]
+}

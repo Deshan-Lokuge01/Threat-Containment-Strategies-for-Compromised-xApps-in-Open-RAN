@@ -1,0 +1,72 @@
+--- ricxapp-hw-python ---
+{
+  "errors": [
+    {
+      "code": "NAME_UNKNOWN",
+      "message": "repository name not known to registry",
+      "detail": {
+        "name": "ricxapp-hw-python"
+      }
+    }
+  ]
+}
+--- ricxapp-kpimon-go ---
+{
+  "errors": [
+    {
+      "code": "NAME_UNKNOWN",
+      "message": "repository name not known to registry",
+      "detail": {
+        "name": "ricxapp-kpimon-go"
+      }
+    }
+  ]
+}
+--- ricxapp-trafficxapp ---
+{
+  "errors": [
+    {
+      "code": "NAME_UNKNOWN",
+      "message": "repository name not known to registry",
+      "detail": {
+        "name": "ricxapp-trafficxapp"
+      }
+    }
+  ]
+}
+--- kpimon-go ---
+{
+  "errors": [
+    {
+      "code": "NAME_UNKNOWN",
+      "message": "repository name not known to registry",
+      "detail": {
+        "name": "kpimon-go"
+      }
+    }
+  ]
+}
+--- hw-python ---
+{
+  "errors": [
+    {
+      "code": "NAME_UNKNOWN",
+      "message": "repository name not known to registry",
+      "detail": {
+        "name": "hw-python"
+      }
+    }
+  ]
+}
+--- trafficxapp ---
+{
+  "errors": [
+    {
+      "code": "NAME_UNKNOWN",
+      "message": "repository name not known to registry",
+      "detail": {
+        "name": "trafficxapp"
+      }
+    }
+  ]
+}

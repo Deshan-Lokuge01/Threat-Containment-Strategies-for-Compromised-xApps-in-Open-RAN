@@ -1,0 +1,558 @@
+cd ~/Desktop/FYP/zt-xguard/ztx-control-plane/policy-engine || exit 1
+
+TS=$(date -u +%Y%m%dT%H%M%SZ)
+cp static/dashboard.js "static/dashboard.js.bak-manual-restore-$TS"
+
+cat > static/dashboard.js <<'EOF'
+const XAPPS_DEFAULT = [
+  "telemetry-monitor",
+  "qos-optimizer",
+  "traffic-analyzer",
+  "resource-optimizer",
+  "security-observer",
+];
+
+const SCENARIO_DEFAULT_TARGETS = {
+  A1: "telemetry-monitor",
+  A2: "telemetry-monitor",
+  A3: "telemetry-monitor",
+  A4: "resource-optimizer",
+  A5: "traffic-analyzer",
+  A6: "qos-optimizer",
+  A7: "security-observer",
+  A8: "security-observer",
+  A9: "qos-optimizer",
+  A10: "telemetry-monitor",
+  B1: "telemetry-monitor",
+  B2: "telemetry-monitor",
+  B3: "qos-optimizer",
+};
+
+const $ = (id) => document.getElementById(id);
+
+let currentXapps = [...XAPPS_DEFAULT];
+let scenarioCache = [];
+let lastTrustIndex = {};
+
+async function apiJson(url, options = {}) {
+  const res = await fetch(url, options);
+  const text = await res.text();
+
+  try {
+    const data = JSON.parse(text);
+    if (!res.ok) {
+      return { ok: false, status: res.status, error: data };
+    }
+    return data;
+  } catch {
+    return {
+      ok: false,
+      status: res.status,
+      error: "non_json_response",
+      body: text.slice(0, 800),
+    };
+  }
+}
+
+function fmt(obj) {
+  return JSON.stringify(obj, null, 2);
+}
+
+function stateClass(state) {
+  const s = String(state || "UNKNOWN").toLowerCase();
+
+  if (s.includes("healthy") || s.includes("trusted") || s.includes("restored")) {
+    return "healthy";
+  }
+
+  if (s.includes("contained") || s.includes("quarantined")) {
+    return "contained";
+  }
+
+  if (s.includes("compromised")) {
+    return "compromised";
+  }
+
+  if (s.includes("suspicious") || s.includes("degraded")) {
+    return "degraded";
+  }
+
+  if (s.includes("observed")) {
+    return "observed";
+  }
+
+  return "unknown";
+}
+
+function badgeState(state) {
+  return `pill ${stateClass(state)}`;
+}
+
+function pill(text, cls) {
+  return `<span class="pill ${cls || ""}">${text}</span>`;
+}
+
+function setText(id, value) {
+  const el = $(id);
+  if (el) {
+    el.textContent = value ?? 0;
+  }
+}
+
+function scenarioDefaultTarget(scenario) {
+  const id = String(scenario?.id || "").toUpperCase();
+
+  return (
+    scenario?.target_xapp ||
+    scenario?.default_xapp ||
+    scenario?.xapp ||
+    scenario?.target ||
+    SCENARIO_DEFAULT_TARGETS[id] ||
+    currentXapps[0] ||
+    XAPPS_DEFAULT[0]
+  );
+}
+
+function scenarioExpectedState(scenario) {
+  return scenario?.expected_state || scenario?.expected || "UNKNOWN";
+}
+
+function scenarioExpectedContainment(scenario) {
+  return Boolean(
+    scenario?.expected_containment === true ||
+    scenario?.containment_expected === true ||
+    scenario?.containment === true
+  );
+}
+
+function xappOptionsHtml(selected) {
+  const options = currentXapps.length ? currentXapps : XAPPS_DEFAULT;
+
+  return options
+    .map((x) => {
+      const isSelected = x === selected ? "selected" : "";
+      return `<option value="${x}" ${isSelected}>${x}</option>`;
+    })
+    .join("");
+}
+
+function updateSelects() {
+  document.querySelectorAll("#xappSelect").forEach((sel) => {
+    const old = sel.value;
+    sel.innerHTML = "";
+
+    currentXapps.forEach((x) => {
+      const opt = document.createElement("option");
+      opt.value = x;
+      opt.textContent = x;
+      sel.appendChild(opt);
+    });
+
+    if (old && currentXapps.includes(old)) {
+      sel.value = old;
+    }
+  });
+}
+
+async function refreshState() {
+  const state = await apiJson("/csm/state");
+  if (!state || state.error) {
+    return;
+  }
+
+  lastTrustIndex = {};
+  (state.xapps || []).forEach((x) => {
+    if (x && x.xapp) {
+      lastTrustIndex[x.xapp] = x;
+    }
+  });
+
+  if ((state.xapps || []).length) {
+    currentXapps = state.xapps.map((x) => x.xapp).filter(Boolean);
+    updateSelects();
+  }
+
+  const summary = state.summary || {};
+
+  if ($("overallState")) {
+    $("overallState").textContent = state.overall_state || "UNKNOWN";
+    $("overallState").className = `overall ${stateClass(state.overall_state)}`;
+  }
+
+  setText("trustedCount", summary.TRUSTED);
+  setText("observedCount", summary.OBSERVED);
+  setText("suspiciousCount", summary.SUSPICIOUS);
+  setText("compromisedCount", summary.COMPROMISED);
+  setText("quarantinedCount", summary.QUARANTINED);
+
+  if ($("lastUpdated")) {
+    $("lastUpdated").textContent = `Updated ${new Date().toLocaleTimeString()}`;
+  }
+}
+
+async function refreshRuntimeTable() {
+  const body = $("runtimeTableBody");
+  if (!body) {
+    return;
+  }
+
+  const data = await apiJson("/csm/xapps/runtime");
+  if (!data || data.error) {
+    body.innerHTML = `<tr><td colspan="12">Runtime API error</td></tr>`;
+    return;
+  }
+
+  const rows = data.rows || [];
+  body.innerHTML = "";
+
+  rows.forEach((r) => {
+    const trust = r.trust || lastTrustIndex[r.xapp] || {};
+    const pod = r.pod || {};
+    const endpoints = r.service?.endpoint_count;
+    const isolated = r.containment?.service_isolated;
+    const contained = r.containment?.contained;
+    const quarantine =
+      r.containment?.pod_labelled_quarantined ??
+      r.containment?.quarantine_marked ??
+      pod.quarantine_label;
+
+    let trustState = trust.state || r.trust_state || "UNKNOWN";
+    let riskScore = trust.risk_score ?? trust.score ?? r.risk_score ?? r.score;
+
+    if (
+      String(trustState).toUpperCase() === "QUARANTINED" &&
+      contained === false &&
+      isolated === false &&
+      endpoints !== 0
+    ) {
+      trustState = "RESTORED";
+      riskScore = 0;
+    }
+
+    const riskDisplay =
+      String(trustState).toUpperCase() === "UNKNOWN" ||
+      riskScore === null ||
+      riskScore === undefined
+        ? "N/A"
+        : riskScore;
+
+    const row = document.createElement("tr");
+    row.className = isolated || quarantine ? "row-contained" : "";
+
+    row.innerHTML = `
+      <td><strong>${r.xapp || "n/a"}</strong></td>
+      <td><span class="${badgeState(trustState)}">${trustState}</span></td>
+      <td>${riskDisplay}</td>
+      <td class="mono">${pod.name || "missing"}</td>
+      <td>${pod.ready ? pill(pod.ready_text, "healthy") : pill(pod.ready_text || "0/0", "bad")}</td>
+      <td>${pod.phase || "Unknown"}</td>
+      <td>${pod.restarts ?? "n/a"}</td>
+      <td class="mono">${pod.pod_ip || "-"}</td>
+      <td class="mono">${pod.service_account || "-"}</td>
+      <td>${endpoints === 0 ? pill("0", "bad") : pill(endpoints ?? "?", "healthy")}</td>
+      <td>${isolated ? pill("YES", "contained") : pill("NO", "healthy")}</td>
+      <td>${quarantine ? pill("YES", "contained") : pill("NO", "healthy")}</td>
+    `;
+
+    body.appendChild(row);
+  });
+}
+
+async function loadScenarios() {
+  const data = await apiJson("/csm/scenarios");
+  if (!data || data.error) {
+    return;
+  }
+
+  scenarioCache = data.scenarios || [];
+  renderScenarios(scenarioCache);
+  renderRecentResults(data.last_results || []);
+}
+
+function renderScenarios(scenarios) {
+  const grid = $("scenarioGrid");
+  if (!grid) {
+    return;
+  }
+
+  grid.innerHTML = "";
+
+  scenarios.forEach((scenario) => {
+    const id = String(scenario.id || "").toUpperCase();
+    const kind = scenario.malicious ? "attack" : "benign";
+    const defaultTarget = scenarioDefaultTarget(scenario);
+    const expectedState = scenarioExpectedState(scenario);
+    const expectedContainment = scenarioExpectedContainment(scenario);
+
+    const card = document.createElement("div");
+    card.className = `scenario-card ${kind}`;
+
+    card.innerHTML = `
+      <div class="scenario-head">
+        <span class="scenario-id">${id}</span>
+        <span class="scenario-kind ${kind}">${kind.toUpperCase()}</span>
+      </div>
+
+      <h3>${scenario.name || id}</h3>
+      <p>${scenario.description || ""}</p>
+
+      <div class="card-row">
+        <span>Target xApp</span>
+        <select class="scenario-target-select" data-scenario-target="${id}">
+          ${xappOptionsHtml(defaultTarget)}
+        </select>
+      </div>
+
+      <div class="card-row">
+        <span>Mode</span>
+        <strong>${scenario.mode || "signal-simulation"}</strong>
+      </div>
+
+      <div class="card-row">
+        <span>Expected</span>
+        <strong>${expectedState}</strong>
+      </div>
+
+      <div class="card-row">
+        <span>Containment</span>
+        <strong>${expectedContainment ? "Expected" : "Not expected"}</strong>
+      </div>
+
+      <button class="btn ${scenario.malicious ? "danger" : "secondary"} wide" data-run-scenario="${id}">
+        Run ${id}
+      </button>
+    `;
+
+    grid.appendChild(card);
+  });
+
+  document.querySelectorAll("[data-run-scenario]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      runScenario(btn.getAttribute("data-run-scenario"));
+    });
+  });
+}
+
+function renderRecentResults(results) {
+  const list = $("recentResults");
+  if (!list) {
+    return;
+  }
+
+  if (!results.length) {
+    list.innerHTML = `<div class="small-muted">No scenario results yet.</div>`;
+    return;
+  }
+
+  list.innerHTML = "";
+
+  results.forEach((r) => {
+    const item = document.createElement("div");
+    item.className = `event-item ${r.pass ? "pass" : "fail"}`;
+
+    item.innerHTML = `
+      <div class="event-title">${r.scenario_id || ""} ${r.name || ""}</div>
+      <div class="event-meta">
+        ${r.classification || "n/a"} · expected=${r.expected_state || "n/a"} · actual=${r.actual_state || "n/a"} · pass=${r.pass}
+      </div>
+      <div class="event-meta">
+        xApp=${r.xapp || "n/a"} · containment=${r.actual_containment} · endpoints=${r.post?.endpoint_count ?? "n/a"} · duration=${r.duration_ms ?? "n/a"}ms
+      </div>
+    `;
+
+    list.appendChild(item);
+  });
+}
+
+async function refreshEvaluation() {
+  const data = await apiJson("/csm/evaluation/summary");
+  if (!data || data.error) {
+    return;
+  }
+
+  const rate = data.total_runs
+    ? Math.round((data.passed / data.total_runs) * 100) + "%"
+    : "--";
+
+  setText("evalPassRate", rate);
+  setText("tpCount", data.TP);
+  setText("tnCount", data.TN);
+  setText("fpCount", data.FP);
+  setText("fnCount", data.FN);
+  setText("totalRuns", data.total_runs);
+
+  const box = $("evaluationBox");
+  if (box) {
+    box.textContent = fmt({
+      total_runs: data.total_runs,
+      passed: data.passed,
+      failed: data.failed,
+      TP: data.TP,
+      TN: data.TN,
+      FP: data.FP,
+      FN: data.FN,
+      precision: data.precision,
+      recall: data.recall,
+      f1_score: data.f1_score,
+      false_positive_rate: data.false_positive_rate,
+      false_negative_rate: data.false_negative_rate,
+    });
+  }
+
+  renderRecentResults(data.recent_results || []);
+}
+
+async function verifySelected() {
+  const sel = $("xappSelect");
+  const box = $("containmentBox");
+
+  if (!sel || !box) {
+    return;
+  }
+
+  const xapp = sel.value || currentXapps[0] || "telemetry-monitor";
+  const data = await apiJson(`/csm/containment/verify?xapp=${encodeURIComponent(xapp)}`);
+
+  box.textContent = fmt({
+    xapp,
+    contained: data.contained,
+    service_isolated: data.service_isolated,
+    quarantine_marked: data.quarantine_marked ?? data.pod_labelled_quarantined,
+    selector: data.services?.[0]?.selector,
+    endpoint_count: data.services?.[0]?.endpoint_summary?.endpoint_count,
+    note: data.containment_note,
+  });
+}
+
+async function primeAudit() {
+  const data = await apiJson("/csm/audit?persist=true");
+  const box = $("scenarioBox") || $("containmentBox") || $("evaluationBox");
+
+  if (box) {
+    box.textContent = fmt({
+      action: "prime_audit",
+      overall_state: data.overall_state,
+      summary: data.summary,
+    });
+  }
+
+  await refreshAll();
+}
+
+async function restoreSelected() {
+  const sel = $("xappSelect");
+  const xapp = sel?.value || currentXapps[0] || "telemetry-monitor";
+
+  const restore = await apiJson("/csm/containment/restore", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ xapp }),
+  });
+
+  const box = $("scenarioBox") || $("containmentBox");
+
+  if (box) {
+    box.textContent = fmt({
+      action: "restore_and_readmit",
+      xapp,
+      restored: restore.restored,
+      contained: restore.verification_after_restore?.contained,
+      endpoints: restore.verification_after_restore?.services?.[0]?.endpoint_summary?.endpoint_count,
+      service_isolated: restore.verification_after_restore?.service_isolated,
+    });
+  }
+
+  await refreshAll();
+}
+
+async function runScenario(id) {
+  const scenarioId = String(id || "").toUpperCase();
+  const scenario = scenarioCache.find((s) => String(s.id || "").toUpperCase() === scenarioId);
+  const box = $("scenarioBox") || $("containmentBox");
+
+  const targetSelect = document.querySelector(`[data-scenario-target="${scenarioId}"]`);
+  const selectedTarget =
+    targetSelect?.value ||
+    scenarioDefaultTarget(scenario) ||
+    currentXapps[0] ||
+    "telemetry-monitor";
+
+  if (box) {
+    box.textContent = `Running ${scenarioId} ${scenario?.name || ""} on ${selectedTarget}...`;
+  }
+
+  const result = await apiJson(`/csm/scenarios/${encodeURIComponent(scenarioId)}/run`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      xapp: selectedTarget,
+      target_xapp: selectedTarget,
+      execution_mode: scenario?.mode || "signal-simulation",
+    }),
+  });
+
+  const timing = result.event_result?.timing || result.timing || {};
+  const quarantine = result.event_result?.quarantine || result.containment_action?.containment || {};
+
+  if (box) {
+    box.textContent = fmt({
+      scenario_id: result.scenario_id || scenarioId,
+      name: result.name || scenario?.name,
+      xapp: result.xapp || selectedTarget,
+      signal: result.signal || scenario?.signal,
+      mode: result.mode || scenario?.mode || "signal-simulation",
+      expected_state: result.expected_state || scenarioExpectedState(scenario),
+      actual_state: result.actual_state || result.state,
+      expected_containment:
+        result.expected_containment ?? scenarioExpectedContainment(scenario),
+      actual_containment: result.actual_containment,
+      classification: result.classification,
+      pass: result.pass,
+      risk_score:
+        result.risk_score ??
+        result.score ??
+        result.event_result?.risk_score ??
+        result.event_result?.score,
+      endpoint_count: result.post?.endpoint_count,
+      selector: result.post?.selector,
+      decision_ms: timing.decision_ms ?? null,
+      quarantine_ms: timing.quarantine_ms ?? quarantine.duration_ms ?? null,
+      total_duration_ms: result.duration_ms,
+    });
+  }
+
+  await refreshAll();
+}
+
+async function clearEvaluation() {
+  await apiJson("/csm/evaluation/clear", { method: "POST" });
+  await refreshAll();
+}
+
+async function refreshAll() {
+  await refreshState();
+  await refreshRuntimeTable();
+  await loadScenarios();
+  await refreshEvaluation();
+  await verifySelected();
+}
+
+function bindActions() {
+  $("refreshBtn")?.addEventListener("click", refreshAll);
+  $("primeAuditBtn")?.addEventListener("click", primeAudit);
+  $("verifyBtn")?.addEventListener("click", verifySelected);
+  $("restoreBtn")?.addEventListener("click", restoreSelected);
+  $("clearEvalBtn")?.addEventListener("click", clearEvaluation);
+  $("xappSelect")?.addEventListener("change", verifySelected);
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  updateSelects();
+  bindActions();
+  await refreshAll();
+  setInterval(refreshAll, 1500);
+});
+EOF
+
+echo "dashboard.js restored/replaced"
+node --check static/dashboard.js

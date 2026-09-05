@@ -1,0 +1,2 @@
+NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+resource-optimizer-76cd8c474d-qq2dz   1/1     Running   0          6m35s   10.244.0.201   near-rt-ric   <none>           <none>

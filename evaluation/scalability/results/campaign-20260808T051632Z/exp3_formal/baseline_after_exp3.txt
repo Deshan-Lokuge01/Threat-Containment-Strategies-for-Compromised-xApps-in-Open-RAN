@@ -1,0 +1,8 @@
+utc=2026-08-08T08:45:31Z
+T2_AUTO_CONTAIN=true
+iptables_DROP=0
+ricxapp-hw-go-79c6d795d5-n7j66 2/2 Running
+ricxapp-hw-python-fbbd5f54-c68tx 2/2 Running
+ricxapp-kpimon-go-79c564f9b5-x5qs8 2/2 Running
+ricxapp-trafficxapp-5d44655dcb-t897m 2/2 Running
+POST_EXPERIMENT_RESTORATION=PASS

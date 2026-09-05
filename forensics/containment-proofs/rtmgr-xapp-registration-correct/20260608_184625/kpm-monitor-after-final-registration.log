@@ -1,0 +1,15 @@
+[2026-06-08T13:17:53.680492+00:00] Starting kpm-monitor real O-RAN xApp
+[2026-06-08T13:17:53.680544+00:00] POD_IP=10.244.0.222, SERVICE_HTTP_HOST=service-ricxapp-kpm-monitor-rmr.ricxapp, SUBMGR_URI=http://ztx-submgr-http.ricplt.svc.cluster.local:8088/ric/v1
+[2026-06-08T13:17:53.680559+00:00] E2_NODE_ID=gnbd_001_001_00019b_0, RAN_FUNCTION_ID=2, KPM_METRICS=['DRB.UEThpUl', 'DRB.UEThpDl']
+[2026-06-08T13:17:53.681399+00:00] Starting RMR listener on port 4560
+1780924673 1/RMR [INFO] ric message routing library on SI95/g mv=3 flg=00 (f25dc7f 4.0.5 built: May  7 2020)
+[2026-06-08T13:17:53.682558+00:00] HTTP server listening on 0.0.0.0:8092
+[2026-06-08T13:17:54.682669+00:00] RMR listener is ready
+1780924674 1/RMR [INFO] sends: ts=1780924674 src=kpm-monitor-d4855ffd7-59z88:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780924674 1/RMR [INFO] sends: ts=1780924674 src=kpm-monitor-d4855ffd7-59z88:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:18:08.693854+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+1780924705 1/RMR [INFO] sends: ts=1780924705 src=kpm-monitor-d4855ffd7-59z88:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780924705 1/RMR [INFO] sends: ts=1780924705 src=kpm-monitor-d4855ffd7-59z88:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)
+[2026-06-08T13:18:43.700490+00:00] Target E2 node gnbd_001_001_00019b_0 is not CONNECTED. Current state=CHECK_FAILED
+1780924736 1/RMR [INFO] sends: ts=1780924736 src=kpm-monitor-d4855ffd7-59z88:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780924736 1/RMR [INFO] sends: ts=1780924736 src=kpm-monitor-d4855ffd7-59z88:4560 target=127.0.0.1:4560 open=0 succ=0 fail=0 (hard=0 soft=0)

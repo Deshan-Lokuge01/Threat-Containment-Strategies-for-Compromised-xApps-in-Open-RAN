@@ -1,0 +1,32 @@
+xapps/kpm-monitor/app.py:21:RMR_PORT = int(os.getenv("RMR_PORT", "4562"))
+xapps/kpm-monitor/app.py:24:SERVICE_HTTP_HOST = os.getenv("SERVICE_HTTP_HOST", "kpm-monitor.ricxapp.svc.cluster.local")
+xapps/kpm-monitor/app.py:27:SUBMGR_URI = os.getenv(
+xapps/kpm-monitor/app.py:28:    "SUBMGR_URI",
+xapps/kpm-monitor/app.py:44:RMR_MESSAGE_TYPES = {
+xapps/kpm-monitor/app.py:116:                "rmr_port": RMR_PORT,
+xapps/kpm-monitor/app.py:118:                "service_http_host": SERVICE_HTTP_HOST,
+xapps/kpm-monitor/app.py:121:                "submgr_uri": SUBMGR_URI,
+xapps/kpm-monitor/app.py:245:        "ClientEndpoint": {
+xapps/kpm-monitor/app.py:246:            "Host": SERVICE_HTTP_HOST,
+xapps/kpm-monitor/app.py:248:            "RMRPort": RMR_PORT
+xapps/kpm-monitor/app.py:287:    url = f"{SUBMGR_URI}/subscriptions"
+xapps/kpm-monitor/app.py:336:        log(f"Starting RMR listener on port {RMR_PORT}")
+xapps/kpm-monitor/app.py:337:        ctx = rmr.rmr_init(str(RMR_PORT).encode("utf-8"), rmr.RMR_MAX_RCV_BYTES, 0x00)
+xapps/kpm-monitor/app.py:347:        log("RMR listener is ready")
+xapps/kpm-monitor/app.py:354:                msg_state = summary.get(rmr.RMR_MS_MSG_STATE)
+xapps/kpm-monitor/app.py:363:                mname = RMR_MESSAGE_TYPES.get(mtype, "UNKNOWN")
+xapps/kpm-monitor/app.py:389:                log(f"RMR message received: type={mtype} name={mname} meid={meid} sub_id={sub_id} payload_len={len(payload) if payload else 0}")
+xapps/kpm-monitor/app.py:412:        log("RMR loop crashed:")
+xapps/kpm-monitor/app.py:469:                "rmr_port": RMR_PORT,
+xapps/kpm-monitor/app.py:482:                "submgr_uri": SUBMGR_URI,
+xapps/kpm-monitor/app.py:551:    log(f"POD_IP={POD_IP}, SERVICE_HTTP_HOST={SERVICE_HTTP_HOST}, SUBMGR_URI={SUBMGR_URI}")
+xapps/kpm-monitor/build-test/Dockerfile:5:CMD ["python3", "-c", "import asn1tools; from ricxappframe.rmr import rmr; print('OK asn1tools and RMR ready')"]
+xapps/kpm-monitor/descriptors/config-file.template.json:51:        "description": "RMR data port for RIC indications and subscription messages"
+xapps/kpm-monitor/descriptors/xapp-descriptor.template.json:30:        "description": "RMR data port for O-RAN RIC indications, subscription responses, and failures"
+roles/smo/charts/verified/kpm-monitor/xapp-descriptor.json:30:        "description": "RMR data port for O-RAN RIC indications, subscription responses, and failures"
+roles/smo/charts/verified/kpm-monitor/templates/rmr-service.yaml:4:  name: service-ricxapp-kpm-monitor-rmr
+roles/smo/charts/verified/kpm-monitor/templates/deployment.yaml:92:            - name: SERVICE_HTTP_HOST
+roles/smo/charts/verified/kpm-monitor/templates/deployment.yaml:93:              value: "kpm-monitor.ricxapp"
+roles/smo/charts/verified/kpm-monitor/templates/deployment.yaml:98:            - name: RMR_PORT
+roles/smo/charts/verified/kpm-monitor/templates/deployment.yaml:100:            - name: SUBMGR_URI
+roles/smo/charts/verified/kpm-monitor/config-file.json:51:        "description": "RMR data port for RIC indications and subscription messages"

@@ -1,0 +1,7 @@
+Release "kpm-monitor" does not exist. Installing it now.
+NAME: kpm-monitor
+LAST DEPLOYED: Mon Jun  8 18:02:22 2026
+NAMESPACE: ricxapp
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None

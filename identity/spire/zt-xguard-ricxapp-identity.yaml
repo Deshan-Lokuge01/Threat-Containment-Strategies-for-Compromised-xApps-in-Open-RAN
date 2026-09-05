@@ -1,0 +1,24 @@
+apiVersion: spire.spiffe.io/v1alpha1
+kind: ClusterSPIFFEID
+metadata:
+  name: zt-xguard-ricxapp-identity
+  labels:
+    app.kubernetes.io/part-of: zt-xguard
+    zt-xguard.io/component: workload-identity
+spec:
+  className: spire-mgmt-spire
+
+  namespaceSelector:
+    matchLabels:
+      kubernetes.io/metadata.name: ricxapp
+
+  podSelector:
+    matchLabels:
+      zt-xguard.io/svid-enabled: "true"
+
+  spiffeIDTemplate: >-
+    spiffe://{{ .TrustDomain }}/ns/{{ .PodMeta.Namespace }}/sa/{{ .PodSpec.ServiceAccountName }}
+
+  ttl: 5m
+  jwtTtl: 5m
+  hint: zt-xguard-ricxapp

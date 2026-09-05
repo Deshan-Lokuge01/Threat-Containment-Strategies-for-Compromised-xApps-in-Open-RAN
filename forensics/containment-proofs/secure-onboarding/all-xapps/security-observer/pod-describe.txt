@@ -1,0 +1,112 @@
+Name:             security-observer-9f84cf9bd-4rg9z
+Namespace:        ricxapp
+Priority:         0
+Service Account:  security-observer
+Node:             near-rt-ric/192.168.112.129
+Start Time:       Fri, 05 Jun 2026 22:20:38 +0530
+Labels:           app=security-observer
+                  pod-template-hash=9f84cf9bd
+                  version=1.0.0
+                  zt-xguard.io/provider=sp1
+                  zt-xguard.io/verified=true
+Annotations:      <none>
+Status:           Running
+SeccompProfile:   RuntimeDefault
+IP:               10.244.0.202
+IPs:
+  IP:           10.244.0.202
+Controlled By:  ReplicaSet/security-observer-9f84cf9bd
+Init Containers:
+  fetch-svid:
+    Container ID:  containerd://cf20c55e1c3eccf193a46082d7fff2a152ae6aadb8c0c0226d2b3e8a726df695
+    Image:         localhost:5000/spire-fetcher:1.0-nonroot
+    Image ID:      sha256:27bc2b1b240c4c264a23f1d4e535959f8515e4313a7f2ea94087386b6cad4d49
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      set -e
+      echo "Waiting for SPIRE socket..."
+      while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+      echo "Socket ready. Fetching SVID..."
+      /opt/spire/bin/spire-agent api fetch x509 \
+        -socketPath /var/run/spire/sockets/spire-agent.sock \
+        -write /svid-data
+      echo "SVID fetched successfully."
+      ls -l /svid-data || true
+      
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 05 Jun 2026 22:20:40 +0530
+      Finished:     Fri, 05 Jun 2026 22:20:41 +0530
+    Ready:          True
+    Restart Count:  1
+    Environment:    <none>
+    Mounts:
+      /svid-data from svid-data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-7b4xx (ro)
+      /var/run/spire/sockets from spiffe-socket (ro)
+Containers:
+  security-observer:
+    Container ID:   containerd://7663663833e0b0a5eed0fc9e77a3871ae63ec462f09165eecc70e92bdf3b5068
+    Image:          localhost:5000/zt-security-observer:1.0
+    Image ID:       sha256:1a3565d52ca767a26fdbb9685151dc084c974f0f1c035b973951b0ca725b451e
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Fri, 05 Jun 2026 22:20:42 +0530
+    Ready:          True
+    Restart Count:  0
+    Liveness:       http-get http://:http/health delay=10s timeout=1s period=15s #success=1 #failure=3
+    Readiness:      http-get http://:http/health delay=10s timeout=1s period=15s #success=1 #failure=3
+    Environment:
+      XAPP_PROFILE_PATH:  /etc/xapp-profile/profile.json
+      XAPP_PORT:          8080
+    Mounts:
+      /etc/svid from svid-data (ro)
+      /etc/xapp-profile from xapp-profile (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-7b4xx (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  spiffe-socket:
+    Type:              CSI (a Container Storage Interface (CSI) volume source)
+    Driver:            csi.spiffe.io
+    FSType:            
+    ReadOnly:          true
+    VolumeAttributes:  <none>
+  svid-data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  xapp-profile:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      security-observer-profile
+    Optional:  false
+  kube-api-access-7b4xx:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age                    From               Message
+  ----    ------     ----                   ----               -------
+  Normal  Scheduled  5m54s                  default-scheduler  Successfully assigned ricxapp/security-observer-9f84cf9bd-4rg9z to near-rt-ric
+  Normal  Pulled     5m52s (x2 over 5m53s)  kubelet            Container image "localhost:5000/spire-fetcher:1.0-nonroot" already present on machine
+  Normal  Created    5m52s (x2 over 5m53s)  kubelet            Created container: fetch-svid
+  Normal  Started    5m52s (x2 over 5m53s)  kubelet            Started container fetch-svid
+  Normal  Pulled     5m50s                  kubelet            Container image "localhost:5000/zt-security-observer:1.0" already present on machine
+  Normal  Created    5m50s                  kubelet            Created container: security-observer
+  Normal  Started    5m50s                  kubelet            Started container security-observer

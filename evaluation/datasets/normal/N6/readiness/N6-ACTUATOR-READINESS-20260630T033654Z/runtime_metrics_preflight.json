@@ -1,0 +1,8 @@
+{
+  "dataset": "N6",
+  "role": "actuator-dormant-clean-readiness",
+  "timestamp_utc": "20260630T033654Z",
+  "kpimon_pod": "ricxapp-kpimon-go-687d9645b6-snlkl",
+  "actuator_dormant": true,
+  "stress_ng_running": false
+}

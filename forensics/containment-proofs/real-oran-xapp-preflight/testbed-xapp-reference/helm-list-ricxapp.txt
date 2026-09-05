@@ -1,0 +1,6 @@
+NAME              	NAMESPACE	REVISION	UPDATED                                  	STATUS  	CHART                   	APP VERSION
+qos-optimizer     	ricxapp  	1       	2026-06-05 22:19:33.484181377 +0530 +0530	deployed	qos-optimizer-1.0.0     	1.0.0      
+resource-optimizer	ricxapp  	1       	2026-06-05 22:19:57.168856174 +0530 +0530	deployed	resource-optimizer-1.0.0	1.0.0      
+security-observer 	ricxapp  	1       	2026-06-05 22:20:38.32273233 +0530 +0530 	deployed	security-observer-1.0.0 	1.0.0      
+telemetry-monitor 	ricxapp  	1       	2026-06-05 22:14:52.417649006 +0530 +0530	deployed	telemetry-monitor-1.0.0 	1.0.0      
+traffic-analyzer  	ricxapp  	6       	2026-06-05 21:32:35.381818509 +0530 +0530	deployed	traffic-analyzer-1.0.0  	1.0.0      

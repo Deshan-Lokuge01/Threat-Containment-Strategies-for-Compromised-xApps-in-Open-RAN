@@ -1,0 +1,241 @@
+{
+  "created_utc": "2026-06-27T05:33:22.395688+00:00",
+  "datasets": {
+    "N1": {
+      "columns": 63,
+      "directory": "/home/nearric/Desktop/O-RAN-Threat-Containment-Strategies/zt-xguard/data/normal/N1/N1-OFFICIAL-1UE-10PPS-20260626T121005Z",
+      "file_hashes": {
+        "SHA256SUMS": "520b25010d8b16913f5229ed277a4e6641dd17c06e820cc9d971a0e54bf7d0c8",
+        "metric_summary.csv": "26b758f43ba6ea3fcf811281165e11a6656087ed80b2d5ca09c6021114335879",
+        "quality_summary.json": "d701b00286321dd214db1fc908591108cba9e8e233f3fc0424ee3eef870af047",
+        "raw_metrics.csv": "95e7707ceb4df5577d563e5869cc0692bf6664dd9bf8667c60bc18caf7a8662d",
+        "resource_configuration.json": "7242b98bbd493bf4f9c9d941587e2f5d7aea1b4190b7078283cfd51a78dc0425",
+        "run_metadata.json": "c78af60572a105f195d7ab5a48cdc39e29ad788dbbd679a4f11a03f39bf4a49c",
+        "runtime_events.csv": "c50b4e70aa69976caa064bad8c112b4c5fce735fb92a95e5433ddfe7fbf8d644",
+        "validation.txt": "86b80420b3047d7cd1608dd1dcb364d4b4c13c836beedbb842983fe037dbcc8f"
+      },
+      "m4_ready_rows": 1772,
+      "role": "normal-model-fitting-run-1",
+      "rows": 1800,
+      "run_id": "N1-OFFICIAL-1UE-10PPS-20260626T121005Z",
+      "runtime_counter_deltas": {
+        "ric_indication_total": {
+          "delta": 23,
+          "end": 90,
+          "start": 67
+        },
+        "rmr_rx_total": {
+          "delta": 23,
+          "end": 90,
+          "start": 67
+        },
+        "rmr_tx_total": {
+          "delta": 0,
+          "end": 0,
+          "start": 0
+        },
+        "work_units_total": {
+          "delta": 23,
+          "end": 90,
+          "start": 67
+        }
+      },
+      "sample_quality_counts": {
+        "memory_slope_warmup": 28,
+        "ok": 1772
+      }
+    },
+    "N2": {
+      "columns": 63,
+      "directory": "/home/nearric/Desktop/O-RAN-Threat-Containment-Strategies/zt-xguard/data/normal/N2/N2-OFFICIAL-1UE-10PPS-20260626T132023Z",
+      "file_hashes": {
+        "SHA256SUMS": "872dfd43c46994690ae3cbac5be43c36b258b668398bfb01db76ce2ab4303cee",
+        "metric_summary.csv": "135cfe40371ce8eb0e4318a3fd7f5a002742dc53e530d8dd3000d06c7cfffb4c",
+        "quality_summary.json": "9b39ff251a1989d1af647bcb720d82a24ede0e221157c91163324c6ae8fdd97a",
+        "raw_metrics.csv": "87ff3d51f3316a5734c99cad496d11a141322fedc07b313fb3318a1072f6607b",
+        "resource_configuration.json": "7242b98bbd493bf4f9c9d941587e2f5d7aea1b4190b7078283cfd51a78dc0425",
+        "run_metadata.json": "6777b3247f91c43f0fcc648f490ad60b4f9f0d6234094b11495c5c8ca34b4e3d",
+        "runtime_events.csv": "5f6d806068c12a4fd0d8b77614b0337784c6189bf190dc9d46272a4925aaa571",
+        "validation.txt": "52bc0241764ad2aba6e6a4cf64dabe688855adb7f3a39a9e5d989ccc4821d7f0"
+      },
+      "m4_ready_rows": 1772,
+      "role": "normal-model-fitting-run-2",
+      "rows": 1800,
+      "run_id": "N2-OFFICIAL-1UE-10PPS-20260626T132023Z",
+      "runtime_counter_deltas": {
+        "ric_indication_total": {
+          "delta": 22,
+          "end": 37,
+          "start": 15
+        },
+        "rmr_rx_total": {
+          "delta": 22,
+          "end": 37,
+          "start": 15
+        },
+        "rmr_tx_total": {
+          "delta": 0,
+          "end": 0,
+          "start": 0
+        },
+        "work_units_total": {
+          "delta": 22,
+          "end": 37,
+          "start": 15
+        }
+      },
+      "sample_quality_counts": {
+        "memory_slope_warmup": 28,
+        "ok": 1772
+      }
+    },
+    "N3": {
+      "columns": 63,
+      "directory": "/home/nearric/Desktop/O-RAN-Threat-Containment-Strategies/zt-xguard/data/normal/N3/N3-OFFICIAL-1UE-10PPS-20260626T142748Z",
+      "file_hashes": {
+        "SHA256SUMS": "7c0cd1479cbf6757d0a78a0e0e0a190c59ab42abe65003d9cbaa85c06e5a2205",
+        "metric_summary.csv": "dfa8f3b057c1101e5e6f919ee91f98a6b76bba6de2539b46f3e9a8280345e07b",
+        "quality_summary.json": "f4c97b215aa1cce2630987053063dfcb697c23b302a1820c420103fc51634003",
+        "raw_metrics.csv": "2390e9acb2d6dead79e6e33537ffea8ca9184536218fda66d0481023bf2ddacb",
+        "resource_configuration.json": "7242b98bbd493bf4f9c9d941587e2f5d7aea1b4190b7078283cfd51a78dc0425",
+        "run_metadata.json": "a198d37801dde01b5051609ce8479d26ead623eb325aee37848931d6ffb470cd",
+        "runtime_events.csv": "215a0ca4f195242f7d3f59f62de8981ae2f0ef72dda20db4bc2aee8b3afda0f6",
+        "validation.txt": "20fb21df45a85ee0af60d6f1d1edfd04799d773036a04732fa20c7ba4cf4538e"
+      },
+      "m4_ready_rows": 1772,
+      "role": "clean-detector-calibration-only",
+      "rows": 1800,
+      "run_id": "N3-OFFICIAL-1UE-10PPS-20260626T142748Z",
+      "runtime_counter_deltas": {
+        "ric_indication_total": {
+          "delta": 23,
+          "end": 37,
+          "start": 14
+        },
+        "rmr_rx_total": {
+          "delta": 23,
+          "end": 37,
+          "start": 14
+        },
+        "rmr_tx_total": {
+          "delta": 0,
+          "end": 0,
+          "start": 0
+        },
+        "work_units_total": {
+          "delta": 23,
+          "end": 37,
+          "start": 14
+        }
+      },
+      "sample_quality_counts": {
+        "memory_slope_warmup": 28,
+        "ok": 1772
+      }
+    }
+  },
+  "frozen_configuration_hashes": {
+    "matlab_data_contract_v1.csv": "bd08756a574da0836b2caafe590a76cd3bcff56c3b55b680811a36497616e927",
+    "resource_detector_protocol_v1.yaml": "5b45d1df96ba3a42bdf9f2caa31b290fbde9d49f973839b3fd5b48059713c71f"
+  },
+  "half_life_candidates_seconds": [
+    3,
+    5,
+    10,
+    15,
+    20
+  ],
+  "lambda_formula": "lambda = 1 - 2^(-1 / half_life_seconds)",
+  "protocol_status": "frozen-before-N1",
+  "resource_metrics": [
+    "m1_cpu_millicores",
+    "m2_cpu_throttle_ratio",
+    "m3_memory_working_set_bytes",
+    "m4_memory_growth_bytes_per_s",
+    "m5_network_rx_bytes_per_s",
+    "m6_network_tx_bytes_per_s",
+    "m7_filesystem_read_bytes_per_s",
+    "m8_filesystem_write_bytes_per_s",
+    "m9_socket_count",
+    "m10_fd_count",
+    "m11_thread_count"
+  ],
+  "schema": "ztx-resource-model-dataset-manifest-v1",
+  "schema_columns": [
+    "timestamp_utc",
+    "timestamp_unix_ns",
+    "sample_index",
+    "elapsed_s",
+    "sample_interval_s",
+    "sample_lag_ms",
+    "timing_ok",
+    "run_id",
+    "profile",
+    "pod_name",
+    "pod_uid",
+    "container_id",
+    "host_pid",
+    "cgroup_path",
+    "m1_cpu_millicores",
+    "m2_cpu_throttle_ratio",
+    "m3_memory_working_set_bytes",
+    "m4_memory_growth_bytes_per_s",
+    "m4_memory_slope_ready",
+    "m5_network_rx_bytes_per_s",
+    "m6_network_tx_bytes_per_s",
+    "m7_filesystem_read_bytes_per_s",
+    "m8_filesystem_write_bytes_per_s",
+    "m9_socket_count",
+    "m10_fd_count",
+    "m11_thread_count",
+    "cpu_usage_usec_total",
+    "cpu_nr_periods_total",
+    "cpu_nr_throttled_total",
+    "cpu_throttled_usec_total",
+    "memory_current_bytes",
+    "memory_inactive_file_bytes",
+    "network_rx_bytes_total",
+    "network_tx_bytes_total",
+    "filesystem_read_bytes_total",
+    "filesystem_write_bytes_total",
+    "process_count",
+    "rmr_rx_total",
+    "rmr_rx_per_s",
+    "rmr_tx_total",
+    "rmr_tx_per_s",
+    "ric_indication_total",
+    "ric_indication_per_s",
+    "work_units_total",
+    "work_units_per_s",
+    "heartbeat_total",
+    "heartbeat_per_s",
+    "heartbeat_stall_age_s",
+    "last_rmr_rx_age_s",
+    "last_work_age_s",
+    "rmr_tx_status",
+    "metrics_endpoint_ok",
+    "metrics_endpoint_error",
+    "cpu_limit_enabled",
+    "cpu_quota_us",
+    "cpu_period_us",
+    "memory_limit_enabled",
+    "memory_limit_bytes",
+    "host_mem_available_bytes",
+    "host_swap_used_bytes",
+    "resource_counter_reset",
+    "runtime_counter_reset",
+    "sample_quality"
+  ],
+  "usage_policy": {
+    "N1": "Fit transformations, robust center, robust scale and normal covariance.",
+    "N2": "Fit transformations, robust center, robust scale and normal covariance.",
+    "N3": "Clean detector calibration and false-alarm evaluation only. Do not refit transformations, center, scale or covariance.",
+    "N4": "Untouched final normal evaluation. Not yet collected."
+  },
+  "window_candidates_seconds": [
+    5,
+    8,
+    10
+  ],
+  "window_stride_seconds": 1
+}

@@ -1,0 +1,2 @@
+NAME                                READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+security-observer-9f84cf9bd-4rg9z   1/1     Running   0          5m54s   10.244.0.202   near-rt-ric   <none>           <none>

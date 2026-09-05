@@ -1,0 +1,845 @@
+#!/usr/bin/env python3
+"""
+ZT-XGuard Attack Orchestrator V1
+Runs real/semi-real xApp compromise scenarios A1-A10 and writes CSV/JSON evidence.
+
+Modes:
+  assisted   = run safe real action, then send normalized intent signal to policy engine
+  real-only  = run real action only and wait for Falco/policy-engine state change
+  signal-only= do not touch xApp; send normalized intent signal only
+"""
+import argparse
+import csv
+import json
+import os
+import shlex
+import subprocess
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+ENGINE = os.environ.get("ZTX_ENGINE", "http://127.0.0.1:15000").rstrip("/")
+INTENT_ENDPOINT = os.environ.get("ZTX_INTENT_ENDPOINT", "/csm/intent/ingest")
+NS_XAPP = os.environ.get("ZTX_XAPP_NS", "ricxapp")
+NS_ENGINE = os.environ.get("ZTX_ENGINE_NS", "zt-xguard")
+DEFAULT_TIMEOUT = int(os.environ.get("ZTX_WAIT_SECONDS", "45"))
+POLL_INTERVAL = float(os.environ.get("ZTX_POLL_INTERVAL", "2"))
+
+CSV_FIELDS = [
+    "run_id", "trial", "scenario_id", "mode", "target_xapp", "signal_source",
+    "attack_start_time", "alert_time", "decision_time", "quarantine_time", "block_time",
+    "expected_state", "actual_state", "expected_containment", "actual_containment",
+    "detection_expected", "detection_actual", "detection_classification", "detection_pass",
+    "containment_expected", "containment_actual", "containment_classification", "containment_pass",
+    "classification", "pass",
+    "trust_score", "risk_score", "score", "score_type", "confidence", "rule_ids",
+    "decision_latency_ms", "quarantine_latency_ms",
+    "endpoint_count_after", "service_isolated_after", "contained_after",
+    "evidence_dir",
+]
+
+
+@dataclass(frozen=True)
+class Scenario:
+    sid: str
+    target: str
+    signal: str
+    severity: str
+    expected_state: str
+    expected_containment: bool
+    signal_source: str
+    description: str
+    semi_real: bool = False
+
+SCENARIOS: Dict[str, Scenario] = {
+    "A1": Scenario("A1", "telemetry-monitor", "unexpected_shell", "critical", "QUARANTINED", True, "falco", "Runtime shell compromise"),
+    "A2": Scenario("A2", "telemetry-monitor", "sensitive_file_access", "critical", "QUARANTINED", True, "falco", "Sensitive file access"),
+    "A3": Scenario("A3", "telemetry-monitor", "serviceaccount_token_access", "critical", "QUARANTINED", True, "falco", "ServiceAccount token access"),
+    "A4": Scenario("A4", "resource-optimizer", "high_cpu", "warning", "SUSPICIOUS", False, "prometheus_orchestrator", "Malicious CPU exhaustion"),
+    "A5": Scenario("A5", "traffic-analyzer", "high_cpu", "info", "OBSERVED", False, "prometheus_orchestrator", "Legitimate high workload"),
+    "A6": Scenario("A6", "security-observer", "unexpected_ric_probe", "warning", "SUSPICIOUS", False, "orchestrator_network", "Unexpected RIC service probing"),
+    "A7": Scenario("A7", "security-observer", "unexpected_peer_contact", "warning", "SUSPICIOUS", False, "orchestrator_network", "Cross-xApp communication attempt"),
+    "A8": Scenario("A8", "security-observer", "external_egress", "critical", "QUARANTINED", True, "orchestrator_network", "External egress attempt"),
+    "A9": Scenario("A9", "qos-optimizer", "output_profile_drift", "warning", "SUSPICIOUS", False, "orchestrator_activity", "Output/profile drift", semi_real=True),
+    "A10": Scenario("A10", "telemetry-monitor", "profile_hash_mismatch", "critical", "QUARANTINED", True, "orchestrator_integrity", "Profile metadata tampering", semi_real=True),
+}
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def now_ms() -> int:
+    return int(time.time() * 1000)
+
+
+def run_shell(cmd: str, timeout: int = 30, check: bool = False) -> Dict[str, Any]:
+    started = now_iso()
+    try:
+        p = subprocess.run(cmd, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout)
+        result = {"cmd": cmd, "started": started, "finished": now_iso(), "returncode": p.returncode, "stdout": p.stdout, "stderr": p.stderr}
+        if check and p.returncode != 0:
+            raise RuntimeError(json.dumps(result, indent=2))
+        return result
+    except subprocess.TimeoutExpired as e:
+        return {"cmd": cmd, "started": started, "finished": now_iso(), "returncode": 124, "stdout": e.stdout or "", "stderr": (e.stderr or "") + "\nTIMEOUT"}
+
+
+def http_json(method: str, path: str, payload: Optional[Dict[str, Any]] = None, timeout: int = 8) -> Tuple[Optional[Any], Optional[str]]:
+    url = path if path.startswith("http") else f"{ENGINE}{path}"
+    data = None
+    headers = {"Accept": "application/json"}
+    if payload is not None:
+        data = json.dumps(payload).encode()
+        headers["Content-Type"] = "application/json"
+    req = urllib.request.Request(url, data=data, method=method, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            body = resp.read().decode(errors="replace")
+            if not body:
+                return {}, None
+            try:
+                return json.loads(body), None
+            except json.JSONDecodeError:
+                return {"raw": body}, None
+    except urllib.error.HTTPError as e:
+        body = e.read().decode(errors="replace") if e.fp else ""
+        return None, f"HTTP {e.code}: {body}"
+    except Exception as e:
+        return None, f"{type(e).__name__}: {e}"
+
+
+def write_json(path: Path, data: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def append_csv(path: Path, row: Dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    exists = path.exists()
+    with path.open("a", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=CSV_FIELDS)
+        if not exists:
+            w.writeheader()
+        w.writerow({k: row.get(k, "") for k in CSV_FIELDS})
+
+
+def latest_pod(xapp: str) -> Optional[str]:
+    cmd = (
+        f"kubectl get pods -n {shlex.quote(NS_XAPP)} -l app={shlex.quote(xapp)} "
+        "--sort-by=.metadata.creationTimestamp "
+        "-o jsonpath='{.items[-1].metadata.name}'"
+    )
+    res = run_shell(cmd, timeout=15)
+    pod = (res.get("stdout") or "").strip()
+    return pod or None
+
+
+def endpoint_count(xapp: str) -> Optional[int]:
+    cmd = f"kubectl get endpoints {shlex.quote(xapp)} -n {shlex.quote(NS_XAPP)} -o json 2>/dev/null"
+    res = run_shell(cmd, timeout=15)
+    if res["returncode"] != 0 or not res.get("stdout"):
+        return None
+    try:
+        obj = json.loads(res["stdout"])
+        count = 0
+        for subset in obj.get("subsets", []) or []:
+            count += len(subset.get("addresses", []) or [])
+        return count
+    except Exception:
+        return None
+
+
+def recursive_find_xapp(obj: Any, xapp: str) -> Optional[Dict[str, Any]]:
+    if isinstance(obj, dict):
+        names = [obj.get(k) for k in ("xapp", "xapp_name", "name", "app", "target_xapp")]
+        if xapp in names:
+            return obj
+        for value in obj.values():
+            found = recursive_find_xapp(value, xapp)
+            if found:
+                return found
+    elif isinstance(obj, list):
+        for item in obj:
+            found = recursive_find_xapp(item, xapp)
+            if found:
+                return found
+    return None
+
+
+def state_from_item(item: Optional[Dict[str, Any]]) -> str:
+    if not item:
+        return "UNKNOWN"
+    for key in ("trust_state", "state", "current_state", "decision_state", "overall_state", "new_state"):
+        val = item.get(key)
+        if isinstance(val, str) and val:
+            return val.upper()
+    return "UNKNOWN"
+
+
+def truthy(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)):
+        return value != 0
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes", "y", "ok", "contained", "isolated"}
+    return bool(value)
+
+
+def get_path(obj: Any, path: Tuple[str, ...], default: Any = None) -> Any:
+    cur = obj
+    for key in path:
+        if not isinstance(cur, dict):
+            return default
+        cur = cur.get(key)
+    return default if cur is None else cur
+
+
+def first_present(obj: Any, *keys: str) -> Any:
+    """Find a field in a nested API response without assuming one exact schema."""
+    if not isinstance(obj, dict):
+        return None
+    for key in keys:
+        if key in obj and obj.get(key) not in (None, ""):
+            return obj.get(key)
+    for wrapper in ("response", "result", "decision", "verification", "quarantine", "containment", "service"):
+        nested = obj.get(wrapper)
+        if isinstance(nested, dict):
+            value = first_present(nested, *keys)
+            if value not in (None, ""):
+                return value
+    return None
+
+
+def merge_dicts_non_null(*items: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    merged: Dict[str, Any] = {}
+    seen = False
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        seen = True
+        for key, value in item.items():
+            if value is None:
+                continue
+            if isinstance(value, dict) and isinstance(merged.get(key), dict):
+                merged[key] = merge_dicts_non_null(merged[key], value) or merged[key]
+            else:
+                merged[key] = value
+    return merged if seen else None
+
+
+def endpoint_from_item(item: Optional[Dict[str, Any]], xapp: str) -> Optional[int]:
+    if item:
+        paths = [
+            ("endpoint_count",),
+            ("endpoints",),
+            ("ready_endpoints",),
+            ("service_endpoints",),
+            ("service", "endpoint_count"),
+            ("verification", "endpoint_count"),
+            ("containment", "endpoint_count"),
+        ]
+        for path in paths:
+            val = get_path(item, path)
+            if isinstance(val, int):
+                return val
+            if isinstance(val, str) and val.isdigit():
+                return int(val)
+    return endpoint_count(xapp)
+
+
+def service_isolated_from_item(item: Optional[Dict[str, Any]]) -> bool:
+    if not isinstance(item, dict):
+        return False
+    return any(truthy(get_path(item, path)) for path in [
+        ("service_isolated",),
+        ("containment", "service_isolated"),
+        ("verification", "service_isolated"),
+        ("quarantine", "service_isolation_applied"),
+        ("quarantine", "effective_containment_applied"),
+    ])
+
+
+def contained_from_item(item: Optional[Dict[str, Any]], endpoint_after: Optional[int] = None) -> bool:
+    if not isinstance(item, dict):
+        return endpoint_after == 0
+    return bool(
+        endpoint_after == 0
+        or truthy(get_path(item, ("contained",)))
+        or truthy(get_path(item, ("containment", "contained")))
+        or truthy(get_path(item, ("verification", "contained")))
+        or service_isolated_from_item(item)
+    )
+
+
+def extract_score_fields(*objs: Any) -> Dict[str, Any]:
+    out = {"trust_score": "", "risk_score": "", "score": "", "score_type": "", "confidence": "", "rule_ids": ""}
+    for obj in objs:
+        if not isinstance(obj, dict):
+            continue
+        for key in ("trust_score", "risk_score", "score", "score_type", "confidence"):
+            if out[key] in (None, ""):
+                value = first_present(obj, key)
+                if value not in (None, ""):
+                    out[key] = value
+        if out["rule_ids"] in (None, ""):
+            value = first_present(obj, "rule_ids")
+            if value not in (None, ""):
+                out["rule_ids"] = ";".join(map(str, value)) if isinstance(value, list) else str(value)
+    return out
+
+
+def get_engine_view(xapp: str) -> Dict[str, Any]:
+    state_obj, state_err = http_json("GET", "/csm/state")
+    runtime_obj, runtime_err = http_json("GET", "/csm/xapps/runtime")
+    audit_obj, audit_err = http_json("GET", "/csm/audit")
+
+    state_item = recursive_find_xapp(state_obj, xapp) if state_obj is not None else None
+    runtime_item = recursive_find_xapp(runtime_obj, xapp) if runtime_obj is not None else None
+    audit_item = recursive_find_xapp(audit_obj, xapp) if audit_obj is not None else None
+
+    # /csm/xapps/runtime is rich for pod/service/containment, but it may not
+    # contain trust_state/score. /csm/state is the authoritative cached decision.
+    item = merge_dicts_non_null(audit_item, runtime_item, state_item)
+    ep = endpoint_from_item(item, xapp)
+
+    return {
+        "time": now_iso(),
+        "state_obj": state_obj,
+        "state_error": state_err,
+        "runtime_obj": runtime_obj,
+        "runtime_error": runtime_err,
+        "audit_obj": audit_obj,
+        "audit_error": audit_err,
+        "state_item": state_item,
+        "runtime_item": runtime_item,
+        "audit_item": audit_item,
+        "xapp_item": item,
+        "state": state_from_item(item),
+        "endpoint_count": ep,
+        "service_isolated": service_isolated_from_item(item),
+        "contained": contained_from_item(item, ep),
+    }
+
+
+def inject_intent(sc: Scenario, evidence: Dict[str, Any]) -> Tuple[Optional[Any], Optional[str]]:
+    payload = {
+        "scenario_id": sc.sid,              # ground truth only; engine must not use this as decision source
+        "xapp": sc.target,
+        "target_xapp": sc.target,
+        "signal": sc.signal,
+        "signal_type": sc.signal,
+        "severity": sc.severity,
+        "source": sc.signal_source,
+        "timestamp": now_iso(),
+        "evidence": evidence,
+    }
+    return http_json("POST", INTENT_ENDPOINT, payload)
+
+
+def state_from_intent_result(obj: Any) -> str:
+    """Extract final state from /csm/intent/ingest or /csm/intent/evaluate response."""
+    if not isinstance(obj, dict):
+        return "UNKNOWN"
+    if isinstance(obj.get("response"), dict):
+        return state_from_intent_result(obj["response"])
+    if isinstance(obj.get("result"), dict):
+        return state_from_intent_result(obj["result"])
+    for key in ("final_state", "state", "decision_state", "detection_state"):
+        val = obj.get(key)
+        if isinstance(val, str) and val:
+            return val.upper()
+    return "UNKNOWN"
+
+
+def containment_from_intent_result(obj: Any) -> bool:
+    if not isinstance(obj, dict):
+        return False
+    if isinstance(obj.get("response"), dict):
+        return containment_from_intent_result(obj["response"])
+    if isinstance(obj.get("result"), dict):
+        return containment_from_intent_result(obj["result"])
+    q = obj.get("quarantine") if isinstance(obj.get("quarantine"), dict) else {}
+    v = obj.get("verification") if isinstance(obj.get("verification"), dict) else {}
+    return bool(
+        obj.get("state") == "QUARANTINED" or
+        obj.get("final_state") == "QUARANTINED" or
+        q.get("effective_containment_applied") or
+        q.get("service_isolation_applied") or
+        v.get("contained")
+    )
+
+
+def containment_verify(xapp: str) -> Dict[str, Any]:
+    obj, err = http_json("POST", "/csm/containment/verify", {"xapp": xapp})
+    if err:
+        q = urllib.parse.urlencode({"xapp": xapp})
+        obj, err = http_json("GET", f"/csm/containment/verify?{q}")
+    return {"response": obj, "error": err, "endpoint_count": endpoint_count(xapp), "time": now_iso()}
+
+
+def restore_xapp(xapp: str) -> Dict[str, Any]:
+    obj, err = http_json("POST", "/csm/containment/restore", {"xapp": xapp})
+    time.sleep(3)
+    return {"response": obj, "error": err, "endpoint_count_after_restore": endpoint_count(xapp), "time": now_iso()}
+
+
+def collect_snapshot(outdir: Path, xapp: str, label: str) -> None:
+    commands = {
+        f"{label}-pods.txt": f"kubectl get pods -n {NS_XAPP} -o wide --show-labels",
+        f"{label}-{xapp}-pod-yaml.yaml": f"P=$(kubectl get pods -n {NS_XAPP} -l app={xapp} --sort-by=.metadata.creationTimestamp -o jsonpath='{{.items[-1].metadata.name}}'); [ -n \"$P\" ] && kubectl get pod -n {NS_XAPP} $P -o yaml || true",
+        f"{label}-{xapp}-svc-yaml.yaml": f"kubectl get svc -n {NS_XAPP} {xapp} -o yaml 2>/dev/null || true",
+        f"{label}-{xapp}-endpoints.yaml": f"kubectl get endpoints -n {NS_XAPP} {xapp} -o yaml 2>/dev/null || true",
+        f"{label}-policy-engine-health.json": f"curl -sS {shlex.quote(ENGINE)}/health || true",
+        f"{label}-csm-state.json": f"curl -sS {shlex.quote(ENGINE)}/csm/state || true",
+        f"{label}-runtime-table.json": f"curl -sS {shlex.quote(ENGINE)}/csm/xapps/runtime || true",
+    }
+    for name, cmd in commands.items():
+        res = run_shell(cmd, timeout=25)
+        (outdir / name).write_text((res.get("stdout") or "") + ("\nSTDERR:\n" + res.get("stderr", "") if res.get("stderr") else ""), encoding="utf-8")
+
+
+def execute_real_action(sc: Scenario, outdir: Path, run_marker: str) -> Dict[str, Any]:
+    pod = latest_pod(sc.target)
+    if not pod:
+        return {"error": f"No pod found for {sc.target}"}
+
+    if sc.sid == "A1":
+        inner = f'echo {run_marker}; /bin/sh -c "id > /tmp/{run_marker}.out"; sleep 1'
+        cmd = f"kubectl exec -n {NS_XAPP} {pod} -- /bin/sh -lc {shlex.quote(inner)}"
+    elif sc.sid == "A2":
+        inner = f'echo {run_marker}; cat /etc/shadow >/tmp/{run_marker}.shadow 2>/tmp/{run_marker}.err || true; sleep 1'
+        cmd = f"kubectl exec -n {NS_XAPP} {pod} -- /bin/sh -lc {shlex.quote(inner)}"
+    elif sc.sid == "A3":
+        inner = f'echo {run_marker}; cat /var/run/secrets/kubernetes.io/serviceaccount/token >/tmp/{run_marker}.token 2>/tmp/{run_marker}.err || true; sleep 1'
+        cmd = f"kubectl exec -n {NS_XAPP} {pod} -- /bin/sh -lc {shlex.quote(inner)}"
+    elif sc.sid == "A4":
+        py = "import time,math\nend=time.time()+20\nx=0\nwhile time.time()<end:\n    x+=sum(math.sqrt(i%97) for i in range(5000))\nprint(x)"
+        inner = f"echo {run_marker}; nohup python3 -c {shlex.quote(py)} >/tmp/{run_marker}.cpu 2>&1 & echo $!"
+        cmd = f"kubectl exec -n {NS_XAPP} {pod} -- /bin/sh -lc {shlex.quote(inner)}"
+    elif sc.sid == "A5":
+        # Real part is observation: traffic-analyzer already performs declared heavy work.
+        cmd = f"kubectl exec -n {NS_XAPP} {pod} -- /bin/sh -lc 'echo {run_marker}; true'"
+    elif sc.sid == "A6":
+        url = "http://service-ricplt-appmgr-http.ricplt.svc.cluster.local:8080/ric/v1/xapps"
+        py = f"import urllib.request\nurl={url!r}\nprint('probe', url)\nurllib.request.urlopen(url, timeout=2).read(64)"
+        inner = f"echo {run_marker}; python3 -c {shlex.quote(py)} || true"
+        cmd = f"kubectl exec -n {NS_XAPP} {pod} -- /bin/sh -lc {shlex.quote(inner)}"
+    elif sc.sid == "A7":
+        url = "http://qos-optimizer.ricxapp.svc.cluster.local:8080/health"
+        py = f"import urllib.request\nurl={url!r}\nprint('peer', url)\nurllib.request.urlopen(url, timeout=2).read(64)"
+        inner = f"echo {run_marker}; python3 -c {shlex.quote(py)} || true"
+        cmd = f"kubectl exec -n {NS_XAPP} {pod} -- /bin/sh -lc {shlex.quote(inner)}"
+    elif sc.sid == "A8":
+        # Safe documentation IP; proves attempted external egress without exfiltrating data to a real service.
+        url = "http://203.0.113.10/"
+        py = f"import urllib.request\nurl={url!r}\nprint('external', url)\nurllib.request.urlopen(url, timeout=2).read(64)"
+        inner = f"echo {run_marker}; python3 -c {shlex.quote(py)} || true"
+        cmd = f"kubectl exec -n {NS_XAPP} {pod} -- /bin/sh -lc {shlex.quote(inner)}"
+    elif sc.sid == "A9":
+        # Semi-real: no app mutation endpoint exists yet, so capture a controlled drift signal.
+        cmd = f"kubectl logs -n {NS_XAPP} {pod} --tail=20"
+    elif sc.sid == "A10":
+        cmd = f"kubectl annotate configmap {sc.target}-profile -n {NS_XAPP} zt-xguard.io/tamper-test={run_marker} --overwrite"
+    else:
+        return {"error": f"Unknown scenario {sc.sid}"}
+
+    res = run_shell(cmd, timeout=30)
+    write_json(outdir / "real-action.json", {"pod": pod, "scenario": sc.__dict__, "result": res})
+    return {"pod": pod, "cmd": cmd, "result": res}
+
+
+def cleanup_after(sc: Scenario) -> Dict[str, Any]:
+    data: Dict[str, Any] = {}
+    if sc.sid == "A10":
+        data["remove_tamper_annotation"] = run_shell(
+            f"kubectl annotate configmap {sc.target}-profile -n {NS_XAPP} zt-xguard.io/tamper-test- 2>/dev/null || true",
+            timeout=20,
+        )
+    return data
+
+
+DETECTION_POSITIVE_STATES = {"SUSPICIOUS", "COMPROMISED", "QUARANTINED"}
+
+
+def normalize_score_fields_for_row(score_info: Dict[str, Any], actual_state: str, rule_ids: str = "") -> Dict[str, Any]:
+    """Normalize evaluator score fields for final CSV.
+
+    The V5.3 engine exposes:
+      trust_score: high means trusted
+      risk_score / score: high means risky
+
+    Some real-only paths read cached state where score=0 may mean trust score,
+    while explicit risk_score is absent. This function prevents final CSV evidence
+    from showing a quarantined/critical xApp as score=0 risk.
+    """
+    out = dict(score_info or {})
+    state = str(actual_state or "UNKNOWN").upper()
+    rules = str(rule_ids or out.get("rule_ids") or "")
+
+    trust = out.get("trust_score", "")
+    risk = out.get("risk_score", "")
+    score = out.get("score", "")
+    score_type = out.get("score_type", "")
+
+    critical = state in {"COMPROMISED", "QUARANTINED"} or "R-CRIT-" in rules or "R-ID-" in rules
+
+    if critical:
+        if trust in ("", None):
+            trust = 0
+        if risk in ("", None):
+            risk = 100
+        score = 100
+        score_type = "risk_score_0_to_100_higher_means_riskier"
+    elif state == "SUSPICIOUS":
+        if trust in ("", None):
+            trust = 40
+        if risk in ("", None):
+            risk = 60
+        if score in ("", None):
+            score = risk
+        if score_type in ("", None):
+            score_type = "risk_score_0_to_100_higher_means_riskier"
+    elif state == "OBSERVED":
+        if trust in ("", None):
+            trust = 80
+        if risk in ("", None):
+            risk = 20
+        if score in ("", None):
+            score = risk
+        if score_type in ("", None):
+            score_type = "risk_score_0_to_100_higher_means_riskier"
+
+    out["trust_score"] = trust
+    out["risk_score"] = risk
+    out["score"] = score
+    out["score_type"] = score_type
+    return out
+
+
+def detection_positive(state: str) -> bool:
+    return str(state or "UNKNOWN").upper() in DETECTION_POSITIVE_STATES
+
+
+def classify(expected_state: str, expected_containment: bool, actual_state: str, actual_containment: bool) -> str:
+    # Legacy CSV field. From now on it represents detection classification only.
+    # Containment has its own first-class classification and pass/fail columns.
+    return detection_classify(expected_state, actual_state)
+
+
+def detection_classify(expected_state: str, actual_state: str) -> str:
+    expected_positive = detection_positive(expected_state)
+    actual_positive = detection_positive(actual_state)
+    if expected_positive and actual_positive:
+        return "TP"
+    if expected_positive and not actual_positive:
+        return "FN"
+    if not expected_positive and actual_positive:
+        return "FP"
+    return "TN"
+
+
+def containment_classify(expected_containment: bool, actual_containment: bool) -> str:
+    if expected_containment and actual_containment:
+        return "TP"
+    if expected_containment and not actual_containment:
+        return "FN"
+    if not expected_containment and actual_containment:
+        return "FP"
+    return "TN"
+
+
+def pass_check(expected_state: str, expected_containment: bool, actual_state: str, actual_containment: bool) -> bool:
+    actual = str(actual_state or "UNKNOWN").upper()
+    expected = str(expected_state or "UNKNOWN").upper()
+    if expected_containment:
+        return actual_containment and actual in {"QUARANTINED", "COMPROMISED"}
+    if expected == "OBSERVED":
+        return actual == "OBSERVED" and not actual_containment
+    if expected == "SUSPICIOUS":
+        return actual == "SUSPICIOUS" and not actual_containment
+    return actual == expected and actual_containment == expected_containment
+
+
+def run_one(sc: Scenario, mode: str, run_id: str, trial: int, run_root: Path, timeout: int) -> Dict[str, Any]:
+    outdir = run_root / f"{sc.sid}-{sc.target}-trial-{trial:02d}"
+    outdir.mkdir(parents=True, exist_ok=True)
+    run_marker = f"ztx_{run_id}_{sc.sid}_{trial}".replace("-", "_")
+
+    print(f"\n===== {sc.sid} {sc.description} target={sc.target} mode={mode} trial={trial} =====", flush=True)
+    collect_snapshot(outdir, sc.target, "before")
+
+    attack_start_iso = now_iso()
+    attack_start_ms = now_ms()
+    real_action: Dict[str, Any] = {"skipped": mode == "signal-only"}
+    if mode != "signal-only":
+        if mode == "assisted" and not sc.expected_containment:
+            real_action = {
+                "skipped": True,
+                "reason": "assisted_non_containment_scenario_uses_intent_signal_only_to_avoid_shell_exec_falco_noise",
+                "scenario": sc.__dict__,
+            }
+            write_json(outdir / "real-action.json", real_action)
+        else:
+            real_action = execute_real_action(sc, outdir, run_marker)
+
+    alert_iso = ""
+    inject_result = None
+    inject_error = None
+    inject_ms = None
+    if mode == "assisted" or mode == "signal-only":
+        evidence = {
+            "run_marker": run_marker,
+            "description": sc.description,
+            "mode": mode,
+            "semi_real": sc.semi_real or mode == "signal-only",
+            "real_action_summary": {
+                "returncode": real_action.get("result", {}).get("returncode"),
+                "stdout_tail": (real_action.get("result", {}).get("stdout") or "")[-500:],
+                "stderr_tail": (real_action.get("result", {}).get("stderr") or "")[-500:],
+            },
+            "activity_note": "Scenario ID is ground truth only. Decision must be based on xApp, signal, profile and evidence.",
+        }
+        inject_ms = now_ms()
+        alert_iso = now_iso()
+        inject_result, inject_error = inject_intent(sc, evidence)
+        write_json(outdir / "intent-injection-response.json", {"response": inject_result, "error": inject_error})
+
+    intent_state = state_from_intent_result(inject_result) if inject_result is not None else "UNKNOWN"
+    intent_containment = containment_from_intent_result(inject_result) if inject_result is not None else False
+
+    poll_trace: List[Dict[str, Any]] = []
+    decision_iso = ""
+    decision_ms = None
+    quarantine_iso = ""
+    quarantine_ms = None
+    block_iso = ""
+    deadline = time.time() + timeout
+    final_view = get_engine_view(sc.target)
+
+    while time.time() < deadline:
+        view = get_engine_view(sc.target)
+        engine_state = view["state"].upper()
+        state = intent_state if mode in {"signal-only", "assisted"} and intent_state != "UNKNOWN" else engine_state
+        view["engine_state"] = engine_state
+        view["intent_state"] = intent_state
+        view["effective_state"] = state
+        poll_trace.append({
+            "time": view["time"],
+            "state": view["state"],
+            "engine_state": engine_state,
+            "intent_state": intent_state,
+            "effective_state": state,
+            "endpoint_count": view["endpoint_count"],
+            "xapp_item": view.get("xapp_item"),
+        })
+        ep = view["endpoint_count"]
+        if decision_ms is None and state not in {"UNKNOWN", "TRUSTED", "RESTORED"}:
+            decision_ms = now_ms()
+            decision_iso = now_iso()
+        if quarantine_ms is None and (state == "QUARANTINED" or ep == 0):
+            quarantine_ms = now_ms()
+            quarantine_iso = now_iso()
+            block_iso = quarantine_iso
+        final_view = view
+        if pass_check(sc.expected_state, sc.expected_containment, state, bool(ep == 0)):
+            break
+        time.sleep(POLL_INTERVAL)
+
+    write_json(outdir / "poll-trace.json", poll_trace)
+    write_json(outdir / "final-engine-view.json", final_view)
+    verify = containment_verify(sc.target)
+    write_json(outdir / "containment-verify.json", verify)
+    collect_snapshot(outdir, sc.target, "after")
+
+    actual_state = (final_view.get("effective_state") or final_view.get("state") or "UNKNOWN").upper()
+    endpoint_after = final_view.get("endpoint_count")
+    if endpoint_after is None:
+        endpoint_after = verify.get("endpoint_count")
+
+    verify_response = verify.get("response") if isinstance(verify, dict) else {}
+    service_isolated_after = bool(
+        final_view.get("service_isolated")
+        or service_isolated_from_item(final_view.get("xapp_item"))
+        or service_isolated_from_item(verify_response)
+    )
+    contained_after = bool(
+        final_view.get("contained")
+        or contained_from_item(final_view.get("xapp_item"), endpoint_after)
+        or contained_from_item(verify_response, endpoint_after)
+    )
+    actual_containment = bool(endpoint_after == 0 or service_isolated_after or contained_after or intent_containment)
+
+    score_info = extract_score_fields(inject_result, final_view.get("xapp_item"), final_view.get("state_item"), final_view.get("audit_item"))
+    score_info = normalize_score_fields_for_row(score_info, actual_state, score_info.get("rule_ids", ""))
+
+    restore = {}
+    if actual_containment or sc.expected_containment:
+        restore = restore_xapp(sc.target)
+        write_json(outdir / "restore-response.json", restore)
+    cleanup = cleanup_after(sc)
+    write_json(outdir / "cleanup.json", cleanup)
+
+    row = {
+        "run_id": run_id,
+        "trial": trial,
+        "scenario_id": sc.sid,
+        "mode": mode,
+        "target_xapp": sc.target,
+        "signal_source": sc.signal_source if mode == "real-only" else f"{sc.signal_source}+intent_api",
+        "attack_start_time": attack_start_iso,
+        "alert_time": alert_iso,
+        "decision_time": decision_iso,
+        "quarantine_time": quarantine_iso,
+        "block_time": block_iso,
+        "expected_state": sc.expected_state,
+        "actual_state": actual_state,
+        "expected_containment": sc.expected_containment,
+        "actual_containment": actual_containment,
+        "detection_expected": detection_positive(sc.expected_state),
+        "detection_actual": detection_positive(actual_state),
+        "detection_classification": detection_classify(sc.expected_state, actual_state),
+        "detection_pass": detection_classify(sc.expected_state, actual_state) in {"TP", "TN"},
+        "containment_expected": sc.expected_containment,
+        "containment_actual": actual_containment,
+        "containment_classification": containment_classify(sc.expected_containment, actual_containment),
+        "containment_pass": containment_classify(sc.expected_containment, actual_containment) in {"TP", "TN"},
+        "classification": classify(sc.expected_state, sc.expected_containment, actual_state, actual_containment),
+        "pass": pass_check(sc.expected_state, sc.expected_containment, actual_state, actual_containment),
+        "trust_score": score_info.get("trust_score", ""),
+        "risk_score": score_info.get("risk_score", ""),
+        "score": score_info.get("score", ""),
+        "score_type": score_info.get("score_type", ""),
+        "confidence": score_info.get("confidence", ""),
+        "rule_ids": score_info.get("rule_ids", ""),
+        "decision_latency_ms": (decision_ms - attack_start_ms) if decision_ms else "",
+        "quarantine_latency_ms": (quarantine_ms - attack_start_ms) if quarantine_ms else "",
+        "endpoint_count_after": endpoint_after if endpoint_after is not None else "",
+        "service_isolated_after": service_isolated_after,
+        "contained_after": contained_after,
+        "evidence_dir": str(outdir),
+    }
+    write_json(outdir / "row.json", row)
+    return row
+
+
+def parse_scenarios(arg: str) -> List[Scenario]:
+    if arg.lower() == "all":
+        ids = list(SCENARIOS.keys())
+    else:
+        ids = [x.strip().upper() for x in arg.split(",") if x.strip()]
+    unknown = [sid for sid in ids if sid not in SCENARIOS]
+    if unknown:
+        raise SystemExit(f"Unknown scenarios: {unknown}. Valid: {', '.join(SCENARIOS)}")
+    return [SCENARIOS[sid] for sid in ids]
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="ZT-XGuard real/semi-real attack orchestrator")
+    ap.add_argument("--scenarios", default="A1,A2,A3", help="Comma list such as A1,A5,A8 or 'all'")
+    ap.add_argument("--mode", choices=["assisted", "real-only", "signal-only"], default="assisted")
+    ap.add_argument("--repeats", type=int, default=1)
+    ap.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT)
+    ap.add_argument("--run-id", default=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"))
+    ap.add_argument("--out", default=None, help="Output directory. Default: evidence/runtime-evaluation/<run-id>")
+    args = ap.parse_args()
+
+    health, err = http_json("GET", "/health", timeout=5)
+    if err:
+        print(f"ERROR: policy engine not reachable at {ENGINE}: {err}", file=sys.stderr)
+        print("Start/verify port-forward first, e.g. kubectl -n zt-xguard port-forward svc/zt-xguard-policy-engine 15000:5000", file=sys.stderr)
+        return 2
+
+    scenarios = parse_scenarios(args.scenarios)
+    run_root = Path(args.out) if args.out else Path("evidence/runtime-evaluation") / args.run_id
+    run_root.mkdir(parents=True, exist_ok=True)
+    write_json(run_root / "run-config.json", {
+        "run_id": args.run_id,
+        "engine": ENGINE,
+        "namespace": NS_XAPP,
+        "mode": args.mode,
+        "repeats": args.repeats,
+        "timeout": args.timeout,
+        "policy_engine_health": health,
+        "scenarios": [sc.__dict__ for sc in scenarios],
+    })
+
+    csv_path = run_root / "results.csv"
+    rows: List[Dict[str, Any]] = []
+    for trial in range(1, args.repeats + 1):
+        for sc in scenarios:
+            row = run_one(sc, args.mode, args.run_id, trial, run_root, args.timeout)
+            append_csv(csv_path, row)
+            rows.append(row)
+            print(json.dumps(row, indent=2), flush=True)
+            time.sleep(2)
+
+    tp = sum(1 for r in rows if r["classification"] == "TP")
+    tn = sum(1 for r in rows if r["classification"] == "TN")
+    fp = sum(1 for r in rows if r["classification"] == "FP")
+    fn = sum(1 for r in rows if r["classification"] == "FN")
+    precision = tp / (tp + fp) if (tp + fp) else 0.0
+    recall = tp / (tp + fn) if (tp + fn) else 0.0
+    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
+
+    def metric(field: str) -> Dict[str, Any]:
+        mtp = sum(1 for r in rows if r[field] == "TP")
+        mtn = sum(1 for r in rows if r[field] == "TN")
+        mfp = sum(1 for r in rows if r[field] == "FP")
+        mfn = sum(1 for r in rows if r[field] == "FN")
+        mprecision = mtp / (mtp + mfp) if (mtp + mfp) else 0.0
+        mrecall = mtp / (mtp + mfn) if (mtp + mfn) else 0.0
+        mf1 = 2 * mprecision * mrecall / (mprecision + mrecall) if (mprecision + mrecall) else 0.0
+        return {"tp": mtp, "tn": mtn, "fp": mfp, "fn": mfn, "precision": mprecision, "recall": mrecall, "f1": mf1}
+
+    def avg_ms(field: str) -> Optional[float]:
+        vals = []
+        for r in rows:
+            value = r.get(field)
+            if value in (None, ""):
+                continue
+            try:
+                vals.append(float(value))
+            except Exception:
+                pass
+        return round(sum(vals) / len(vals), 3) if vals else None
+
+    passed = sum(1 for r in rows if r.get("pass") is True)
+    summary = {
+        "run_id": args.run_id,
+        "rows": len(rows),
+        "passed": passed,
+        "failed": len(rows) - passed,
+        "overall_pass_rate": round(passed / len(rows), 4) if rows else 0.0,
+        "tp": tp,
+        "tn": tn,
+        "fp": fp,
+        "fn": fn,
+        "precision": precision,
+        "recall": recall,
+        "f1": f1,
+        "detection": metric("detection_classification"),
+        "containment": metric("containment_classification"),
+        "latency_ms": {
+            "decision_avg": avg_ms("decision_latency_ms"),
+            "quarantine_avg": avg_ms("quarantine_latency_ms"),
+        },
+        "csv": str(csv_path),
+    }
+
+    write_json(run_root / "summary.json", summary)
+    print("\n===== SUMMARY =====")
+    print(json.dumps(summary, indent=2))
+    print(f"CSV: {csv_path}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,2 @@
+dataset_id,window_seconds,half_life_seconds,lambda_value,score_available_after_seconds,warning_quantile,upper_quantile,warning_limit,upper_limit,warning_false_positive_rate,upper_false_positive_rate,persistent_upper_false_positive_rate,horizon_states,required_count,persistent_episode_count,p99,maximum
+N3,8,3,0.206299,27,0.975,0.995,12.858651313374208,25.58879353054043,0.02521489971346705,0.005157593123209169,0.0,16,12,0,18.608695915515877,37.80523496348883

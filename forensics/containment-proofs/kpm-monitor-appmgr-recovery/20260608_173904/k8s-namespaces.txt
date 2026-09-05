@@ -1,0 +1,14 @@
+NAME                 STATUS   AGE
+default              Active   9d
+falco                Active   7d8h
+kube-flannel         Active   9d
+kube-node-lease      Active   9d
+kube-public          Active   9d
+kube-system          Active   9d
+local-path-storage   Active   9d
+monitoring           Active   7d7h
+ricinfra             Active   9d
+ricplt               Active   9d
+ricxapp              Active   9d
+spire-system         Active   9d
+zt-xguard            Active   3d6h

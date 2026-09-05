@@ -1,0 +1,120 @@
+apiVersion: v1
+data:
+  profile.json: |2-
+
+    {
+      "xapp": "security-observer",
+      "role": "security-observation",
+      "controls": {
+        "expected_cpu_class": "low",
+        "expected_memory_class": "low",
+        "expected_ric_activity": false,
+        "expected_control_activity": false,
+        "expected_shell": false,
+        "expected_sensitive_file_access": false,
+        "expected_external_egress": false,
+        "heartbeat_period_sec": 5,
+        "workload_intensity": "low",
+        "allowed_ric_services": [],
+        "max_api_rate_per_min": 30
+      },
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "security-observer",
+            "port": 8080,
+            "description": "HTTP REST API for xApp runtime status"
+          }
+        ]
+      },
+      "security_monitoring": {
+        "compromise_indicators": [
+          "unexpected_shell_spawn",
+          "sensitive_file_access",
+          "service_account_token_access",
+          "unexpected_external_egress",
+          "high_cpu_without_ric_activity",
+          "stale_heartbeat"
+        ],
+        "containment_actions": [
+          "label_as_quarantined",
+          "deny_all_network_policy",
+          "preserve_pod_for_forensics"
+        ]
+      },
+      "runtime_counters": {
+        "telemetry_samples": false,
+        "qos_decisions": false,
+        "traffic_reports": false,
+        "resource_recommendations": false,
+        "security_checks": true
+      }
+    }
+  xapp-descriptor.json: |2-
+
+    {
+      "name": "security-observer",
+      "version": "1.0.0",
+      "provider": "sp1",
+      "containers": [
+        {
+          "name": "security-observer",
+          "image": {
+            "registry": "localhost:5000",
+            "name": "zt-security-observer",
+            "tag": "1.0",
+            "digest": "sha256:8935f5c1f5632ccd1cf73cebd9f88f1aca4f2fff97ec3fb5da9836555e69ab13",
+            "reference": "localhost:5000/zt-security-observer:1.0",
+            "immutable_reference": "localhost:5000/zt-security-observer@sha256:8935f5c1f5632ccd1cf73cebd9f88f1aca4f2fff97ec3fb5da9836555e69ab13"
+          }
+        }
+      ],
+      "messaging": {
+        "ports": [
+          {
+            "name": "http_service",
+            "container": "security-observer",
+            "port": 8080,
+            "description": "HTTP API for health, profile, activity, RIC reachability, and metrics"
+          }
+        ]
+      },
+      "livenessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "readinessProbe": {
+        "httpGet": {
+          "path": "/health",
+          "port": 8080
+        },
+        "initialDelaySeconds": 5,
+        "periodSeconds": 15
+      },
+      "security": {
+        "serviceAccount": "security-observer",
+        "spiffeID": "spiffe://example.org/ns/ricxapp/sa/security-observer",
+        "requiresSVID": true,
+        "runAsNonRoot": true,
+        "allowPrivilegeEscalation": false
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: security-observer
+    meta.helm.sh/release-namespace: ricxapp
+  creationTimestamp: "2026-06-05T16:50:38Z"
+  labels:
+    app: security-observer
+    app.kubernetes.io/managed-by: Helm
+    zt-xguard.io/verified: "true"
+  name: security-observer-profile
+  namespace: ricxapp
+  resourceVersion: "1027388"
+  uid: 48a5865e-62a0-4238-9be5-3427bfae4e06

@@ -1,0 +1,4 @@
+prompt_utc=2026-07-02T06:03:53Z
+planned_elapsed_s=600
+operation_name=ZTX-T1499-KPIMON-Composite-CPU-IO-Safe900-Official-A4
+adversary=ZT-XGuard T1499 KPIMON Composite CPU-IO Safe900

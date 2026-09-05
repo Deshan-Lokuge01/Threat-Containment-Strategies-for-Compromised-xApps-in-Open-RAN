@@ -1,0 +1,163 @@
+===== Deploy endpoint section =====
+      responses   :
+        '200':
+          description : xApp Manager is ready for service
+        '503':
+          description: xApp Manager is not ready for service
+  /xapps:
+    post:
+      summary: Deploy a xapp
+      tags:
+        - xapp
+      operationId: deployXapp
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: XappDescriptor
+          in: body
+          description: xApp deployment info
+          schema:
+            $ref: '#/definitions/XappDescriptor'
+      responses:
+        '201':
+          description: xApp successfully created
+          schema:
+            $ref: '#/definitions/Xapp'
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal error
+    get:
+      summary: Returns the status of all xapps
+      tags:
+        - xapp
+      operationId: getAllXapps
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful query of xApps
+          schema:
+            $ref: '#/definitions/AllDeployedXapps'
+        '500':
+          description: Internal error
+  /xapps/list:
+    get:
+
+===== Deploy request schema section =====
+          - failed
+          - unknown
+          - completed
+          - crashLoopBackOff
+      ip:
+        type: string
+      port:
+        type: integer
+      txMessages:
+        type: array
+        items:
+          type: string
+      rxMessages:
+        type: array
+        items:
+          type: string
+      policies:
+         type: array
+         items:
+           type: integer
+  XappDescriptor:
+    type: object
+    required:
+      - xappName
+    properties:
+      xappName:
+        type: string
+        description: Name of the xApp in helm chart
+      helmVersion:
+        type: string
+        description: The exact xapp helm chart version to install
+      releaseName:
+        type: string
+        description: Name of the xapp to be visible in Kubernetes
+      namespace:
+        type: string
+        description: Name of the namespace to which xApp is deployed. Overrides the value given in Helm chart value file.
+      overrideFile:
+        type: object
+        description: JSON string of override file for 'helm install' command
+  XappDescriptorList:
+    type: array
+    items:
+      $ref: '#/definitions/XappDescriptor'
+  ConfigMetadata:
+    type: object
+    required:
+      - xappName
+      - namespace
+    properties:
+      xappName:
+        type: string
+        description: Name of the xApp
+      namespace:
+        type: string
+        description: Name of the namespace
+  ConfigValidationError:
+    type: object
+    required:
+      - field
+      - error
+
+===== Full xApp deploy model references =====
+458-         items:
+459-           type: integer
+460-  XappDescriptor:
+461-    type: object
+462-    required:
+463-      - xappName
+464-    properties:
+465-      xappName:
+466-        type: string
+467-        description: Name of the xApp in helm chart
+468:      helmVersion:
+469-        type: string
+470-        description: The exact xapp helm chart version to install
+471-      releaseName:
+472-        type: string
+473-        description: Name of the xapp to be visible in Kubernetes
+474-      namespace:
+475-        type: string
+476-        description: Name of the namespace to which xApp is deployed. Overrides the value given in Helm chart value file.
+477-      overrideFile:
+478-        type: object
+479-        description: JSON string of override file for 'helm install' command
+480-  XappDescriptorList:
+481-    type: array
+482-    items:
+483-      $ref: '#/definitions/XappDescriptor'
+484-  ConfigMetadata:
+485-    type: object
+486-    required:
+487-      - xappName
+488-      - namespace
+489-    properties:
+490-      xappName:
+491-        type: string
+492-        description: Name of the xApp
+493-      namespace:
+494-        type: string
+495-        description: Name of the namespace
+496-  ConfigValidationError:
+497-    type: object
+498-    required:
+499-      - field
+500-      - error
+501-    properties:
+502-      field:
+503-        type: string
+504-        description: Name of the parameter
+505-      error:
+506-        type: string
+507-        description: Description of validation error
+508-  ConfigValidationErrors:

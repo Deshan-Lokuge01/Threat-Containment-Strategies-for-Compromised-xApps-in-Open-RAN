@@ -1,0 +1,13 @@
+{
+  "endpoint_errors": 3,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/attacks/R1/R1-CPU-BOUNDED15M-V1-1UE-10PPS-20260702T165044Z/raw_metrics.csv",
+  "profile": "ATTACK_R1_CPU_BOUNDED15M_V1_1UE_10PPS",
+  "resource_counter_resets": 0,
+  "rows_written": 2100,
+  "run_id": "R1-CPU-BOUNDED15M-V1-1UE-10PPS-20260702T165044Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 2100,
+  "timing_errors": 13
+}

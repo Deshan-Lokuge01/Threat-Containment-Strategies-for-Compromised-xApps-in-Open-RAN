@@ -1,0 +1,1 @@
+resource-optimizer-76cd8c474d-qq2dz   1/1     Running   0          2d14h   10.244.0.201   near-rt-ric   <none>           <none>

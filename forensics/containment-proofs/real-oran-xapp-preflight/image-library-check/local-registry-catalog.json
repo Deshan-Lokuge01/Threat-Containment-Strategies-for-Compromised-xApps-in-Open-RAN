@@ -1,0 +1,10 @@
+{
+  "repositories": [
+    "spire-fetcher",
+    "zt-qos-optimizer",
+    "zt-resource-optimizer",
+    "zt-security-observer",
+    "zt-telemetry-monitor",
+    "zt-traffic-analyzer"
+  ]
+}

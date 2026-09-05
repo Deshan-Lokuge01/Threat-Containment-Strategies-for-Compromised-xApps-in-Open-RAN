@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: r4-infrastructure-prometheus-nodeport
+  namespace: ricplt
+  labels:
+    app: prometheus
+    component: server
+    release: r4-infrastructure
+spec:
+  type: NodePort
+  selector:
+    app: prometheus
+    component: server
+    release: r4-infrastructure
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+      nodePort: 30990

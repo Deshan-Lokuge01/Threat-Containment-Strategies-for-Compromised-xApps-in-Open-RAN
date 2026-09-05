@@ -1,0 +1,35 @@
+### Namespace: ricplt
+ricplt/configmap/configmap-ricplt-a1mediator-a1conf
+5-    # Warning! this is not a functioning table because the subscription manager and route manager are now involved in a1 flows
+6-    # the real routing table requires subscription ids as routing is now done over sub ids, but this isn't known until xapp deploy time, it's a dynamic process triggered by the xapp manager
+7-    # there is a single message type for all messages a1 sends out now, subid is the other necessary piece of info
+8-    # there are two message types a1 listens for; 20011 (instance response) and 20012 (query)
+9-    # xapps likely use rts to reply with 20012 so the routing entry isn't needed for that in most cases
+10:    mse|20010|SUBID|service-ricxapp-admctrl-rmr.ricxapp:4563
+11-    rte|20011|service-ricplt-a1mediator-rmr.ricplt:4562
+12-    rte|20012|service-ricplt-a1mediator-rmr.ricplt:4562
+13-    newrt|end
+14-  loglevel.txt: |
+15-    log-level:
+ricplt/configmap/configmap-ricplt-e2term-router-configmap
+23-    rte|10370|service-ricplt-e2mgr-rmr.ricplt:3801
+24-    rte|10371|service-ricplt-e2term-rmr-alpha.ricplt:38000
+25-    rte|12010|service-ricplt-e2term-rmr-alpha.ricplt:38000
+26-    rte|12020|service-ricplt-e2term-rmr-alpha.ricplt:38000
+27-    rte|20001|service-ricplt-a1mediator-rmr.ricplt:4562
+28:    rte|12011|service-ricxapp-ueec-rmr.ricxapp:4560;service-admission-ctrl-xapp-rmr.ricxapp:4560
+29:    rte|12050|service-ricxapp-ueec-rmr.ricxapp:4560;service-admission-ctrl-xapp-rmr.ricxapp:4560
+30:    rte|12012|service-ricxapp-ueec-rmr.ricxapp:4560;service-admission-ctrl-xapp-rmr.ricxapp:4560
+31:    rte|12021|service-ricxapp-ueec-rmr.ricxapp:4560;service-admission-ctrl-xapp-rmr.ricxapp:4560
+32:    rte|12022|service-ricxapp-ueec-rmr.ricxapp:4560;service-admission-ctrl-xapp-rmr.ricxapp:4560
+33:    rte|12041|service-ricxapp-ueec-rmr.ricxapp:4560;service-admission-ctrl-xapp-rmr.ricxapp:4560
+34:    rte|12042|service-ricxapp-ueec-rmr.ricxapp:4560;service-admission-ctrl-xapp-rmr.ricxapp:4560
+35:    rte|12050|service-ricxapp-ueec-rmr.ricxapp:4560;service-admission-ctrl-xapp-rmr.ricxapp:4560
+36:    rte|20000|service-ricxapp-ueec-rmr.ricxapp:4560;service-admission-ctrl-xapp-rmr.ricxapp:4560
+37-    newrt|end
+38-kind: ConfigMap
+39-metadata:
+40-  annotations:
+41-    meta.helm.sh/release-name: r4-e2term
+### Namespace: ricxapp
+### Namespace: ricinfra

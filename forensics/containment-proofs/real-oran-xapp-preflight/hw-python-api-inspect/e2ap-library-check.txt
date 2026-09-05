@@ -1,0 +1,20 @@
+===== LD config =====
+
+===== e2ap libs/files =====
+/usr/local/lib/python3.8/site-packages/ricxappframe/e2ap
+
+===== environment =====
+CONFIG_FILE=/tmp/init/config-file.json
+DBAAS_SERVICE_HOST=service-ricplt-dbaas-tcp.ricplt.svc.cluster.local
+DBAAS_SERVICE_PORT=6379
+GPG_KEY=E3FF2839C048B25C084DEBE9B26995E310250568
+HOME=/root
+HOSTNAME=403cc78c2c7c
+LANG=C.UTF-8
+LD_LIBRARY_PATH=/usr/local/lib/:/usr/local/lib64
+PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PWD=/
+PYTHONUNBUFFERED=1
+PYTHON_VERSION=3.8.20
+RMR_SEED_RT=/opt/route/test_route.rt
+SHLVL=1

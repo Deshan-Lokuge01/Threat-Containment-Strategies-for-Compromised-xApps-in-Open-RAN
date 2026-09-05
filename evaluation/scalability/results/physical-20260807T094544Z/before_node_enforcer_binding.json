@@ -1,0 +1,29 @@
+{
+    "apiVersion": "rbac.authorization.k8s.io/v1",
+    "kind": "RoleBinding",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"rbac.authorization.k8s.io/v1\",\"kind\":\"RoleBinding\",\"metadata\":{\"annotations\":{},\"labels\":{\"app.kubernetes.io/part-of\":\"zt-xguard\"},\"name\":\"zt-xguard-node-enforcer-exec-binding\",\"namespace\":\"kube-system\"},\"roleRef\":{\"apiGroup\":\"rbac.authorization.k8s.io\",\"kind\":\"Role\",\"name\":\"zt-xguard-node-enforcer-exec\"},\"subjects\":[{\"kind\":\"ServiceAccount\",\"name\":\"zt-xguard-policy-engine\",\"namespace\":\"zt-xguard\"}]}\n"
+        },
+        "creationTimestamp": "2026-07-23T14:31:47Z",
+        "labels": {
+            "app.kubernetes.io/part-of": "zt-xguard"
+        },
+        "name": "zt-xguard-node-enforcer-exec-binding",
+        "namespace": "kube-system",
+        "resourceVersion": "3225547",
+        "uid": "c9a2d214-cbce-47e7-a91c-23f42342eaba"
+    },
+    "roleRef": {
+        "apiGroup": "rbac.authorization.k8s.io",
+        "kind": "Role",
+        "name": "zt-xguard-node-enforcer-exec"
+    },
+    "subjects": [
+        {
+            "kind": "ServiceAccount",
+            "name": "zt-xguard-policy-engine",
+            "namespace": "zt-xguard"
+        }
+    ]
+}

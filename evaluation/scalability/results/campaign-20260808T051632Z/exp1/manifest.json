@@ -1,0 +1,48 @@
+{
+  "schema": "zt-xguard-detector-capacity-manifest-v1",
+  "created_utc": "2026-08-08T05:21:57.527255+00:00",
+  "benchmark": "independent stateful resource-detector workflows",
+  "claim_boundary": "Accelerated logical-workflow capacity benchmark; it does not represent physical pods, Falco eBPF load, Kubernetes containment, Calico propagation or SPIRE renewal load.",
+  "levels": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    10,
+    20,
+    40,
+    60,
+    80
+  ],
+  "repetitions": 5,
+  "ticks_per_workload": 300,
+  "logical_input_rate_hz_per_workload": 1,
+  "deadline_ms_per_logical_cycle": 1000,
+  "trace": "data/diagnostic/D4/D4-CURRENT-NORMAL-SANITY-V1-1UE-10PPS-20260702T150850Z/raw_metrics.csv",
+  "trace_sha256": "4315dd3b3143e5a10c53d94edd549bc79131da15657df6397331e0d1d59e6951",
+  "trace_total_rows": 1800,
+  "trace_accepted_rows": 1772,
+  "trace_rejected_by_reason": {
+    "sample_quality:memory_slope_warmup": 28
+  },
+  "admissibility_predicate": {
+    "sample_quality": "ok",
+    "timing_ok": "1",
+    "metrics_endpoint_ok": "1",
+    "resource_counter_reset": "0",
+    "runtime_counter_reset": "0",
+    "scoring_features": "finite numeric values"
+  },
+  "model_artifacts": {
+    "ztx-control-plane/policy-engine/ztx_model_artifacts/step54/v3_frozen_model_spec.yaml": "d0c6ff4b83dcb4cb6ed7ee142c6b6bfbdfb598c8a87b5c81469fb00a33d300c5",
+    "ztx-control-plane/policy-engine/ztx_model_artifacts/step54/v3_effective_center_scale.csv": "50b677e0fc8281b26900fab134d0e48d5bb98377c7b0eb7fe8d18944c0cffdf0",
+    "ztx-control-plane/policy-engine/ztx_model_artifacts/step54/v3_pressure_state_precision.csv": "107ac61466853af3d8067cb021cd896bbf2977d79f82625d9b97b52a9c154278",
+    "ztx-control-plane/policy-engine/ztx_model_artifacts/step76/v5_frozen_gate_manifest.json": "99a9c5406882e2e651c4c4bf3abe2abf08768029a2c3b1472792fcb2f52eeb45"
+  },
+  "python": "3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0]",
+  "platform": "Linux-6.17.0-29-generic-x86_64-with-glibc2.39",
+  "numpy": "1.26.4",
+  "source_sha256": "baf2d9e384af698e94e69b28737ce585662ed673b6036498f2840b87eae69a9d",
+  "run_isolation": "fresh subprocess for every (N, repetition) cell"
+}

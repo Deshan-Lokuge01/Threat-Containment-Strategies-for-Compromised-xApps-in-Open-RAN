@@ -1,0 +1,432 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/containerID: 5be851d5f8aa2594be5a1b128374cfd0c95d8adafd6598906fec89aaec0c3c8a
+    cni.projectcalico.org/podIP: 10.244.0.37/32
+    cni.projectcalico.org/podIPs: 10.244.0.37/32
+    kubectl.kubernetes.io/restartedAt: "2026-07-02T09:08:51+05:30"
+    zt-xguard.io/expected-spiffe-id: spiffe://oran.fyp.local/ns/ricxapp/sa/ricxapp-kpimon-go
+    zt-xguard.io/svid-logger-version: v2-configmap
+  creationTimestamp: "2026-07-02T03:38:51Z"
+  generateName: ricxapp-kpimon-go-55b569bccd-
+  generation: 1
+  labels:
+    app: ricxapp-kpimon-go
+    kubernetes_name: ricxapp_kpimon-go
+    pod-template-hash: 55b569bccd
+    release: kpimon-go
+    security-status: trusted
+    zt-xguard.io/identity-managed: "true"
+    zt-xguard.io/svid-enabled: "true"
+  name: ricxapp-kpimon-go-55b569bccd-r5mt6
+  namespace: ricxapp
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: ricxapp-kpimon-go-55b569bccd
+    uid: 2df66126-de46-43ee-9522-ab99427694b4
+  resourceVersion: "1508889"
+  uid: 6f2d64e4-b8cb-43f1-a516-d73c70fe6c0b
+spec:
+  containers:
+  - env:
+    - name: OCUDU_CELL_HEX
+      value: 00066c0000
+    - name: OCUDU_PLMN_HEX
+      value: 00f110
+    - name: ZTX_ACTUATOR_TOKEN
+      valueFrom:
+        secretKeyRef:
+          key: ZTX_ACTUATOR_TOKEN
+          name: ztx-kpimon-actuator-token
+    envFrom:
+    - configMapRef:
+        name: configmap-ricxapp-kpimon-go-appenv
+    - configMapRef:
+        name: dbaas-appconfig
+    image: 127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v5-actuator-c-composite-cpu-io-safe-r2-20260701045349
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: ric/v1/health/alive
+        port: 8080
+        scheme: HTTP
+      initialDelaySeconds: 5
+      periodSeconds: 15
+      successThreshold: 1
+      timeoutSeconds: 1
+    name: kpimon-go
+    ports:
+    - containerPort: 8080
+      name: http
+      protocol: TCP
+    - containerPort: 4560
+      name: rmr-data
+      protocol: TCP
+    - containerPort: 4561
+      name: rmr-route
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: ric/v1/health/ready
+        port: 8080
+        scheme: HTTP
+      initialDelaySeconds: 5
+      periodSeconds: 15
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources:
+      limits:
+        cpu: 200m
+        memory: 64Mi
+      requests:
+        cpu: 10m
+        memory: 32Mi
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /etc/svid
+      name: svid-data
+      readOnly: true
+    - mountPath: /opt/ric/config
+      name: config-volume
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-dwxcc
+      readOnly: true
+  - args:
+    - /opt/ztx/svid-renew.sh
+    command:
+    - /bin/sh
+    env:
+    - name: EXPECTED_SPIFFE_ID
+      value: spiffe://oran.fyp.local/ns/ricxapp/sa/ricxapp-kpimon-go
+    - name: RENEW_INTERVAL_SECONDS
+      value: "60"
+    - name: ZTX_ACTUATOR_TOKEN
+      valueFrom:
+        secretKeyRef:
+          key: ZTX_ACTUATOR_TOKEN
+          name: ztx-kpimon-actuator-token
+    image: docker.io/library/zt-spire-fetcher:1.0
+    imagePullPolicy: IfNotPresent
+    name: renew-svid
+    resources:
+      limits:
+        cpu: 50m
+        memory: 64Mi
+      requests:
+        cpu: 5m
+        memory: 16Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      runAsGroup: 10001
+      runAsNonRoot: true
+      runAsUser: 10001
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /opt/ztx/svid-renew.sh
+      name: svid-renew-logger
+      readOnly: true
+      subPath: svid-renew.sh
+    - mountPath: /run/spire/sockets
+      name: spiffe-socket
+      readOnly: true
+    - mountPath: /etc/svid
+      name: svid-data
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-dwxcc
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  hostname: kpimon-go
+  imagePullSecrets:
+  - name: 127-0-0-1-80
+  initContainers:
+  - args:
+    - |
+      SOCKET=/run/spire/sockets/spire-agent.sock
+      OUTPUT=/etc/svid
+
+      echo "Waiting for SPIRE socket..."
+
+      for i in $(seq 1 60); do
+        [ -S "$SOCKET" ] && break
+        echo "Socket not ready: $i/60"
+        sleep 2
+      done
+
+      test -S "$SOCKET"
+      mkdir -p "$OUTPUT"
+
+      echo "Waiting for workload identity..."
+
+      for i in $(seq 1 60); do
+        if /opt/spire/bin/spire-agent api fetch x509                      -socketPath "$SOCKET"                      -write "$OUTPUT"
+        then
+          chmod 0644 "$OUTPUT/svid.0.pem"
+          chmod 0600 "$OUTPUT/svid.0.key"
+          chmod 0644 "$OUTPUT/bundle.0.pem"
+
+          echo "SVID_FETCH_OK"
+          exit 0
+        fi
+
+        echo "Identity not ready: $i/60"
+        sleep 2
+      done
+
+      echo "SVID_FETCH_FAILED"
+      exit 1
+    command:
+    - /bin/sh
+    - -ec
+    env:
+    - name: ZTX_ACTUATOR_TOKEN
+      valueFrom:
+        secretKeyRef:
+          key: ZTX_ACTUATOR_TOKEN
+          name: ztx-kpimon-actuator-token
+    image: docker.io/library/zt-spire-fetcher:1.0
+    imagePullPolicy: IfNotPresent
+    name: fetch-svid
+    resources:
+      limits:
+        cpu: 50m
+        memory: 64Mi
+      requests:
+        cpu: 5m
+        memory: 16Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      runAsGroup: 10001
+      runAsNonRoot: true
+      runAsUser: 10001
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /run/spire/sockets
+      name: spiffe-socket
+      readOnly: true
+    - mountPath: /etc/svid
+      name: svid-data
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-dwxcc
+      readOnly: true
+  nodeName: near-rt-ric
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: ricxapp-kpimon-go
+  serviceAccountName: ricxapp-kpimon-go
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - configMap:
+      defaultMode: 365
+      name: zt-xguard-svid-renew-logger
+    name: svid-renew-logger
+  - csi:
+      driver: csi.spiffe.io
+      readOnly: true
+    name: spiffe-socket
+  - emptyDir: {}
+    name: svid-data
+  - configMap:
+      defaultMode: 420
+      name: configmap-ricxapp-kpimon-go-appconfig
+    name: config-volume
+  - name: kube-api-access-dwxcc
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2026-07-02T03:38:55Z"
+    status: "True"
+    type: PodReadyToStartContainers
+  - lastProbeTime: null
+    lastTransitionTime: "2026-07-02T03:39:00Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2026-07-02T03:39:18Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2026-07-02T03:39:18Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2026-07-02T03:38:51Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - allocatedResources:
+      cpu: 10m
+      memory: 32Mi
+    containerID: containerd://42a7507673c0d14da0fa6fe2c1915f7e4053614bf9f7e26d5a31e5ca40bba950
+    image: 127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v5-actuator-c-composite-cpu-io-safe-r2-20260701045349
+    imageID: 127.0.0.1:80/kpimon-ocudu-cell@sha256:dee320e12c9927de61fd218133d28b580af90d54a23ba2e14705994a95fe47b1
+    lastState: {}
+    name: kpimon-go
+    ready: true
+    resources:
+      limits:
+        cpu: 200m
+        memory: 64Mi
+      requests:
+        cpu: 10m
+        memory: 32Mi
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2026-07-02T03:39:00Z"
+    user:
+      linux:
+        gid: 0
+        supplementalGroups:
+        - 0
+        uid: 0
+    volumeMounts:
+    - mountPath: /etc/svid
+      name: svid-data
+      readOnly: true
+      recursiveReadOnly: Disabled
+    - mountPath: /opt/ric/config
+      name: config-volume
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-dwxcc
+      readOnly: true
+      recursiveReadOnly: Disabled
+  - allocatedResources:
+      cpu: 5m
+      memory: 16Mi
+    containerID: containerd://b577915f990989deb076debacd9ea09f95d279beb80cf3aec855eaee57f08ac2
+    image: docker.io/library/zt-spire-fetcher:1.0
+    imageID: sha256:9bbdbf322cd7dd145f00f60dfb1c3bd03e48bb37e23ace9728f28a03cfbb7753
+    lastState: {}
+    name: renew-svid
+    ready: true
+    resources:
+      limits:
+        cpu: 50m
+        memory: 64Mi
+      requests:
+        cpu: 5m
+        memory: 16Mi
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2026-07-02T03:39:01Z"
+    user:
+      linux:
+        gid: 10001
+        supplementalGroups:
+        - 10001
+        uid: 10001
+    volumeMounts:
+    - mountPath: /opt/ztx/svid-renew.sh
+      name: svid-renew-logger
+      readOnly: true
+      recursiveReadOnly: Disabled
+    - mountPath: /run/spire/sockets
+      name: spiffe-socket
+      readOnly: true
+      recursiveReadOnly: Disabled
+    - mountPath: /etc/svid
+      name: svid-data
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-dwxcc
+      readOnly: true
+      recursiveReadOnly: Disabled
+  hostIP: 192.168.8.159
+  hostIPs:
+  - ip: 192.168.8.159
+  initContainerStatuses:
+  - allocatedResources:
+      cpu: 5m
+      memory: 16Mi
+    containerID: containerd://5873effdbaf058d5a219852b709eacb55b5dbc0afaac75d27cfbcc4576509227
+    image: docker.io/library/zt-spire-fetcher:1.0
+    imageID: sha256:9bbdbf322cd7dd145f00f60dfb1c3bd03e48bb37e23ace9728f28a03cfbb7753
+    lastState: {}
+    name: fetch-svid
+    ready: true
+    resources:
+      limits:
+        cpu: 50m
+        memory: 64Mi
+      requests:
+        cpu: 5m
+        memory: 16Mi
+    restartCount: 0
+    started: false
+    state:
+      terminated:
+        containerID: containerd://5873effdbaf058d5a219852b709eacb55b5dbc0afaac75d27cfbcc4576509227
+        exitCode: 0
+        finishedAt: "2026-07-02T03:38:59Z"
+        reason: Completed
+        startedAt: "2026-07-02T03:38:54Z"
+    user:
+      linux:
+        gid: 10001
+        supplementalGroups:
+        - 10001
+        uid: 10001
+    volumeMounts:
+    - mountPath: /run/spire/sockets
+      name: spiffe-socket
+      readOnly: true
+      recursiveReadOnly: Disabled
+    - mountPath: /etc/svid
+      name: svid-data
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-dwxcc
+      readOnly: true
+      recursiveReadOnly: Disabled
+  phase: Running
+  podIP: 10.244.0.37
+  podIPs:
+  - ip: 10.244.0.37
+  qosClass: Burstable
+  startTime: "2026-07-02T03:38:51Z"

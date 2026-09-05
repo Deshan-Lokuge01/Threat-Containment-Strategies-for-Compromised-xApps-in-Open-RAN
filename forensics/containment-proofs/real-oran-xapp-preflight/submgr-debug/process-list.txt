@@ -1,0 +1,4 @@
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.0 2658592 28508 ?       Ssl  May30   7:55 /submgr -f /cfg/submgr-config.yaml
+root          27  0.0  0.0   2904  1896 ?        Ss   06:42   0:00 sh -c ps aux || ps -ef
+root          33  0.0  0.0   7076  3172 ?        R    06:42   0:00 ps aux

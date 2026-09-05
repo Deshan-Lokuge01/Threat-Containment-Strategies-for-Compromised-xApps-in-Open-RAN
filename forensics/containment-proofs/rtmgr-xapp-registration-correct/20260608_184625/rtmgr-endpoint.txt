@@ -1,0 +1,1 @@
+RTMGR_ENDPOINT=http://10.107.112.218:3800/ric/v1/handles/xapp-handle

@@ -1,0 +1,67 @@
+{
+  "schema": "ztx-forensic-vault-v1",
+  "incident_id": "20260826T120939Z-serviceaccount_token_access-ricxapp-hw-python-6cde0af0da",
+  "captured_utc": "2026-08-26T12:09:42.593843+00:00",
+  "sealed_utc": "2026-08-26T16:27:04Z",
+  "captured_by": "ZT-XGuard policy-engine (automated containment)",
+  "asset": {
+    "xapp": "ricxapp-hw-python",
+    "pod": "ricxapp-hw-python-fbbd5f54-rphqm",
+    "namespace": "ricxapp"
+  },
+  "trigger": {
+    "source": "falco_event",
+    "signal": "serviceaccount_token_access",
+    "falco_rule": "ZTX xApp ServiceAccount Token Access",
+    "priority": "Critical",
+    "rule_ids": [
+      "ZTX-LM-01"
+    ],
+    "alert": "2026-08-26T12:09:38.989525055+0000: Critical ztx_signal=serviceaccount_token_access rule_id=ZTX-A3 xapp serviceaccount token access (user=root file=/var/run/secrets/kubernetes.io/serviceaccount/token command=cat /var/run/secrets/kubernetes.io/serviceaccount/token pod=ricxapp-hw-python-fbbd5f54-rphqm ns=ricxapp container=hw-python) container_id=5f15544606b9 container_name=hw-python container_image_repository=127.0.0.1:80/hw-python container_image_tag=latest k8s_pod_name=ricxapp-hw-python-fbbd5f54-rphqm k8s_ns_name=ricxapp"
+  },
+  "decision": {
+    "state": "ISOLATED",
+    "detection_state": "COMPROMISED",
+    "containment_required": true,
+    "containment_action": "SERVICE_ISOLATION_AND_LATERAL_MOVEMENT_CONTAINMENT",
+    "isolation_timing": "IMMEDIATE",
+    "severity": "CRITICAL",
+    "score": 100,
+    "confidence": 0.97
+  },
+  "integrity": "sha256",
+  "artifacts": [
+    {
+      "name": "events.json",
+      "bytes": 1782,
+      "sha256": "625f503c7c421748cd92659b938d93de1772b1659e892cf9e5d64e1603d82ec4"
+    },
+    {
+      "name": "incident.json",
+      "bytes": 47751,
+      "sha256": "14d5a69b03d378a1c8315991bf4edb5d32c9675ec3d856f099b12d87aa6411b7"
+    },
+    {
+      "name": "pod-log-tail.txt",
+      "bytes": 537,
+      "sha256": "c663d7bfb76facabb413a742b0829afbf85723254d8ad4449827052e75193843"
+    },
+    {
+      "name": "pod.json",
+      "bytes": 26249,
+      "sha256": "87a26d130b033142baa057c61c7c981930da97b1f5840d5a45a066fccf56dfa0"
+    }
+  ],
+  "chain_of_custody": [
+    {
+      "actor": "policy-engine.forensic-capture",
+      "action": "captured",
+      "utc": "2026-08-26T12:09:42.593843+00:00"
+    },
+    {
+      "actor": "policy-engine.vault-sealer",
+      "action": "sealed+hashed",
+      "utc": "2026-08-26T16:27:04Z"
+    }
+  ]
+}

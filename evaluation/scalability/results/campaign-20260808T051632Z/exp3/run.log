@@ -1,0 +1,12 @@
+[Exp3] trial=3 | RESET | pause forwarder + restart evaluator | elapsed=0s
+[Exp3] valid=03/20 | round=1 | K=2 | targets=hw-go|hw-python | PASS | T_all=4016.324ms skew=0.157ms | nontargets_ok=True | invalid=0
+[Exp3] trial=4 | RESET | pause forwarder + restart evaluator | elapsed=0s
+[Exp3] trial=4 attempt 1 transient error: RuntimeError('ricxapp-hw-go: expected one Ready pod, found 0'); full reset + retry
+[Exp3] trial=0 | RESET | pause forwarder + restart evaluator | elapsed=0s
+[Exp3] valid=04/20 | round=1 | K=1 | targets=hw-go | PASS | T_all=1932.344ms skew=0.0ms | nontargets_ok=True | invalid=0
+[Exp3] trial=5 | RESET | pause forwarder + restart evaluator | elapsed=0s
+[Exp3] trial=5 | RESET | waiting preconditions reachable={'ricxapp-hw-go': True, 'ricxapp-hw-python': True, 'ricxapp-kpimon-go': True, 'ricxapp-trafficxapp': True} | elapsed=59s
+[Exp3] trial=5 | RESET | pause Falcosidekick (startup shells will be dropped) | elapsed=0s
+[Exp3] trial=5 | RESET | restart evaluator (clear CSM_STATE) | elapsed=0s
+[Exp3] trial=5 | RESET | recreate unhealthy pods; Falcosidekick stays paused during startup | elapsed=45s
+[Exp3] trial=5 | RESET | waiting app-ready reach={'ricxapp-hw-go': False, 'ricxapp-hw-python': True, 'ricxapp-kpimon-go': True, 'ricxapp-trafficxapp': True} | elapsed=46s

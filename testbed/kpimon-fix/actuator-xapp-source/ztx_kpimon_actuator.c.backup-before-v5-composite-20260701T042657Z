@@ -1,0 +1,170 @@
+#include <arpa/inet.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <sys/socket.h>
+#include <sys/wait.h>
+#include <time.h>
+#include <unistd.h>
+
+static pid_t child_pid = -1;
+static char active_scenario[64] = "";
+static char started_utc[64] = "";
+
+static void reply(int fd, int code, const char *body) {
+    char header[512];
+    int n = snprintf(header, sizeof(header),
+        "HTTP/1.1 %d OK\r\nContent-Type: application/json\r\nContent-Length: %zu\r\nConnection: close\r\n\r\n",
+        code, strlen(body));
+    (void)write(fd, header, n);
+    (void)write(fd, body, strlen(body));
+}
+
+static void now_utc(char *buf, size_t n) {
+    time_t t = time(NULL);
+    struct tm tm;
+    gmtime_r(&t, &tm);
+    strftime(buf, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
+}
+
+static void reap_child(void) {
+    if (child_pid > 0) {
+        int status = 0;
+        pid_t r = waitpid(child_pid, &status, WNOHANG);
+        if (r == child_pid) {
+            child_pid = -1;
+            active_scenario[0] = 0;
+            started_utc[0] = 0;
+        }
+    }
+}
+
+static int token_ok(const char *req) {
+    const char *expected = getenv("ZTX_ACTUATOR_TOKEN");
+    if (!expected || expected[0] == 0) return 0;
+
+    const char *h = strcasestr(req, "X-ZTX-Token:");
+    if (!h) return 0;
+    h += strlen("X-ZTX-Token:");
+    while (*h == ' ') h++;
+
+    size_t len = strcspn(h, "\r\n");
+    return strlen(expected) == len && strncmp(h, expected, len) == 0;
+}
+
+static void start_r1(int client, const char *req) {
+    if (!token_ok(req)) {
+        reply(client, 401, "{\"error\":\"unauthorized\"}\n");
+        return;
+    }
+
+    if (!strstr(req, "R1_CPU_PILOT_SAFE")) {
+        reply(client, 400, "{\"error\":\"unsupported_scenario\"}\n");
+        return;
+    }
+
+    reap_child();
+    if (child_pid > 0) {
+        reply(client, 409, "{\"error\":\"run_already_active\"}\n");
+        return;
+    }
+
+    pid_t p = fork();
+    if (p < 0) {
+        reply(client, 500, "{\"error\":\"fork_failed\"}\n");
+        return;
+    }
+
+    if (p == 0) {
+        execlp("stress-ng", "stress-ng",
+               "--cpu", "1",
+               "--cpu-load", "20",
+               "--timeout", "60s",
+               "--metrics-brief",
+               (char *)NULL);
+        _exit(127);
+    }
+
+    child_pid = p;
+    snprintf(active_scenario, sizeof(active_scenario), "R1_CPU_PILOT_SAFE");
+    now_utc(started_utc, sizeof(started_utc));
+
+    char body[256];
+    snprintf(body, sizeof(body),
+        "{\"active\":true,\"scenario\":\"%s\",\"pid\":%d,\"duration_seconds\":60,\"cpu_workers\":1,\"cpu_load_percent\":20,\"started_utc\":\"%s\"}\n",
+        active_scenario, child_pid, started_utc);
+    reply(client, 202, body);
+}
+
+static void stop_run(int client, const char *req) {
+    if (!token_ok(req)) {
+        reply(client, 401, "{\"error\":\"unauthorized\"}\n");
+        return;
+    }
+
+    if (child_pid > 0) {
+        kill(child_pid, SIGTERM);
+        sleep(1);
+        kill(child_pid, SIGKILL);
+        waitpid(child_pid, NULL, WNOHANG);
+    }
+
+    child_pid = -1;
+    active_scenario[0] = 0;
+    started_utc[0] = 0;
+    reply(client, 200, "{\"stopped\":true}\n");
+}
+
+int main(void) {
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int opt = 1;
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    addr.sin_port = htons(18080);
+
+    if (bind(server_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) return 1;
+    if (listen(server_fd, 8) < 0) return 1;
+
+    for (;;) {
+        reap_child();
+
+        int client = accept(server_fd, NULL, NULL);
+        if (client < 0) continue;
+
+        char req[4096];
+        int n = read(client, req, sizeof(req) - 1);
+        if (n <= 0) {
+            close(client);
+            continue;
+        }
+        req[n] = 0;
+
+        if (strncmp(req, "GET /ztx-test/v1/health ", 24) == 0) {
+            reply(client, 200, "{\"ok\":true,\"service\":\"ztx-kpimon-actuator-c\",\"version\":\"step49b-r1-pilot\"}\n");
+        } else if (strncmp(req, "GET /ztx-test/v1/status ", 24) == 0) {
+            reap_child();
+            if (child_pid > 0) {
+                char body[256];
+                snprintf(body, sizeof(body), "{\"active\":true,\"scenario\":\"%s\",\"pid\":%d,\"started_utc\":\"%s\"}\n",
+                    active_scenario, child_pid, started_utc);
+                reply(client, 200, body);
+            } else {
+                reply(client, 200, "{\"active\":false}\n");
+            }
+        } else if (strncmp(req, "POST /ztx-test/v1/runs ", 23) == 0) {
+            start_r1(client, req);
+        } else if (strncmp(req, "POST /ztx-test/v1/stop ", 23) == 0) {
+            stop_run(client, req);
+        } else {
+            reply(client, 404, "{\"error\":\"not_found\"}\n");
+        }
+
+        close(client);
+    }
+}

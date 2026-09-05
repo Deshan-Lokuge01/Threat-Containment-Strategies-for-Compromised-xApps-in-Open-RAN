@@ -1,0 +1,9 @@
+dataset=N6
+role=actuator-dormant-clean-readiness
+timestamp_utc=20260630T033654Z
+expected_pod=ricxapp-kpimon-go-687d9645b6-snlkl
+expected_container=kpimon-go
+expected_image=127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v2-actuator
+actuator_expected=present
+stress_ng_expected=dormant
+caldera_operation_expected=none

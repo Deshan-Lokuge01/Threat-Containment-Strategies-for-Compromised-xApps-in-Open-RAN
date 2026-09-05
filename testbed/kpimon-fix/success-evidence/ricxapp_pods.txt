@@ -1,0 +1,5 @@
+NAME                                   READY   STATUS    RESTARTS        AGE
+ricxapp-hw-go-c84579888-tnc49          1/1     Running   10 (156m ago)   5d
+ricxapp-hw-python-6dc58c6556-f7ckw     1/1     Running   10 (156m ago)   5d
+ricxapp-kpimon-go-65b4d7f794-gq9n4     1/1     Running   3 (8m25s ago)   8m41s
+ricxapp-trafficxapp-7c46768578-rr9j9   1/1     Running   10 (156m ago)   5d

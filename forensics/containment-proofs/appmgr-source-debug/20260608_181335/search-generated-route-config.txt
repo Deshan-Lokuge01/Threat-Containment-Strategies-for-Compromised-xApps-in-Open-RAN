@@ -1,0 +1,2 @@
+./api/appmgr_rest_api.yaml:55:      operationId: deployXapp
+./api/appmgr_rest_api.yaml:133:      operationId: undeployXapp

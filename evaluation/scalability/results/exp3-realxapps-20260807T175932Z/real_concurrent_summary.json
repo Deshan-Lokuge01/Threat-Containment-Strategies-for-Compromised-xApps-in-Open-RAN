@@ -1,0 +1,229 @@
+{
+  "schema": "zt-xguard-real-xapp-concurrency-summary-v1",
+  "levels": {
+    "1": {
+      "cells": 3,
+      "attempts": 3,
+      "successes": 3,
+      "success_rate": 1.0,
+      "quarantine_label_ms": {
+        "n": 3,
+        "mean": 741.76,
+        "median": 722.355,
+        "p95": 813.063,
+        "max": 823.142
+      },
+      "identity_disabled_ms": {
+        "n": 3,
+        "mean": 1707.832,
+        "median": 1625.83,
+        "p95": 2014.246,
+        "max": 2057.403
+      },
+      "service_isolated_ms": {
+        "n": 3,
+        "mean": 922.185,
+        "median": 1133.678,
+        "p95": 1271.669,
+        "max": 1287.001
+      },
+      "endpoints_empty_ms": {
+        "n": 3,
+        "mean": 922.185,
+        "median": 1133.678,
+        "p95": 1271.669,
+        "max": 1287.001
+      },
+      "contained_verified_ms": {
+        "n": 3,
+        "mean": 741.76,
+        "median": 722.355,
+        "p95": 813.063,
+        "max": 823.142
+      },
+      "direct_packet_filter_ms": {
+        "n": 3,
+        "mean": 1838.762,
+        "median": 1772.245,
+        "p95": 2123.172,
+        "max": 2162.164
+      },
+      "network_unreachable_ms": {
+        "n": 3,
+        "mean": 1961.688,
+        "median": 1890.542,
+        "p95": 2240.599,
+        "max": 2279.494
+      }
+    },
+    "2": {
+      "cells": 3,
+      "attempts": 6,
+      "successes": 6,
+      "success_rate": 1.0,
+      "quarantine_label_ms": {
+        "n": 6,
+        "mean": 1599.4,
+        "median": 1608.664,
+        "p95": 2488.002,
+        "max": 2527.613
+      },
+      "identity_disabled_ms": {
+        "n": 6,
+        "mean": 2820.615,
+        "median": 2894.801,
+        "p95": 3954.442,
+        "max": 4059.232
+      },
+      "service_isolated_ms": {
+        "n": 6,
+        "mean": 1881.701,
+        "median": 1856.228,
+        "p95": 2895.719,
+        "max": 2936.726
+      },
+      "endpoints_empty_ms": {
+        "n": 6,
+        "mean": 1881.701,
+        "median": 1856.228,
+        "p95": 2895.719,
+        "max": 2936.726
+      },
+      "contained_verified_ms": {
+        "n": 6,
+        "mean": 1599.4,
+        "median": 1608.664,
+        "p95": 2488.002,
+        "max": 2527.613
+      },
+      "direct_packet_filter_ms": {
+        "n": 6,
+        "mean": 3994.296,
+        "median": 3777.198,
+        "p95": 4444.227,
+        "max": 4444.246
+      },
+      "network_unreachable_ms": {
+        "n": 6,
+        "mean": 4194.874,
+        "median": 3943.101,
+        "p95": 4759.981,
+        "max": 4760.158
+      }
+    },
+    "3": {
+      "cells": 3,
+      "attempts": 9,
+      "successes": 9,
+      "success_rate": 1.0,
+      "quarantine_label_ms": {
+        "n": 9,
+        "mean": 2866.644,
+        "median": 3108.46,
+        "p95": 4835.304,
+        "max": 5120.959
+      },
+      "identity_disabled_ms": {
+        "n": 9,
+        "mean": 4025.199,
+        "median": 4133.141,
+        "p95": 6069.933,
+        "max": 6160.439
+      },
+      "service_isolated_ms": {
+        "n": 9,
+        "mean": 3162.236,
+        "median": 3108.46,
+        "p95": 5247.626,
+        "max": 5332.07
+      },
+      "endpoints_empty_ms": {
+        "n": 9,
+        "mean": 3162.236,
+        "median": 3108.46,
+        "p95": 5247.626,
+        "max": 5332.07
+      },
+      "contained_verified_ms": {
+        "n": 9,
+        "mean": 2866.644,
+        "median": 3108.46,
+        "p95": 4835.304,
+        "max": 5120.959
+      },
+      "direct_packet_filter_ms": {
+        "n": 9,
+        "mean": 6182.495,
+        "median": 6214.999,
+        "p95": 6456.277,
+        "max": 6456.3
+      },
+      "network_unreachable_ms": {
+        "n": 9,
+        "mean": 6299.033,
+        "median": 6325.738,
+        "p95": 6555.072,
+        "max": 6555.154
+      }
+    },
+    "4": {
+      "cells": 2,
+      "attempts": 8,
+      "successes": 8,
+      "success_rate": 1.0,
+      "quarantine_label_ms": {
+        "n": 8,
+        "mean": 3634.215,
+        "median": 3720.992,
+        "p95": 6191.99,
+        "max": 6272.287
+      },
+      "identity_disabled_ms": {
+        "n": 8,
+        "mean": 4829.387,
+        "median": 4980.502,
+        "p95": 7175.778,
+        "max": 7187.127
+      },
+      "service_isolated_ms": {
+        "n": 8,
+        "mean": 3776.116,
+        "median": 3911.858,
+        "p95": 6191.99,
+        "max": 6272.287
+      },
+      "endpoints_empty_ms": {
+        "n": 8,
+        "mean": 3776.116,
+        "median": 3911.858,
+        "p95": 6191.99,
+        "max": 6272.287
+      },
+      "contained_verified_ms": {
+        "n": 8,
+        "mean": 3776.116,
+        "median": 3911.858,
+        "p95": 6191.99,
+        "max": 6272.287
+      },
+      "direct_packet_filter_ms": {
+        "n": 8,
+        "mean": 7514.656,
+        "median": 7514.595,
+        "p95": 7771.326,
+        "max": 7771.372
+      },
+      "network_unreachable_ms": {
+        "n": 8,
+        "mean": 7625.488,
+        "median": 7625.686,
+        "p95": 7893.12,
+        "max": 7893.442
+      }
+    }
+  },
+  "total_attempts": 26,
+  "total_successes": 26,
+  "note": "K=4 has 2 repetitions (8 attempts); the third K=4 replicate aborted at its baseline check due to a post-reset re-containment artifact and was not collected.",
+  "generated_utc": "2026-08-07T18:32:20.239028+00:00"
+}

@@ -1,0 +1,24 @@
+Name:         spire-controller-manager-service-account-based
+Namespace:    
+Labels:       app.kubernetes.io/managed-by=Helm
+Annotations:  meta.helm.sh/release-name: spire
+              meta.helm.sh/release-namespace: spire-system
+API Version:  spire.spiffe.io/v1alpha1
+Kind:         ClusterSPIFFEID
+Metadata:
+  Creation Timestamp:  2026-05-30T08:38:23Z
+  Generation:          1
+  Resource Version:    345839
+  UID:                 07900e1f-8bce-449d-888d-06c344a42a44
+Spec:
+  Spiffe ID Template:  spiffe://{{ .TrustDomain }}/ns/{{ .PodMeta.Namespace }}/sa/{{ .PodSpec.ServiceAccountName }}
+Status:
+  Stats:
+    Entries Masked:             0
+    Entries To Set:             36
+    Entry Failures:             0
+    Namespaces Ignored:         3
+    Namespaces Selected:        12
+    Pod Entry Render Failures:  0
+    Pods Selected:              36
+Events:                         <none>

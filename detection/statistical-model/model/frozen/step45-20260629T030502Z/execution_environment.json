@@ -1,0 +1,25 @@
+{
+  "python_version": "3.12.4 (tags/v3.12.4:8e8a4ba, Jun  6 2024, 19:30:16) [MSC v.1940 64 bit (AMD64)]",
+  "python_executable": "C:\\Program Files\\Python312\\python.exe",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "platform_system": "Windows",
+  "platform_machine": "AMD64",
+  "utc_time": "2026-06-29T03:05:07.648617+00:00",
+  "numpy_version": "2.0.0",
+  "pandas_version": "2.2.2",
+  "scipy_version": "1.16.1",
+  "sklearn_version": "1.5.1",
+  "statsmodels_version": "0.14.2",
+  "yaml_version": "6.0.2",
+  "scikit_learn_version": "1.5.1",
+  "input_hashes": {
+    "step42_frozen_transform": "d9d7f41328595026d674ad1dbf487e5901c268cf46737253bf1ab264b9d6d4c4",
+    "step42_frozen_scale": "677e6dd3911aecbc6f69ba4a326f00c97f90f7d8b9000d523848dc2d2d959929",
+    "step42_frozen_m3_offsets": "bb0b1616168b2e8e97c44ce841daa3b62714492fc8495c6ff798f97eb74426cf",
+    "model_candidates": "cfc159f68ecd854fa1a40a37b2beace4a1ddd3f8252dc8b20aa3719b955bc71d",
+    "N1_raw": "95e7707ceb4df5577d563e5869cc0692bf6664dd9bf8667c60bc18caf7a8662d",
+    "N2_raw": "87ff3d51f3316a5734c99cad496d11a141322fedc07b313fb3318a1072f6607b",
+    "N3_raw": "2390e9acb2d6dead79e6e33537ffea8ca9184536218fda66d0481023bf2ddacb",
+    "N4_raw_posthoc": "2da1ba06dcbb5df3e69263273137fe90d4fa2a13e0367375f5bc37c5b61dc103"
+  }
+}

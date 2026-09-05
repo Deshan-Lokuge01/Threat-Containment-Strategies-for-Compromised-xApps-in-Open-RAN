@@ -1,0 +1,2 @@
+service-ricplt-submgr-http                  ClusterIP      None             <none>        3800/TCP                        9d
+service-ricplt-submgr-rmr                   ClusterIP      None             <none>        4560/TCP,4561/TCP               9d

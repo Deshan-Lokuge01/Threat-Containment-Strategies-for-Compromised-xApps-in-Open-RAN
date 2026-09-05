@@ -1,0 +1,28 @@
+{
+  "attack_timeline_file": "/home/nearric/Desktop/FYP/zt-xguard/data/attacks/R1/A1-R1-CPU-PILOT-1UE-10PPS-20260630T050146Z/attack_timeline.csv",
+  "dataset": "A1_R1",
+  "endpoint_errors": 0,
+  "expected_rows": 1800,
+  "resource_counter_resets": 0,
+  "rows": 1800,
+  "runtime_counter_resets": 0,
+  "sample_interval_seconds": {
+    "maximum": 1.602278,
+    "mean": 1.0000015461111111,
+    "p95": 1.00740825,
+    "p99": 1.02770278
+  },
+  "sample_lag_ms": {
+    "maximum": 605.672,
+    "mean": 6.296906111111111,
+    "p95": 11.2989,
+    "p99": 46.80261999999999
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 28,
+    "ok": 1769,
+    "timing": 3
+  },
+  "schema": "ztx-attack-quality-v1",
+  "timing_errors": 3
+}

@@ -1,0 +1,1 @@
+pod/kpm-monitor-6b98c5654-xvbrt           1/1     Terminating   0          172m

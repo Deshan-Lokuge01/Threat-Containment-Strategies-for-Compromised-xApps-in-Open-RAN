@@ -1,0 +1,11 @@
+deployment.apps/telemetry-monitor scaled
+deployment.apps/qos-optimizer scaled
+deployment.apps/traffic-analyzer scaled
+deployment.apps/resource-optimizer scaled
+deployment.apps/security-observer scaled
+Waiting for deployment "telemetry-monitor" rollout to finish: 0 of 1 updated replicas are available...
+deployment "telemetry-monitor" successfully rolled out
+deployment "qos-optimizer" successfully rolled out
+deployment "traffic-analyzer" successfully rolled out
+deployment "resource-optimizer" successfully rolled out
+deployment "security-observer" successfully rolled out

@@ -1,0 +1,13 @@
+{
+  "endpoint_errors": 0,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/controls/A5/A5-BENIGN-LOWCPU15M-V1-1UE-10PPS-20260702T195941Z/raw_metrics.csv",
+  "profile": "CONTROL_A5_BENIGN_LOWCPU15M_V1_1UE_10PPS",
+  "resource_counter_resets": 0,
+  "rows_written": 1500,
+  "run_id": "A5-BENIGN-LOWCPU15M-V1-1UE-10PPS-20260702T195941Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 1500,
+  "timing_errors": 0
+}

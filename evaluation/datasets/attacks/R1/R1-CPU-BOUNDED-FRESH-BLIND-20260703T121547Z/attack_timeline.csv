@@ -1,0 +1,3 @@
+phase,elapsed_s,utc,scenario
+attack_start,600,2026-07-03T12:26:20Z,R1_CPU_20PCT_900S
+attack_end,1500,2026-07-03T12:41:20Z,R1_CPU_20PCT_900S

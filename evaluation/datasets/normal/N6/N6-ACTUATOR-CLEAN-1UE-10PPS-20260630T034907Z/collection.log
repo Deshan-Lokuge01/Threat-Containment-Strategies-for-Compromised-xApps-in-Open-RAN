@@ -1,0 +1,169 @@
+============================================================
+ STEP 48B: N6 ACTUATOR-DORMANT CLEAN COLLECTION
+============================================================
+Run ID: N6-ACTUATOR-CLEAN-1UE-10PPS-20260630T034907Z
+Output: /home/nearric/Desktop/FYP/zt-xguard/data/normal/N6/N6-ACTUATOR-CLEAN-1UE-10PPS-20260630T034907Z
+Started UTC: 2026-06-30T03:49:07Z
+
+--- 1. Verify frozen v2 model ---
+./execution_environment.json: OK
+./step45_report.md: OK
+./step45_summary.json: OK
+./step45_v2_clean_score_ecdf.pdf: OK
+./step45_v2_clean_score_ecdf.png: OK
+./step45_v2_n4_posthoc_timeline.pdf: OK
+./step45_v2_n4_posthoc_timeline.png: OK
+./v2_frozen_mewma_location.csv: OK
+./v2_frozen_mewma_state_covariance.csv: OK
+./v2_frozen_mewma_state_precision.csv: OK
+./v2_frozen_model_spec.yaml: OK
+./v2_frozen_thresholds_and_persistence.csv: OK
+./v2_n3_score_summary_by_candidate.csv: OK
+./v2_n3_scores_W10_H10.csv: OK
+./v2_n3_scores_W10_H15.csv: OK
+./v2_n3_scores_W10_H20.csv: OK
+./v2_n3_scores_W10_H3.csv: OK
+./v2_n3_scores_W10_H5.csv: OK
+./v2_n3_scores_W5_H10.csv: OK
+./v2_n3_scores_W5_H15.csv: OK
+./v2_n3_scores_W5_H20.csv: OK
+./v2_n3_scores_W5_H3.csv: OK
+./v2_n3_scores_W5_H5.csv: OK
+./v2_n3_scores_W8_H10.csv: OK
+./v2_n3_scores_W8_H15.csv: OK
+./v2_n3_scores_W8_H20.csv: OK
+./v2_n3_scores_W8_H3.csv: OK
+./v2_n3_scores_W8_H5.csv: OK
+./v2_n3_threshold_persistence_candidates.csv: OK
+./v2_n4_posthoc_metrics.csv: OK
+./v2_n4_posthoc_scores.csv: OK
+./v2_selected_n3_scores.csv: OK
+./v2_window_features_W10_N1.csv: OK
+./v2_window_features_W10_N2.csv: OK
+./v2_window_features_W10_N3.csv: OK
+./v2_window_features_W5_N1.csv: OK
+./v2_window_features_W5_N2.csv: OK
+./v2_window_features_W5_N3.csv: OK
+./v2_window_features_W8_N1.csv: OK
+./v2_window_features_W8_N2.csv: OK
+./v2_window_features_W8_N3.csv: OK
+ztx-step45-v2-frozen-model.tar.gz: OK
+n5_v2_freeze_binding.json: OK
+--- 2. Verify latest N6 actuator-dormant readiness ---
+validation.txt: OK
+runtime_metrics_preflight.json: OK
+e2_state_initial.json: OK
+kpimon_pod.yaml: OK
+kpimon_deployment.yaml: OK
+process_check.txt: OK
+stress_ng_check.txt: OK
+PASS: Readiness verified: /home/nearric/Desktop/FYP/zt-xguard/data/normal/N6/readiness/N6-ACTUATOR-READINESS-20260630T034859Z
+--- 3. Bind current kpimon pod ---
+PASS: kpimon bound: pod=ricxapp-kpimon-go-687d9645b6-snlkl host_pid=45199
+--- 4. Verify clean workload ---
+  44572   44571 ping            ping -i 0.1 10.45.1.1
+PASS: Clean workload verified.
+--- 5. Save start evidence ---
+--- 6. Run collector for 30 minutes ---
+{
+  "endpoint_errors": 0,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/normal/N6/N6-ACTUATOR-CLEAN-1UE-10PPS-20260630T034907Z/raw_metrics.csv",
+  "profile": "NORMAL_N6_ACTUATOR_DORMANT_1UE_10PPS_V2_EVAL",
+  "resource_counter_resets": 0,
+  "rows_written": 1800,
+  "run_id": "N6-ACTUATOR-CLEAN-1UE-10PPS-20260630T034907Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 1800,
+  "timing_errors": 0
+}
+--- 7. Save end evidence ---
+--- 8. Build quality summary ---
+{
+  "dataset": "N6",
+  "endpoint_errors": 0,
+  "expected_rows": 1800,
+  "ground_truth": "clean_normal",
+  "resource_counter_resets": 0,
+  "role": "untouched-final-clean-evaluation-for-v2",
+  "rows": 1800,
+  "runtime_counter_deltas": {
+    "ric_indication_total": {
+      "delta": 23,
+      "end": 35,
+      "start": 12
+    },
+    "rmr_rx_total": {
+      "delta": 23,
+      "end": 35,
+      "start": 12
+    },
+    "rmr_tx_total": {
+      "delta": 0,
+      "end": 0,
+      "start": 0
+    },
+    "work_units_total": {
+      "delta": 23,
+      "end": 35,
+      "start": 12
+    }
+  },
+  "runtime_counter_resets": 0,
+  "sample_interval_seconds": {
+    "maximum": 1.040607,
+    "mean": 1.0000008072222222,
+    "minimum": 0.960975,
+    "p95": 1.004324,
+    "p99": 1.010712
+  },
+  "sample_lag_ms": {
+    "maximum": 43.073,
+    "mean": 3.855498888888889,
+    "minimum": 1.166,
+    "p95": 7.955,
+    "p99": 14.312
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 28,
+    "ok": 1772
+  },
+  "schema": "ztx-normal-quality-v1",
+  "timing_errors": 0
+}
+--- 9. Acceptance checks ---
+./cadvisor_full_end.prom: OK
+./cadvisor_full_start.prom: OK
+./kpimon_deployment.yaml: OK
+./kpimon.log: OK
+./kpimon_pod_end.yaml: OK
+./kpimon_pod_start.yaml: OK
+./n5_v2_freeze_binding.json: OK
+./quality_summary.json: OK
+./raw_metrics.csv: OK
+./raw_metrics.csv.summary.json: OK
+./run_metadata.json: OK
+./runtime_metrics_end.json: OK
+./runtime_metrics_start.json: OK
+./step45e_validation.txt: OK
+./validation.txt: OK
+./workload_verification.txt: OK
+dataset=N6
+role=untouched-final-clean-evaluation-for-v2
+ground_truth=clean_normal
+run_id=N6-ACTUATOR-CLEAN-1UE-10PPS-20260630T034907Z
+collector_return_code=0
+primary_data_ok=1
+runtime_counters_ok=1
+minimum_required_ric_cycles=20
+single_ping_at_end=1
+attack_process_count_end=0
+attack_pod_count_end=0
+frozen_model_archive_sha256=47d631da4dd165b7f0527a8749443e54e90c3284215b0aec7358e3f364fe7856
+n6_scored_during_collection=0
+final_acceptance=1
+============================================================
+RESULT: N6 ACTUATOR-DORMANT CLEAN DATASET ACCEPTED
+/home/nearric/Desktop/FYP/zt-xguard/data/normal/N6/N6-ACTUATOR-CLEAN-1UE-10PPS-20260630T034907Z
+============================================================

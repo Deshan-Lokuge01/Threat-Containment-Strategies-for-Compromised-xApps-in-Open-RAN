@@ -1,0 +1,26 @@
+{
+  "dataset": "A_BURST_PULSETRAIN_BLIND",
+  "collector_return_code": 0,
+  "rows": 2835,
+  "expected_rows": 2835,
+  "endpoint_errors": 0,
+  "timing_errors": 0,
+  "kpimon_restart_delta": 0,
+  "sample_interval_seconds": {
+    "mean": 1.0000002558221595,
+    "maximum": 1.0559800000000337,
+    "p95": 1.0031958500000768,
+    "p99": 1.0084381799999937
+  },
+  "sample_lag_ms": {
+    "mean": 2.93240987654321,
+    "maximum": 58.236,
+    "p95": 5.612999999999986,
+    "p99": 10.80449999999996
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 28,
+    "ok": 2807
+  },
+  "final_collection_acceptance": 1
+}

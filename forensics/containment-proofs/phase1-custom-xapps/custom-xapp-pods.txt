@@ -1,0 +1,6 @@
+NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+qos-optimizer-56d96965cf-gxp9g        1/1     Running   0          6m34s   10.244.0.182   near-rt-ric   <none>           <none>
+resource-optimizer-6b4996ff4b-xgdcz   1/1     Running   0          6m34s   10.244.0.183   near-rt-ric   <none>           <none>
+security-observer-55674689c9-jgd26    1/1     Running   0          6m34s   10.244.0.184   near-rt-ric   <none>           <none>
+telemetry-monitor-75bcb6d888-j2p5j    1/1     Running   0          6m34s   10.244.0.181   near-rt-ric   <none>           <none>
+traffic-analyzer-6756f48b94-d428r     1/1     Running   0          6m34s   10.244.0.185   near-rt-ric   <none>           <none>

@@ -1,0 +1,6 @@
+{
+  "xappName": "kpm-monitor",
+  "helmVersion": "1.0.0",
+  "releaseName": "kpm-monitor",
+  "namespace": "ricxapp"
+}

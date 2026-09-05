@@ -1,0 +1,132 @@
+============================================================
+ STEP 50A: CALDERA-ORCHESTRATED T1499 KPIMON CPU COLLECTION
+============================================================
+Run ID:   A2-CALDERA-T1499-KPIMON-CPU-1UE-10PPS-20260630T095947Z
+Root:     /home/nearric/Desktop/FYP/zt-xguard
+Collector:/home/nearric/Desktop/FYP/zt-xguard/collector/collect_resources.py
+Output:   /home/nearric/Desktop/FYP/zt-xguard/data/attacks/R1/A2-CALDERA-T1499-KPIMON-CPU-1UE-10PPS-20260630T095947Z
+Duration: 1800 s
+Prompt:   launch CALDERA operation at +300s
+Started:  2026-06-30T09:59:47Z
+
+--- 1. Verify clean workload ---
+===== ALL PINGS TO 10.45.1.1 =====
+  44572   44571 ping            ping -i 0.1 10.45.1.1
+
+===== EXPECTED 10 PPS PING =====
+  44572   44571 ping            ping -i 0.1 10.45.1.1
+PASS: Clean 1 UE / 10 PPS workload verified.
+
+--- 2. Resolve KPIMON target ---
+pod=ricxapp-kpimon-go-7bf6985688-fj8q4
+pod_uid=e85eebb9-e353-4c10-8b57-c27201e05279
+pod_ip=10.244.0.112
+container_id=3fd958246bc029c3367c51e71149ac130135ff579fcc80a3de033ea3a0a276d9
+host_pid=206844
+cgroup=/sys/fs/cgroup/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pode85eebb9_e353_4c10_8b57_c27201e05279.slice/cri-containerd-3fd958246bc029c3367c51e71149ac130135ff579fcc80a3de033ea3a0a276d9.scope
+metrics_url=http://10.244.0.112:9090/ztx/metrics
+
+--- 3. Verify CALDERA agent and actuator state ---
+caldera_pod=caldera-agent-6d6c6c886f-nbhqj
+actuator_status={"active":false}
+PASS: CALDERA agent reachable and actuator inactive.
+
+--- 4. Save start evidence ---
+
+--- 5. Start actuator monitor ---
+monitor_pid=808516
+
+--- 6. Start resource collector in background ---
+collector_pid=808517
+
+============================================================
+COLLECTION RUNNING.
+At +300s this script will tell you to launch CALDERA.
+Use CALDERA UI operation:
+  Name: ZTX-T1499-KPIMON-CPU-Resource-Exhaustion-Step50-Official
+  Group: ztx-cluster-lab
+  Adversary: ZT-XGuard T1499 KPIMON CPU Resource Exhaustion Pilot V2
+  Planner: atomic
+  Autonomous: yes
+  Run immediately: yes
+  Obfuscator: plain-text
+============================================================
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LAUNCH CALDERA OPERATION NOW
+Time UTC: 2026-06-30T10:04:50Z
+Operation: ZTX-T1499-KPIMON-CPU-Resource-Exhaustion-Step50-Official
+Adversary: ZT-XGuard T1499 KPIMON CPU Resource Exhaustion Pilot V2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+{
+  "endpoint_errors": 0,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/attacks/R1/A2-CALDERA-T1499-KPIMON-CPU-1UE-10PPS-20260630T095947Z/raw_metrics.csv",
+  "profile": "ATTACK_CALDERA_T1499_KPIMON_CPU_1UE_10PPS",
+  "resource_counter_resets": 0,
+  "rows_written": 1800,
+  "run_id": "A2-CALDERA-T1499-KPIMON-CPU-1UE-10PPS-20260630T095947Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 1800,
+  "timing_errors": 0
+}
+
+--- 7. Collector finished ---
+collector_return_code=0
+
+--- 8. Save end evidence ---
+
+--- 9. Build quality summary ---
+{
+  "dataset": "A2_CALDERA_T1499_R1_CPU",
+  "endpoint_errors": 0,
+  "expected_rows": 1800,
+  "resource_counter_resets": 0,
+  "rows": 1800,
+  "runtime_counter_resets": 0,
+  "sample_interval_seconds": {
+    "maximum": 1.146748,
+    "mean": 1.0000015772222222,
+    "p95": 1.0085654499999999,
+    "p99": 1.0245468500000001
+  },
+  "sample_lag_ms": {
+    "maximum": 153.368,
+    "mean": 5.450684444444445,
+    "p95": 12.848499999999998,
+    "p99": 30.115529999999996
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 28,
+    "ok": 1772
+  },
+  "schema": "ztx-step50-attack-quality-v1",
+  "timing_errors": 0
+}
+
+--- 10. Build attack timeline from actuator monitor ---
+active_seen= 1
+dataset=A2_CALDERA_T1499_R1_CPU
+run_id=A2-CALDERA-T1499-KPIMON-CPU-1UE-10PPS-20260630T095947Z
+role=caldera-orchestrated-attack-evaluation
+collector_return_code=0
+primary_data_ok=1
+attack_started=1
+stress_ng_running_at_end=0
+actuator_inactive_at_end=1
+scored_during_collection=0
+final_acceptance=1
+caldera_report_required=1
+
+--- 11. Finalize metadata and hashes ---
+
+============================================================
+RESULT: STEP 50A DATASET COLLECTED / ACCEPTED
+/home/nearric/Desktop/FYP/zt-xguard/data/attacks/R1/A2-CALDERA-T1499-KPIMON-CPU-1UE-10PPS-20260630T095947Z
+============================================================
+
+NEXT: download the CALDERA operation report and place it here:
+/home/nearric/Desktop/FYP/zt-xguard/data/attacks/R1/A2-CALDERA-T1499-KPIMON-CPU-1UE-10PPS-20260630T095947Z/caldera_operation_report.json

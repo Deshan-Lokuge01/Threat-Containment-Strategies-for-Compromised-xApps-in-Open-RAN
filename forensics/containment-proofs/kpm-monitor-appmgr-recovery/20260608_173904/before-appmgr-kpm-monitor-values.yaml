@@ -1,0 +1,14 @@
+COMPUTED VALUES:
+appLabel: kpm-monitor
+image: localhost:5000/zt-kpm-monitor:1.0
+imagePullPolicy: IfNotPresent
+immutableImage: localhost:5000/zt-kpm-monitor@sha256:ad33e4066862da37731a118b170832ec29a51aac3c3433095d8a32b4582913fe
+namespace: ricxapp
+ports:
+  http: 8092
+  rmr: 4560
+replicaCount: 1
+serviceAccountName: kpm-monitor
+spiffeID: spiffe://example.org/ns/ricxapp/sa/kpm-monitor
+svidFetcherImage: localhost:5000/spire-fetcher:1.0-nonroot
+xappName: kpm-monitor

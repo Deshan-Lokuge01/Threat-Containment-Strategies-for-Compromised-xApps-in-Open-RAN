@@ -1,0 +1,19 @@
+# HELP xapp_work_units_processed Total legitimate work units processed
+# TYPE xapp_work_units_processed counter
+xapp_work_units_processed{xapp="qos-optimizer",role="qos-optimization"} 9120
+
+# HELP xapp_ric_activity_counter Simulated or real RIC activity counter
+# TYPE xapp_ric_activity_counter counter
+xapp_ric_activity_counter{xapp="qos-optimizer",role="qos-optimization"} 76
+
+# HELP xapp_control_action_counter Simulated control action counter
+# TYPE xapp_control_action_counter counter
+xapp_control_action_counter{xapp="qos-optimizer",role="qos-optimization"} 76
+
+# HELP xapp_heartbeat_age_seconds Seconds since last heartbeat
+# TYPE xapp_heartbeat_age_seconds gauge
+xapp_heartbeat_age_seconds{xapp="qos-optimizer",role="qos-optimization"} 4.9
+
+# HELP xapp_errors_total Total internal xApp errors
+# TYPE xapp_errors_total counter
+xapp_errors_total{xapp="qos-optimizer",role="qos-optimization"} 0

@@ -1,0 +1,3 @@
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME                                 ENDPOINTS              AGE
+service-ricplt-xapp-onboarder-http   192.168.112.129:8090   101m

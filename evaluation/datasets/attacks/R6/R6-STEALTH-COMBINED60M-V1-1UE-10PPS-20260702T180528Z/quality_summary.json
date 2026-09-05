@@ -1,0 +1,31 @@
+{
+  "dataset": "R6_STEALTH_COMBINED60M_V1",
+  "collector_return_code": 0,
+  "rows": 5700,
+  "expected_rows": 5700,
+  "endpoint_errors": 51,
+  "timing_errors": 60,
+  "kpimon_restart_delta": 0,
+  "sample_interval_seconds": {
+    "mean": 1.0000002381119495,
+    "maximum": 18.702349000000027,
+    "p95": 1.0031699999999546,
+    "p99": 1.0200864600000112
+  },
+  "sample_lag_ms": {
+    "mean": 49.05134280701754,
+    "maximum": 17942.117,
+    "p95": 5.977500000000003,
+    "p99": 277.86961000000815
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 57,
+    "ok": 5538,
+    "metrics_endpoint": 44,
+    "timing": 51,
+    "timing;memory_slope_warmup": 3,
+    "metrics_endpoint;memory_slope_warmup": 1,
+    "timing;metrics_endpoint": 6
+  },
+  "final_collection_acceptance": 0
+}

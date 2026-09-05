@@ -1,0 +1,214 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zt-xguard
+  labels:
+    app.kubernetes.io/part-of: zt-xguard
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: zt-xguard-policy-engine
+  namespace: zt-xguard
+  labels:
+    app.kubernetes.io/part-of: zt-xguard
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: zt-xguard-policy-engine-observer
+  namespace: ricxapp
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+      - services
+      - endpoints
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - replicasets
+    verbs:
+      - get
+      - list
+      - watch
+
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - get
+      - list
+      - watch
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: zt-xguard-policy-engine-observer
+  namespace: ricxapp
+subjects:
+  - kind: ServiceAccount
+    name: zt-xguard-policy-engine
+    namespace: zt-xguard
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: zt-xguard-policy-engine-observer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zt-xguard-policy-engine
+  namespace: zt-xguard
+  labels:
+    app: zt-xguard-policy-engine
+    app.kubernetes.io/part-of: zt-xguard
+spec:
+  replicas: 1
+
+  strategy:
+    type: Recreate
+
+  selector:
+    matchLabels:
+      app: zt-xguard-policy-engine
+
+  template:
+    metadata:
+      labels:
+        app: zt-xguard-policy-engine
+        app.kubernetes.io/part-of: zt-xguard
+        zt-xguard.io/mode: observation
+
+    spec:
+      serviceAccountName: zt-xguard-policy-engine
+      automountServiceAccountToken: true
+      terminationGracePeriodSeconds: 10
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+        - name: policy-engine
+          image: docker.io/library/zt-xguard-policy-engine:observe-v1
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+
+          env:
+            - name: XAPP_NAMESPACE
+              value: ricxapp
+
+            - name: TRUST_DOMAIN
+              value: oran.fyp.local
+
+            - name: AUTO_QUARANTINE
+              value: "false"
+
+            - name: ALLOW_DESTRUCTIVE_ACTIONS
+              value: "false"
+
+            - name: EVIDENCE_DIR
+              value: /evidence
+
+            - name: ACTIVITY_TIMEOUT
+              value: "2.0"
+
+            - name: SPIRE_NAMESPACE
+              value: spire-server
+
+            - name: SPIRE_SERVER_POD
+              value: spire-server-0
+
+            - name: SPIRE_SERVER_CONTAINER
+              value: spire-server
+
+            - name: SPIRE_SERVER_SOCKET
+              value: /tmp/spire-server/private/api.sock
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            capabilities:
+              drop:
+                - ALL
+
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+          volumeMounts:
+            - name: evidence
+              mountPath: /evidence
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 4
+
+      volumes:
+        - name: evidence
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zt-xguard-policy-engine
+  namespace: zt-xguard
+  labels:
+    app: zt-xguard-policy-engine
+spec:
+  type: ClusterIP
+
+  selector:
+    app: zt-xguard-policy-engine
+
+  ports:
+    - name: http
+      port: 5000
+      targetPort: http
+      protocol: TCP

@@ -1,0 +1,41 @@
+schema: ztx-resource-detector-v3-directional-resource-pressure
+frozen_utc: '2026-07-02T13:06:55.339291+00:00'
+reason_for_new_version: v2_two_sided_distance_false_positives_on_current_clean_D1_D2_D3_due_to_M5_M6_lower_baseline
+fitting_datasets:
+- N1
+- N2
+calibration_dataset: N3
+validation_datasets:
+- N5_CLEAN
+- N6_ACTUATOR_CLEAN
+- D1_CURRENT_NORMAL
+- D2_CURRENT_NORMAL_V4
+- D3_CURRENT_NORMAL_V1
+- R1_STEP49_CPU_PILOT
+- A4B_DIRECT_COMPOSITE_BOUNDED60
+features:
+- M1_log1p
+- M4_identity
+- M5_log1p
+- M6_log1p
+directional_excess_formula: max(0, (transformed_value - frozen_center) / effective_scale)
+pressure_score_formula: MEWMA(excess)^T * precision_N1_N2_assume_centered * MEWMA(excess)
+scale_floor_formula: 0.1 * median(original selected-feature scales)
+scale_floor_value: 0.007669426873078445
+window_seconds: 8
+half_life_seconds: 3
+lambda_value: 0.206299
+warmup_steps: 20
+warning_quantile: 0.975
+upper_quantile: 0.995
+warning_limit: 10.436432182404562
+upper_limit: 15.3084172374118
+horizon_states: 16
+required_count: 12
+ledoit_wolf_shrinkage: 0.0002496893919143938
+public_states:
+- NORMAL
+- SUSPICIOUS
+- COMPROMISED
+compromise_policy: COMPROMISED requires corroborating evidence; resource score alone
+  produces SUSPICIOUS at most.

@@ -1,0 +1,182 @@
+# ============================================================================
+# dos-detector xApp — deployed into the ricxapp namespace on THIS RIC, mirroring
+# the other xApps' SPIFFE/SPIRE workload attestation (SVID + renew-svid sidecar).
+#
+# It is DELIBERATELY independent of the ZT-XGuard dashboard (the dashboard only
+# tracks its fixed 4 xApps), and starts SCALED TO 0 — it only appears in
+# `k9s -A` / kubectl once you run the scale-up command in your demo script.
+#
+#   Registry:  127.0.0.1:80/dos-detector:1.0.1   (this VM's local registry)
+#   Identity:  spiffe://oran.fyp.local/ns/ricxapp/sa/ricxapp-dos-detector
+# ============================================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ricxapp-dos-detector
+  namespace: ricxapp
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-ricxapp-dos-detector-appconfig
+  namespace: ricxapp
+data:
+  config-file.json: |
+    {
+        "xapp_name": "dos-detector",
+        "version": "1.0.0",
+        "controls": {
+            "security_threshold_ul": 200.0,
+            "measurement_interval": 1000
+        },
+        "messaging": {
+            "ports": [
+                {
+                    "name": "rmr_data",
+                    "container": "my-secure-dos-xapp",
+                    "port": 4562,
+                    "rxMessages": ["RIC_INDICATION"],
+                    "txMessages": ["RIC_CONTROL_REQ"],
+                    "policies": [1]
+                },
+                {
+                    "name": "http_service",
+                    "container": "my-secure-dos-xapp",
+                    "port": 8092,
+                    "description": "HTTP REST API for the xApp"
+                }
+            ]
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ricxapp-dos-detector
+  namespace: ricxapp
+  labels:
+    app: ricxapp-dos-detector
+    release: dos-detector
+spec:
+  replicas: 0                      # <-- starts scaled DOWN; scale to 1 in the demo
+  selector:
+    matchLabels:
+      app: ricxapp-dos-detector
+  template:
+    metadata:
+      labels:
+        app: ricxapp-dos-detector
+        release: dos-detector
+        kubernetes_name: ricxapp_dos-detector
+        security-status: trusted
+        zt-xguard.io/identity-managed: "true"
+        zt-xguard.io/svid-enabled: "true"      # <-- makes the ClusterSPIFFEID issue an SVID
+    spec:
+      serviceAccountName: ricxapp-dos-detector
+      containers:
+        # ---- the dos-detector xApp ----
+        - name: my-secure-dos-xapp
+          image: 127.0.0.1:80/dos-detector:1.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: rmr-data
+              containerPort: 4562
+              protocol: TCP
+            - name: http
+              containerPort: 8092
+              protocol: TCP
+          env:
+            - name: CONFIG_FILE
+              value: /opt/ric/config/config-file.json
+            - name: RMR_SEED_RT
+              value: /app/correct_rtg.rt
+            - name: RMR_PORT
+              value: "4562"
+            - name: SERVICE_HTTP_HOST
+              value: service-ricxapp-dos-detector-http.ricxapp.svc.cluster.local
+            - name: SERVICE_HTTP_PORT
+              value: "8092"
+          volumeMounts:
+            - name: svid-data
+              mountPath: /etc/svid
+              readOnly: true
+            - name: config-volume
+              mountPath: /opt/ric/config
+          readinessProbe:            # informational only; no liveness -> never crash-loops the demo pod
+            tcpSocket:
+              port: 4562
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            failureThreshold: 6
+        # ---- SPIRE SVID fetch/renew sidecar (identical to the other xApps) ----
+        - name: renew-svid
+          image: docker.io/library/zt-spire-fetcher:1.0
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args: ["/opt/ztx/svid-renew.sh"]
+          env:
+            - name: EXPECTED_SPIFFE_ID
+              value: spiffe://oran.fyp.local/ns/ricxapp/sa/ricxapp-dos-detector
+            - name: RENEW_INTERVAL_SECONDS
+              value: "60"
+          resources:
+            requests: { cpu: "5m", memory: "16Mi" }
+            limits:   { cpu: "50m", memory: "64Mi" }
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: svid-renew-logger
+              mountPath: /opt/ztx/svid-renew.sh
+              subPath: svid-renew.sh
+              readOnly: true
+            - name: spiffe-socket
+              mountPath: /run/spire/sockets
+              readOnly: true
+            - name: svid-data
+              mountPath: /etc/svid
+      volumes:
+        - name: svid-renew-logger
+          configMap:
+            name: zt-xguard-svid-renew-logger
+            defaultMode: 365
+        - name: spiffe-socket
+          csi:
+            driver: csi.spiffe.io
+            readOnly: true
+        - name: svid-data
+          emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: configmap-ricxapp-dos-detector-appconfig
+            defaultMode: 420
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-ricxapp-dos-detector-rmr
+  namespace: ricxapp
+spec:
+  selector:
+    app: ricxapp-dos-detector
+  ports:
+    - name: rmr-data
+      port: 4562
+      targetPort: 4562
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-ricxapp-dos-detector-http
+  namespace: ricxapp
+spec:
+  selector:
+    app: ricxapp-dos-detector
+  ports:
+    - name: http
+      port: 8092
+      targetPort: 8092

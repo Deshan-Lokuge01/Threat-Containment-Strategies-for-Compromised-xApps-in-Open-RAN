@@ -1,0 +1,5 @@
+feature_id,column,selected_transform,center,original_scale,scale_floor_value,effective_scale,scale_was_floored,scale_floor_formula
+M1_log1p,m1_cpu_millicores,log1p,0.8522854018982426,0.1496175930924836,0.007669426873078445,0.1496175930924836,False,0.1 * median(original selected-feature scales)
+M4_identity,m4_memory_growth_bytes_per_s,identity,906.5685,3322.7882940000004,0.007669426873078445,3322.7882940000004,False,0.1 * median(original selected-feature scales)
+M5_log1p,m5_network_rx_bytes_per_s,log1p,6.511114372832169,0.0037709443690853,0.007669426873078445,0.007669426873078445,True,0.1 * median(original selected-feature scales)
+M6_log1p,m6_network_tx_bytes_per_s,log1p,6.883949148349977,0.0034901639873214,0.007669426873078445,0.007669426873078445,True,0.1 * median(original selected-feature scales)

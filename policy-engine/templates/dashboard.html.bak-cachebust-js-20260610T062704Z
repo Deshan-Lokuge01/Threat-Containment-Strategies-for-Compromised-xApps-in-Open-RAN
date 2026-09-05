@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ZT-XGuard Runtime Security Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body data-page="dashboard">
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">3</div>
+      <h1>Runtime Security Dashboard</h1>
+    </div>
+    <nav class="top-actions">
+      <a class="btn secondary" href="/dashboard">Runtime Dashboard</a>
+      <a class="btn secondary" href="/scenario-console">Attack Simulation</a>
+      <button id="primeAuditBtn" class="btn">Prime Audit</button>
+      <button id="refreshBtn" class="btn secondary">Refresh</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="panel hero">
+      <div>
+        <div class="label">Overall Trust State</div>
+        <div id="overallState" class="overall unknown">LOADING</div>
+      </div>
+      <div class="summary-grid">
+        <div class="metric good"><span id="trustedCount">0</span><small>Trusted</small></div>
+        <div class="metric info"><span id="observedCount">0</span><small>Observed</small></div>
+        <div class="metric warn"><span id="suspiciousCount">0</span><small>Suspicious</small></div>
+        <div class="metric bad"><span id="compromisedCount">0</span><small>Compromised</small></div>
+        <div class="metric purple"><span id="quarantinedCount">0</span><small>Quarantined</small></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <h2>xApp Runtime Table</h2>
+        </div>
+        <div id="lastUpdated" class="small-muted">Not updated yet</div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="runtime-table">
+          <thead>
+            <tr>
+              <th>xApp</th>
+              <th>State</th>
+              <th>Risk</th>
+              <th>Pod</th>
+              <th>Ready</th>
+              <th>Phase</th>
+              <th>Restarts</th>
+              <th>Pod IP</th>
+              <th>Service Account</th>
+              <th>Endpoints</th>
+	      <th>Isolated</th>
+              <th>Quarantine</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="runtimeTableBody">
+            <tr><td colspan="12">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/dashboard.js"></script>
+
+
+
+
+<div id="ztxForensicCenter" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #07111f; color: #e8f1ff; z-index: 99999; padding: 40px; box-sizing: border-box; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px;">
+        <div>
+            <div style="color: #60a5fa; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; font-family: sans-serif; letter-spacing: 0.5px;">ZT-XGuard Closed-Loop Isolation Engine</div>
+            <h1 style="color: #ffffff; margin: 0; font-size: 1.8rem; font-family: sans-serif; letter-spacing: -0.5px;">Incident Investigation Center: <span id="ztxTargetPodName" style="color: #fb7185; font-family: monospace;">[xApp-Instance]</span></h1>
+        </div>
+        <button onclick="closeZtxForensics()" style="background-color: rgba(255,255,255,0.08); color: #e8f1ff; border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 12px; transition: background 0.2s;">← Back to Dashboard</button>
+    </div>
+
+    <div style="background-color: #0d1b2d; border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; margin-bottom: 25px; display: flex; gap: 15px; align-items: center; font-family: sans-serif;">
+        <span style="font-size: 13px; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 10px;">Remediation Controls:</span>
+        
+        <button onclick="executeZtxAction('terminate')" style="background: linear-gradient(135deg, rgba(251,113,133,0.3), rgba(185,28,28,0.2)); color: #fb7185; border: 1px solid rgba(251,113,133,0.4); padding: 10px 20px; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 13px;">💀 Terminate</button>
+        
+        <button onclick="executeZtxAction('safeboot')" style="background: linear-gradient(135deg, rgba(96,165,250,0.3), rgba(59,130,246,0.15)); color: #60a5fa; border: 1px solid rgba(96,165,250,0.4); padding: 10px 20px; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 13px;">⚡ Safe Boot</button>
+    </div>
+
+    <h3 style="color: #e8f1ff; font-family: sans-serif; font-size: 1.1rem; margin-bottom: 12px;">Extracted System Evidentiary Logs:</h3>
+    <div style="background-color: #020617; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 25px; overflow-x: auto; box-shadow: inset 0 4px 12px rgba(0,0,0,0.5);">
+        <pre id="ztxForensicConsoleBox" style="color: #4ade80; font-family: 'Consolas', 'Courier New', monospace; font-size: 13px; line-height: 1.6; margin: 0; white-space: pre-wrap;">Loading runtime log block...</pre>
+    </div>
+</div>
+
+
+
+</body>
+</html>

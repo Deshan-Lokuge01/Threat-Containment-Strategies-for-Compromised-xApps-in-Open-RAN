@@ -1,0 +1,26 @@
+{
+  "dataset": "A5_BENIGN_LOWCPU15M_V1",
+  "collector_return_code": 0,
+  "rows": 1500,
+  "expected_rows": 1500,
+  "endpoint_errors": 0,
+  "timing_errors": 0,
+  "kpimon_restart_delta": 0,
+  "sample_interval_seconds": {
+    "mean": 1.0000004089392929,
+    "maximum": 1.398335999999972,
+    "p95": 1.0029040000000065,
+    "p99": 1.0129054999999743
+  },
+  "sample_lag_ms": {
+    "mean": 4.32209,
+    "maximum": 399.791,
+    "p95": 5.204349999999999,
+    "p99": 21.015549999999955
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 28,
+    "ok": 1472
+  },
+  "final_collection_acceptance": 1
+}

@@ -1,0 +1,23 @@
+         items:
+           type: integer
+  XappDescriptor:
+    type: object
+    required:
+      - xappName
+    properties:
+      xappName:
+        type: string
+        description: Name of the xApp in helm chart
+      helmVersion:
+        type: string
+        description: The exact xapp helm chart version to install
+      releaseName:
+        type: string
+        description: Name of the xapp to be visible in Kubernetes
+      namespace:
+        type: string
+        description: Name of the namespace to which xApp is deployed. Overrides the value given in Helm chart value file.
+      overrideFile:
+        type: object
+        description: JSON string of override file for 'helm install' command
+  XappDescriptorList:

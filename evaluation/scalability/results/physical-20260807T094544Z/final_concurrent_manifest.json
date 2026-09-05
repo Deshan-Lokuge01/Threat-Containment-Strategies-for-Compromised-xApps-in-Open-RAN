@@ -1,0 +1,25 @@
+{
+  "design": {
+    "levels": [
+      1,
+      3,
+      5
+    ],
+    "repetitions": 3
+  },
+  "workloads": [
+    "telemetry-monitor",
+    "qos-optimizer",
+    "traffic-analyzer",
+    "resource-optimizer",
+    "security-observer"
+  ],
+  "attack": "real /bin/sh syscall via kubectl exec; Falco path, not synthetic API",
+  "latency_origin": "client timestamp immediately before kubectl exec",
+  "observation": "200 ms polling plus independent TCP and iptables checks",
+  "active_probe_execution": "one concurrent TCP connect attempt per target",
+  "post_enforcement_settle_seconds": 3.0,
+  "between_cell_reset": "Falcosidekick paused; target pods restored/recreated; evaluator restarted to clear per-trial memory; forwarding resumed. Reset is strictly outside every measured interval.",
+  "claim_boundary": "Dummy xApps exercise real Kubernetes/Falco/evaluator/responder workflows but do not claim E2 control-loop traffic equivalence.",
+  "created_utc": "2026-08-07T11:08:00.669031+00:00"
+}

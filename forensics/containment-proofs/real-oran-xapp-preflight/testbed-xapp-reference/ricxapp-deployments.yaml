@@ -1,0 +1,835 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: qos-optimizer
+      meta.helm.sh/release-namespace: ricxapp
+    creationTimestamp: "2026-06-05T16:49:33Z"
+    generation: 1
+    labels:
+      app: qos-optimizer
+      app.kubernetes.io/managed-by: Helm
+      version: 1.0.0
+      zt-xguard.io/verified: "true"
+    name: qos-optimizer
+    namespace: ricxapp
+    resourceVersion: "1027245"
+    uid: 860f5289-4fae-4d06-a918-ce47a108846c
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: qos-optimizer
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: qos-optimizer
+          version: 1.0.0
+          zt-xguard.io/provider: sp1
+          zt-xguard.io/verified: "true"
+      spec:
+        containers:
+        - env:
+          - name: XAPP_PROFILE_PATH
+            value: /etc/xapp-profile/profile.json
+          - name: XAPP_PORT
+            value: "8080"
+          image: localhost:5000/zt-qos-optimizer:1.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: qos-optimizer
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/svid
+            name: svid-data
+            readOnly: true
+          - mountPath: /etc/xapp-profile
+            name: xapp-profile
+            readOnly: true
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            set -e
+            echo "Waiting for SPIRE socket..."
+            while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+            echo "Socket ready. Fetching SVID..."
+            /opt/spire/bin/spire-agent api fetch x509 \
+              -socketPath /var/run/spire/sockets/spire-agent.sock \
+              -write /svid-data
+            echo "SVID fetched successfully."
+            ls -l /svid-data || true
+          image: localhost:5000/spire-fetcher:1.0-nonroot
+          imagePullPolicy: IfNotPresent
+          name: fetch-svid
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/run/spire/sockets
+            name: spiffe-socket
+            readOnly: true
+          - mountPath: /svid-data
+            name: svid-data
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext:
+          fsGroup: 10001
+          fsGroupChangePolicy: OnRootMismatch
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount: qos-optimizer
+        serviceAccountName: qos-optimizer
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - csi:
+            driver: csi.spiffe.io
+            readOnly: true
+          name: spiffe-socket
+        - emptyDir: {}
+          name: svid-data
+        - configMap:
+            defaultMode: 420
+            name: qos-optimizer-profile
+          name: xapp-profile
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-06-05T16:49:53Z"
+      lastUpdateTime: "2026-06-05T16:49:53Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-06-05T16:49:33Z"
+      lastUpdateTime: "2026-06-05T16:49:53Z"
+      message: ReplicaSet "qos-optimizer-77877f44b8" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: resource-optimizer
+      meta.helm.sh/release-namespace: ricxapp
+    creationTimestamp: "2026-06-05T16:49:57Z"
+    generation: 1
+    labels:
+      app: resource-optimizer
+      app.kubernetes.io/managed-by: Helm
+      version: 1.0.0
+      zt-xguard.io/verified: "true"
+    name: resource-optimizer
+    namespace: ricxapp
+    resourceVersion: "1027377"
+    uid: 0a3a4495-136d-4316-89f6-6eccc12c0427
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: resource-optimizer
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: resource-optimizer
+          version: 1.0.0
+          zt-xguard.io/provider: sp1
+          zt-xguard.io/verified: "true"
+      spec:
+        containers:
+        - env:
+          - name: XAPP_PROFILE_PATH
+            value: /etc/xapp-profile/profile.json
+          - name: XAPP_PORT
+            value: "8080"
+          image: localhost:5000/zt-resource-optimizer:1.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: resource-optimizer
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/svid
+            name: svid-data
+            readOnly: true
+          - mountPath: /etc/xapp-profile
+            name: xapp-profile
+            readOnly: true
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            set -e
+            echo "Waiting for SPIRE socket..."
+            while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+            echo "Socket ready. Fetching SVID..."
+            /opt/spire/bin/spire-agent api fetch x509 \
+              -socketPath /var/run/spire/sockets/spire-agent.sock \
+              -write /svid-data
+            echo "SVID fetched successfully."
+            ls -l /svid-data || true
+          image: localhost:5000/spire-fetcher:1.0-nonroot
+          imagePullPolicy: IfNotPresent
+          name: fetch-svid
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/run/spire/sockets
+            name: spiffe-socket
+            readOnly: true
+          - mountPath: /svid-data
+            name: svid-data
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext:
+          fsGroup: 10001
+          fsGroupChangePolicy: OnRootMismatch
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount: resource-optimizer
+        serviceAccountName: resource-optimizer
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - csi:
+            driver: csi.spiffe.io
+            readOnly: true
+          name: spiffe-socket
+        - emptyDir: {}
+          name: svid-data
+        - configMap:
+            defaultMode: 420
+            name: resource-optimizer-profile
+          name: xapp-profile
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-06-05T16:50:34Z"
+      lastUpdateTime: "2026-06-05T16:50:34Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-06-05T16:49:57Z"
+      lastUpdateTime: "2026-06-05T16:50:34Z"
+      message: ReplicaSet "resource-optimizer-76cd8c474d" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: security-observer
+      meta.helm.sh/release-namespace: ricxapp
+    creationTimestamp: "2026-06-05T16:50:38Z"
+    generation: 1
+    labels:
+      app: security-observer
+      app.kubernetes.io/managed-by: Helm
+      version: 1.0.0
+      zt-xguard.io/verified: "true"
+    name: security-observer
+    namespace: ricxapp
+    resourceVersion: "1027467"
+    uid: 9012a5b1-af30-4e66-a6c4-61d56562b9df
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: security-observer
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: security-observer
+          version: 1.0.0
+          zt-xguard.io/provider: sp1
+          zt-xguard.io/verified: "true"
+      spec:
+        containers:
+        - env:
+          - name: XAPP_PROFILE_PATH
+            value: /etc/xapp-profile/profile.json
+          - name: XAPP_PORT
+            value: "8080"
+          image: localhost:5000/zt-security-observer:1.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: security-observer
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/svid
+            name: svid-data
+            readOnly: true
+          - mountPath: /etc/xapp-profile
+            name: xapp-profile
+            readOnly: true
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            set -e
+            echo "Waiting for SPIRE socket..."
+            while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+            echo "Socket ready. Fetching SVID..."
+            /opt/spire/bin/spire-agent api fetch x509 \
+              -socketPath /var/run/spire/sockets/spire-agent.sock \
+              -write /svid-data
+            echo "SVID fetched successfully."
+            ls -l /svid-data || true
+          image: localhost:5000/spire-fetcher:1.0-nonroot
+          imagePullPolicy: IfNotPresent
+          name: fetch-svid
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/run/spire/sockets
+            name: spiffe-socket
+            readOnly: true
+          - mountPath: /svid-data
+            name: svid-data
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext:
+          fsGroup: 10001
+          fsGroupChangePolicy: OnRootMismatch
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount: security-observer
+        serviceAccountName: security-observer
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - csi:
+            driver: csi.spiffe.io
+            readOnly: true
+          name: spiffe-socket
+        - emptyDir: {}
+          name: svid-data
+        - configMap:
+            defaultMode: 420
+            name: security-observer-profile
+          name: xapp-profile
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-06-05T16:50:59Z"
+      lastUpdateTime: "2026-06-05T16:50:59Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-06-05T16:50:38Z"
+      lastUpdateTime: "2026-06-05T16:50:59Z"
+      message: ReplicaSet "security-observer-9f84cf9bd" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: telemetry-monitor
+      meta.helm.sh/release-namespace: ricxapp
+    creationTimestamp: "2026-06-05T16:44:52Z"
+    generation: 1
+    labels:
+      app: telemetry-monitor
+      app.kubernetes.io/managed-by: Helm
+      version: 1.0.0
+      zt-xguard.io/verified: "true"
+    name: telemetry-monitor
+    namespace: ricxapp
+    resourceVersion: "1026720"
+    uid: a833a2d1-5e32-4306-b43f-bcf2d0b32c8b
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: telemetry-monitor
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: telemetry-monitor
+          version: 1.0.0
+          zt-xguard.io/provider: sp1
+          zt-xguard.io/verified: "true"
+      spec:
+        containers:
+        - env:
+          - name: XAPP_PROFILE_PATH
+            value: /etc/xapp-profile/profile.json
+          - name: XAPP_PORT
+            value: "8080"
+          image: localhost:5000/zt-telemetry-monitor:1.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: telemetry-monitor
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/svid
+            name: svid-data
+            readOnly: true
+          - mountPath: /etc/xapp-profile
+            name: xapp-profile
+            readOnly: true
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            set -e
+            echo "Waiting for SPIRE socket..."
+            while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+            echo "Socket ready. Fetching SVID..."
+            /opt/spire/bin/spire-agent api fetch x509 \
+              -socketPath /var/run/spire/sockets/spire-agent.sock \
+              -write /svid-data
+            echo "SVID fetched successfully."
+            ls -l /svid-data || true
+          image: localhost:5000/spire-fetcher:1.0-nonroot
+          imagePullPolicy: IfNotPresent
+          name: fetch-svid
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/run/spire/sockets
+            name: spiffe-socket
+            readOnly: true
+          - mountPath: /svid-data
+            name: svid-data
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext:
+          fsGroup: 10001
+          fsGroupChangePolicy: OnRootMismatch
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount: telemetry-monitor
+        serviceAccountName: telemetry-monitor
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - csi:
+            driver: csi.spiffe.io
+            readOnly: true
+          name: spiffe-socket
+        - emptyDir: {}
+          name: svid-data
+        - configMap:
+            defaultMode: 420
+            name: telemetry-monitor-profile
+          name: xapp-profile
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-06-05T16:45:29Z"
+      lastUpdateTime: "2026-06-05T16:45:29Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-06-05T16:44:52Z"
+      lastUpdateTime: "2026-06-05T16:45:29Z"
+      message: ReplicaSet "telemetry-monitor-667cc6d846" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+      meta.helm.sh/release-name: traffic-analyzer
+      meta.helm.sh/release-namespace: ricxapp
+    creationTimestamp: "2026-06-05T11:51:04Z"
+    generation: 2
+    labels:
+      app: traffic-analyzer
+      app.kubernetes.io/managed-by: Helm
+      version: 1.0.0
+      zt-xguard.io/verified: "true"
+    name: traffic-analyzer
+    namespace: ricxapp
+    resourceVersion: "995047"
+    uid: 802d5a9f-6a21-4a44-8a72-a97adc827779
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: traffic-analyzer
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: traffic-analyzer
+          version: 1.0.0
+          zt-xguard.io/provider: sp1
+          zt-xguard.io/verified: "true"
+      spec:
+        containers:
+        - env:
+          - name: XAPP_PROFILE_PATH
+            value: /etc/xapp-profile/profile.json
+          - name: XAPP_PORT
+            value: "8080"
+          image: localhost:5000/zt-traffic-analyzer:1.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: traffic-analyzer
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/svid
+            name: svid-data
+            readOnly: true
+          - mountPath: /etc/xapp-profile
+            name: xapp-profile
+            readOnly: true
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            set -e
+            echo "Waiting for SPIRE socket..."
+            while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+            echo "Socket ready. Fetching SVID..."
+            /opt/spire/bin/spire-agent api fetch x509 \
+              -socketPath /var/run/spire/sockets/spire-agent.sock \
+              -write /svid-data
+            echo "SVID fetched successfully."
+            ls -l /svid-data || true
+          image: localhost:5000/spire-fetcher:1.0-nonroot
+          imagePullPolicy: IfNotPresent
+          name: fetch-svid
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/run/spire/sockets
+            name: spiffe-socket
+            readOnly: true
+          - mountPath: /svid-data
+            name: svid-data
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext:
+          fsGroup: 10001
+          fsGroupChangePolicy: OnRootMismatch
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount: traffic-analyzer
+        serviceAccountName: traffic-analyzer
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - csi:
+            driver: csi.spiffe.io
+            readOnly: true
+          name: spiffe-socket
+        - emptyDir: {}
+          name: svid-data
+        - configMap:
+            defaultMode: 420
+            name: traffic-analyzer-profile
+          name: xapp-profile
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-06-05T11:59:47Z"
+      lastUpdateTime: "2026-06-05T11:59:47Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-06-05T11:51:04Z"
+      lastUpdateTime: "2026-06-05T11:59:47Z"
+      message: ReplicaSet "traffic-analyzer-b8cb5d96" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""

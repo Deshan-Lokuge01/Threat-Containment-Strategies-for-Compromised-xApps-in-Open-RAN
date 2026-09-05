@@ -1,0 +1,67 @@
+{
+  "schema": "ztx-forensic-vault-v1",
+  "incident_id": "20260904T040507Z-resource_anomaly_t2-ricxapp-kpimon-go-a9df3dc9f9",
+  "captured_utc": "2026-09-04T04:05:07.818310+00:00",
+  "sealed_utc": "2026-09-04T04:05:10Z",
+  "captured_by": "ZT-XGuard policy-engine (automated containment)",
+  "asset": {
+    "xapp": "ricxapp-kpimon-go",
+    "pod": "ricxapp-kpimon-go-d9f4b464c-ggs7l",
+    "namespace": "ricxapp"
+  },
+  "trigger": {
+    "source": "ztx_t2_collector",
+    "signal": "resource_anomaly_t2",
+    "falco_rule": "ZTX T2 Resource Anomaly",
+    "priority": "Critical",
+    "rule_ids": [
+      "R-T2-01"
+    ],
+    "alert": "2026-09-04T04:05:07.756711+00:00: Critical ztx_signal=resource_anomaly_t2 xapp=ricxapp-kpimon-go state=COMPROMISED cpu_millicores=None score=100 detector=ztx_t2_collector (cgroup + streaming MEWMA)"
+  },
+  "decision": {
+    "state": "COMPROMISED",
+    "detection_state": "COMPROMISED",
+    "containment_required": true,
+    "containment_action": "SERVICE_ISOLATION_AFTER_T2_CONFIRMATION",
+    "isolation_timing": "DWELL_30S",
+    "severity": "HIGH",
+    "score": 100,
+    "confidence": 0.9
+  },
+  "integrity": "sha256",
+  "artifacts": [
+    {
+      "name": "events.json",
+      "bytes": 20832,
+      "sha256": "a367e7e13ec56decb8722faa40c5ac4717ad29c2e7e07ad81c20fa557b3b9b5f"
+    },
+    {
+      "name": "incident.json",
+      "bytes": 76601,
+      "sha256": "0310d8eedb064b3c0dfe895731deebc0f24fe6c382a2895dcc9d8fdd49f5a77b"
+    },
+    {
+      "name": "pod-log-tail.txt",
+      "bytes": 538,
+      "sha256": "419f7cd5624ecc074883a5f57ba8240a513a2bce108f48d0340fe9fbe78e3c13"
+    },
+    {
+      "name": "pod.json",
+      "bytes": 32218,
+      "sha256": "39a261cb5973134544c30e59a0824c0e073a1890b8db85ebac0b70233df2bb79"
+    }
+  ],
+  "chain_of_custody": [
+    {
+      "actor": "policy-engine.forensic-capture",
+      "action": "captured",
+      "utc": "2026-09-04T04:05:07.818310+00:00"
+    },
+    {
+      "actor": "policy-engine.vault-sealer",
+      "action": "sealed+hashed",
+      "utc": "2026-09-04T04:05:10Z"
+    }
+  ]
+}

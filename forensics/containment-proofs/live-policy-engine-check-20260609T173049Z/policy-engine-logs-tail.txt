@@ -1,0 +1,201 @@
+===== Policy engine pod logs tail =====
+127.0.0.1 - - [09/Jun/2026 17:29:51] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:51] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:51] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:51] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+10.244.0.1 - - [09/Jun/2026 17:29:51] "GET /ready HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:52] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:52] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:52] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:52] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:54] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:54] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:54] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:54] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:55] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:55] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:55] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:55] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:57] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:57] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:57] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:57] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:58] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:58] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:58] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:29:58] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:00] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:00] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:00] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:00] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:01] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:01] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:01] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:01] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+10.244.0.1 - - [09/Jun/2026 17:30:01] "GET /ready HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:03] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:03] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:03] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:03] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:04] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:04] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:04] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:04] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:06] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:06] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:06] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:06] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:07] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:07] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:07] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:07] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:09] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:09] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:09] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:09] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+10.244.0.1 - - [09/Jun/2026 17:30:09] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:10] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:10] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:10] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:10] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+10.244.0.1 - - [09/Jun/2026 17:30:11] "GET /ready HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:12] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:12] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:12] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:12] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:13] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:13] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:13] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:13] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:15] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:15] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:15] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:15] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:16] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:16] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:16] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:16] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:18] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:18] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:18] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:18] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:19] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:19] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:19] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:20] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:21] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:21] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:21] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:21] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+10.244.0.1 - - [09/Jun/2026 17:30:21] "GET /ready HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:22] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:22] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:22] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:22] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:24] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:24] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:24] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:24] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:25] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:25] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:25] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:26] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:27] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:27] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:27] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:27] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:28] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:28] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:28] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:28] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+10.244.0.1 - - [09/Jun/2026 17:30:29] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:30] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:30] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:30] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:30] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:31] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:31] "GET /csm/scenarios HTTP/1.1" 200 -
+10.244.0.1 - - [09/Jun/2026 17:30:31] "GET /ready HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:31] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:31] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:33] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:33] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:33] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:33] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:34] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:34] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:34] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:34] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:36] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:36] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:36] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:36] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:37] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:37] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:37] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:37] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:39] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:39] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:39] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:39] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:40] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:40] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:40] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:41] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+10.244.0.1 - - [09/Jun/2026 17:30:41] "GET /ready HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:42] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:42] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:42] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:42] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:43] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:43] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:43] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:44] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:45] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:45] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:45] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:45] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:46] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:46] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:46] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:46] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:48] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:48] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:48] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:48] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:49] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:49] "GET /ready HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:49] "GET /csm/state HTTP/1.1" 200 -
+10.244.0.1 - - [09/Jun/2026 17:30:49] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:49] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:49] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:49] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:50] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -
+[2026-06-09 17:30:50,816] ERROR in app: Exception on /falco-webhook [POST]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/app.py", line 2326, in falco_webhook
+    body, status = csm_process_falco_event(alert)
+    ^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+10.244.0.202 - - [09/Jun/2026 17:30:50] "[35m[1mPOST /falco-webhook HTTP/1.1[0m" 500 -
+127.0.0.1 - - [09/Jun/2026 17:30:51] "GET /csm/audit HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:51] "GET /csm/xapps/runtime HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:51] "[31m[1mGET /csm/intent/evaluate HTTP/1.1[0m" 405 -
+127.0.0.1 - - [09/Jun/2026 17:30:51] "[31m[1mGET /csm/containment/verify HTTP/1.1[0m" 400 -
+127.0.0.1 - - [09/Jun/2026 17:30:51] "[33mGET /metrics HTTP/1.1[0m" 404 -
+127.0.0.1 - - [09/Jun/2026 17:30:51] "GET /csm/state HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:51] "GET /csm/scenarios HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:51] "GET /csm/evaluation/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 17:30:51] "GET /csm/containment/verify?xapp=telemetry-monitor HTTP/1.1" 200 -

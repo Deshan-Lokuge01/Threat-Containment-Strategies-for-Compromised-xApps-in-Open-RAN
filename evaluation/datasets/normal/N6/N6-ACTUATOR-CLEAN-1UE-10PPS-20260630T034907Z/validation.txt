@@ -1,0 +1,14 @@
+dataset=N6
+role=untouched-final-clean-evaluation-for-v2
+ground_truth=clean_normal
+run_id=N6-ACTUATOR-CLEAN-1UE-10PPS-20260630T034907Z
+collector_return_code=0
+primary_data_ok=1
+runtime_counters_ok=1
+minimum_required_ric_cycles=20
+single_ping_at_end=1
+attack_process_count_end=0
+attack_pod_count_end=0
+frozen_model_archive_sha256=47d631da4dd165b7f0527a8749443e54e90c3284215b0aec7358e3f364fe7856
+n6_scored_during_collection=0
+final_acceptance=1

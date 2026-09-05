@@ -1,0 +1,709 @@
+/* ZTX_DASHBOARD_SAFE_RESTORE_V1 */
+
+const $ = (id) => document.getElementById(id);
+const RUNTIME_NAMESPACE = "ricxapp";
+const AUTO_REFRESH_MS = 15000;
+
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function asObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
+
+function isNumeric(value) {
+  return value !== null && value !== undefined && value !== "" && Number.isFinite(Number(value));
+}
+
+function hasZeroEndpoints(value) {
+  return isNumeric(value) && Number(value) === 0;
+}
+
+function hasPositiveEndpoints(value) {
+  return isNumeric(value) && Number(value) > 0;
+}
+
+function num(value, digits = 2) {
+  if (!isNumeric(value)) return "N/A";
+  return Number(value).toFixed(digits);
+}
+
+function bytes(value) {
+  if (!isNumeric(value)) return "N/A";
+  const n = Number(value);
+  if (n >= 1024 * 1024 * 1024) return `${(n / (1024 * 1024 * 1024)).toFixed(2)} GiB`;
+  if (n >= 1024 * 1024) return `${(n / (1024 * 1024)).toFixed(1)} MiB`;
+  if (n >= 1024) return `${(n / 1024).toFixed(1)} KiB`;
+  return `${n} B`;
+}
+
+function setStatus(message) {
+  const el = $("lastUpdated");
+  if (el) el.textContent = message;
+}
+
+async function apiJson(url, options = {}) {
+  try {
+    const res = await fetch(url, options);
+    const text = await res.text();
+    try {
+      const data = JSON.parse(text);
+      if (!res.ok) {
+        console.error(`[dashboard] API request failed: ${url}`, { status: res.status, error: data });
+        return { ok: false, status: res.status, error: data };
+      }
+      return data;
+    } catch (e) {
+      console.error(`[dashboard] API returned non-JSON: ${url}`, { status: res.status, body: text.slice(0, 500) });
+      return {
+        ok: false,
+        status: res.status,
+        error: "non_json_response",
+        body: text.slice(0, 500)
+      };
+    }
+  } catch (e) {
+    console.error(`[dashboard] API fetch failed: ${url}`, e);
+    return {
+      ok: false,
+      error: "fetch_failed",
+      message: e && e.message ? e.message : String(e)
+    };
+  }
+}
+
+function setText(id, value) {
+  const el = $(id);
+  if (el) el.textContent = value ?? 0;
+}
+
+function stateClass(state) {
+  const s = String(state || "UNKNOWN").toUpperCase();
+  if (s === "HEALTHY" || s === "TRUSTED" || s === "RESTORED") return "healthy";
+  if (s === "OBSERVED") return "observed";
+  if (s === "SUSPICIOUS" || s === "DEGRADED") return "degraded";
+  if (s === "COMPROMISED") return "compromised";
+  if (s === "QUARANTINED" || s === "CONTAINED") return "contained";
+  return "unknown";
+}
+
+function pill(text, cls) {
+  return `<span class="pill ${cls || ""}">${text}</span>`;
+}
+
+function esc(v) {
+  return String(v ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function runtimeErrorHtml(label, detail) {
+  const pretty = detail === undefined ? "" : `\n<pre>${esc(JSON.stringify(detail, null, 2))}</pre>`;
+  return `
+    <tr>
+      <td colspan="12">
+        ${esc(label)}${pretty}
+      </td>
+    </tr>
+  `;
+}
+
+let trustIndex = {};
+let refreshTimer = null;
+let refreshInFlight = null;
+
+async function refreshState() {
+  const state = await apiJson("/csm/state");
+  trustIndex = {};
+
+  if (!state || state.ok === false || state.error) {
+    setText("overallState", "UNKNOWN");
+    if ($("overallState")) {
+      $("overallState").className = "overall unknown";
+    }
+    setText("trustedCount", 0);
+    setText("observedCount", 0);
+    setText("suspiciousCount", 0);
+    setText("compromisedCount", 0);
+    setText("quarantinedCount", 0);
+    return { ok: false, error: state?.error || "state_fetch_failed" };
+  }
+
+  const xapps = asArray(state.xapps).length
+    ? asArray(state.xapps)
+    : asArray(state.rows).length
+      ? asArray(state.rows)
+      : asArray(state.items);
+  xapps.forEach((x) => {
+    const item = asObject(x);
+    if (item.xapp) trustIndex[item.xapp] = item;
+  });
+
+  const summary = asObject(state.summary);
+  const overall = state.overall_state || "UNKNOWN";
+
+  setText("overallState", overall);
+  if ($("overallState")) {
+    $("overallState").className = `overall ${stateClass(overall)}`;
+  }
+
+  setText("trustedCount", summary.TRUSTED || 0);
+  setText("observedCount", summary.OBSERVED || 0);
+  setText("suspiciousCount", summary.SUSPICIOUS || 0);
+  setText("compromisedCount", summary.COMPROMISED || 0);
+  setText("quarantinedCount", summary.QUARANTINED || 0);
+
+  return { ok: true, xapps: xapps.length };
+}
+
+async function refreshRuntimeTable() {
+  const body = $("runtimeTableBody");
+  if (!body) return;
+
+  const data = await apiJson(`/csm/xapps/runtime-lite?namespace=${encodeURIComponent(RUNTIME_NAMESPACE)}`);
+
+  if (!data || data.error || data.ok === false) {
+    body.innerHTML = runtimeErrorHtml("Runtime API error", data);
+    return { ok: false, error: data?.error || "runtime_fetch_failed" };
+  }
+
+  const rows = asArray(data.rows).length
+    ? asArray(data.rows)
+    : asArray(data.xapps).length
+      ? asArray(data.xapps)
+      : asArray(data.items);
+
+  if (!rows.length) {
+    body.innerHTML = `<tr><td colspan="12">No xApps found from runtime API.</td></tr>`;
+    return { ok: true, rows: 0 };
+  }
+
+  body.innerHTML = "";
+
+  rows.forEach((item, index) => {
+    try {
+      const r = asObject(item);
+      const xapp = String(r.xapp || `unknown-xapp-${index + 1}`);
+      const pod = asObject(r.pod);
+      const svc = asObject(r.service);
+      const cont = asObject(r.containment);
+      const resources = asObject(r.resources);
+      const trust = asObject(r.trust || trustIndex[xapp]);
+
+      let trustState = trust.state || trust.detection_state || trust.decision_state || r.trust_state || "UNKNOWN";
+      let riskScore = trust.risk_score ?? trust.score ?? r.risk_score ?? r.score;
+      let trustScore = trust.trust_score ?? r.trust_score;
+
+      const endpoints = svc.endpoint_count;
+      const endpointsZero = hasZeroEndpoints(endpoints);
+      const isolated = Boolean(cont.service_isolated) || endpointsZero;
+      const contained = Boolean(cont.contained) || endpointsZero;
+      const quarantined = Boolean(
+        cont.pod_labelled_quarantined ??
+        cont.quarantine_marked ??
+        pod.quarantine_label
+      );
+
+      if (contained || isolated || quarantined) {
+        trustState = "QUARANTINED";
+        riskScore = riskScore ?? 100;
+        trustScore = trustScore ?? 0;
+      } else if (String(trustState).toUpperCase() === "UNKNOWN" && pod.ready && hasPositiveEndpoints(endpoints)) {
+        trustState = "TRUSTED";
+        riskScore = riskScore ?? 0;
+        trustScore = trustScore ?? 100;
+      }
+
+      const cpu = resources.cpu_percent_1core ?? resources.cpu_percent_1core_2m;
+      const memory = resources.memory_working_set_bytes ?? resources.memory_usage_bytes;
+      const cpuDisplay = isNumeric(cpu) ? `${num(cpu, 2)}%` : "N/A";
+
+      const row = document.createElement("tr");
+      row.id = xapp;
+      row.className = contained || isolated || quarantined ? "row-contained" : "";
+
+row.innerHTML = `
+        <td><strong>${esc(xapp)}</strong></td>
+        <td>${pill(esc(trustState), stateClass(trustState))}</td>
+        <td>${isNumeric(riskScore) ? esc(Number(riskScore)) : "N/A"}</td>
+        <td>${isNumeric(trustScore) ? esc(Number(trustScore)) : "N/A"}</td>
+        <td>${cpuDisplay}</td>
+        <td>${bytes(memory)}</td>
+        <td class="mono">${esc(pod.name || "missing")}</td>
+        <td>${pod.ready ? pill(esc(pod.ready_text || "Ready"), "healthy") : pill(esc(pod.ready_text || "Not Ready"), "bad")}</td>
+        <td>${endpointsZero ? pill("0", "bad") : pill(esc(endpoints ?? "?"), hasPositiveEndpoints(endpoints) ? "healthy" : "unknown")}</td>
+        <td>${isolated ? pill("YES", "contained") : pill("NO", "healthy")}</td>
+        <td>${quarantined ? pill("YES", "contained") : pill("NO", "healthy")}</td>
+        <td style="display: flex; gap: 0.4rem;">
+          <button class="btn secondary" style="padding:4px 10px;font-size:.75rem" onclick="window.location.href='/analyze?xapp=${encodeURIComponent(xapp)}&pod=${encodeURIComponent(pod.name || '')}'">Analyze</button>
+        </td>
+      `;
+
+      body.appendChild(row);
+    } catch (e) {
+      console.error("[dashboard] Runtime row render failed", { index, row: item, error: e });
+      body.innerHTML += runtimeErrorHtml(`Runtime row render error at index ${index}`, {
+        row: item,
+        error: e && e.message ? e.message : String(e)
+      });
+    }
+  });
+
+  return { ok: true, rows: rows.length };
+}
+
+async function primeAudit() {
+  await apiJson("/csm/audit?persist=true");
+  await refreshAll();
+}
+
+async function refreshAll() {
+  if (refreshInFlight) return refreshInFlight;
+
+  refreshInFlight = (async () => {
+    const errors = [];
+    const startedAt = new Date();
+    const [stateSettled, runtimeSettled] = await Promise.allSettled([
+      refreshState(),
+      refreshRuntimeTable()
+    ]);
+
+    const stateResult = stateSettled.status === "fulfilled"
+      ? stateSettled.value
+      : (errors.push({ stage: "state", error: stateSettled.reason?.message || String(stateSettled.reason) }), { ok: false, error: "state_exception" });
+
+    const runtimeResult = runtimeSettled.status === "fulfilled"
+      ? runtimeSettled.value
+      : (errors.push({ stage: "runtime", error: runtimeSettled.reason?.message || String(runtimeSettled.reason) }), { ok: false, error: "runtime_exception" });
+
+    const failedApis = [];
+    if (stateResult?.ok === false) failedApis.push("state");
+    if (runtimeResult?.ok === false) failedApis.push("runtime");
+
+    if (failedApis.length) {
+      setStatus(`API error: ${failedApis.join(", ")} | ${startedAt.toLocaleTimeString()}`);
+    } else {
+      setStatus(`Updated ${startedAt.toLocaleTimeString()}`);
+    }
+
+    if (!runtimeResult?.ok && $("runtimeTableBody") && errors.length) {
+      $("runtimeTableBody").innerHTML = runtimeErrorHtml("Dashboard JS error", {
+        stateResult,
+        runtimeResult,
+        errors
+      });
+    }
+
+    return { stateResult, runtimeResult };
+  })();
+
+  try {
+    return await refreshInFlight;
+  } finally {
+    refreshInFlight = null;
+    if (refreshTimer) clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => {
+      refreshAll();
+    }, AUTO_REFRESH_MS);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  $("refreshBtn")?.addEventListener("click", refreshAll);
+  $("primeAuditBtn")?.addEventListener("click", primeAudit);
+
+  await refreshAll();
+});
+
+// ------------------------------------------------------------
+// ZTX_PATCH_SCENARIO_CONSOLE_UI
+// Scenario + Evaluation Console support
+// ------------------------------------------------------------
+
+async function ztxScenarioLoadXApps() {
+  const sel = $("xappSelect");
+  if (!sel) return;
+
+  const health = await apiJson("/health");
+  const xapps = asArray(health.xapps);
+  sel.innerHTML = xapps.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join("");
+}
+
+function ztxStatePill(state) {
+  return pill(esc(state || "UNKNOWN"), stateClass(state));
+}
+
+function ztxRenderScenarioGrid(data) {
+  const grid = $("scenarioGrid");
+  if (!grid) return;
+
+  const scenarios = asArray(data.scenarios);
+  if (!scenarios.length) {
+    grid.innerHTML = `<div class="small-muted">No scenarios returned by /csm/scenarios</div>`;
+    return;
+  }
+
+  grid.innerHTML = scenarios.map(s => {
+    const id = s.id || "UNKNOWN";
+    const target = s.target_xapp || s.default_xapp || "";
+    const category = s.category || s.mode || "scenario";
+    const expected = s.expected_state || "UNKNOWN";
+    const malicious = s.malicious ? "Attack" : "Benign";
+
+    return `
+      <div class="scenario-card">
+        <div class="scenario-title">${esc(id)} — ${esc(s.name || "")}</div>
+        <div class="small-muted">${esc(category)} · ${esc(malicious)}</div>
+        <div class="small-muted">Target: <b>${esc(target)}</b></div>
+        <div class="small-muted">Expected: ${ztxStatePill(expected)}</div>
+        <p>${esc(s.description || "")}</p>
+        <button class="btn run-scenario-btn" data-scenario="${esc(id)}" data-xapp="${esc(target)}">
+          Run ${esc(id)}
+        </button>
+      </div>
+    `;
+  }).join("");
+
+  document.querySelectorAll(".run-scenario-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-scenario");
+      const xapp = btn.getAttribute("data-xapp");
+      await ztxRunScenario(id, xapp, btn);
+    });
+  });
+}
+
+function ztxRenderEvaluation(summary) {
+  const total = Number(summary.total_runs || 0);
+  const passed = Number(summary.passed || 0);
+  const passRate = total ? ((passed / total) * 100).toFixed(1) + "%" : "--";
+
+  setText("tpCount", summary.TP ?? 0);
+  setText("tnCount", summary.TN ?? 0);
+  setText("fpCount", summary.FP ?? 0);
+  setText("fnCount", summary.FN ?? 0);
+  setText("totalRuns", total);
+
+  const passEl = $("evalPassRate");
+  if (passEl) {
+    passEl.textContent = passRate;
+    passEl.className = "overall " + (total === 0 ? "unknown" : (Number(passRate.replace("%","")) >= 80 ? "healthy" : "degraded"));
+  }
+
+  const evalBox = $("evaluationBox");
+  if (evalBox) evalBox.textContent = JSON.stringify(summary, null, 2);
+
+  const recent = $("recentResults");
+  if (recent) {
+    const rows = asArray(summary.recent_results);
+    if (!rows.length) {
+      recent.innerHTML = `<div class="small-muted">No scenario results yet. Run A1/B1/etc.</div>`;
+    } else {
+      recent.innerHTML = rows.map(r => `
+        <div class="event-card">
+          <b>${esc(r.scenario_id || "")} — ${esc(r.name || "")}</b>
+          <div class="small-muted">
+            ${esc(r.xapp || "")} · expected ${esc(r.expected_state || "")} · actual ${esc(r.actual_state || "")}
+          </div>
+          <div>
+            ${pill(esc(r.classification || "N/A"), r.classification === "FP" || r.classification === "FN" ? "compromised" : "healthy")}
+            ${pill(r.pass ? "PASS" : "FAIL", r.pass ? "healthy" : "compromised")}
+          </div>
+        </div>
+      `).join("");
+    }
+  }
+}
+
+async function ztxRefreshScenarioConsole() {
+  if (document.body?.dataset?.page !== "scenario-console") return;
+
+  const scenarios = await apiJson("/csm/scenarios");
+  if (scenarios && scenarios.ok !== false) ztxRenderScenarioGrid(scenarios);
+
+  const summary = await apiJson("/csm/evaluation/summary");
+  if (summary && summary.ok !== false) ztxRenderEvaluation(summary);
+
+  await ztxScenarioLoadXApps();
+}
+
+async function ztxRunScenario(id, xapp, btn) {
+  if (!id) return;
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Running...";
+  }
+
+  const result = await apiJson(`/csm/scenarios/${encodeURIComponent(id)}/run`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({xapp})
+  });
+
+  const box = $("scenarioBox");
+  if (box) box.textContent = JSON.stringify(result, null, 2);
+
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = `Run ${id}`;
+  }
+
+  await ztxRefreshScenarioConsole();
+}
+
+async function ztxPrimeAuditScenario() {
+  const result = await apiJson("/csm/audit?persist=true", {method: "POST"});
+  const box = $("containmentBox");
+  if (box) box.textContent = JSON.stringify(result, null, 2);
+  await ztxRefreshScenarioConsole();
+}
+
+async function ztxClearEvaluation() {
+  const result = await apiJson("/csm/evaluation/clear", {method: "POST"});
+  const box = $("evaluationBox");
+  if (box) box.textContent = JSON.stringify(result, null, 2);
+  await ztxRefreshScenarioConsole();
+}
+
+async function ztxVerifySelectedXApp() {
+  const xapp = $("xappSelect")?.value;
+  if (!xapp) return;
+  const result = await apiJson("/csm/containment/verify", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({xapp})
+  });
+  const box = $("containmentBox");
+  if (box) box.textContent = JSON.stringify(result, null, 2);
+}
+
+async function ztxRestoreSelectedXApp() {
+  const xapp = $("xappSelect")?.value;
+  if (!xapp) return;
+  const result = await apiJson("/csm/containment/restore", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({xapp})
+  });
+  const box = $("containmentBox");
+  if (box) box.textContent = JSON.stringify(result, null, 2);
+  await ztxRefreshScenarioConsole();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.body?.dataset?.page !== "scenario-console") return;
+
+  $("refreshBtn")?.addEventListener("click", ztxRefreshScenarioConsole);
+  $("primeAuditBtn")?.addEventListener("click", ztxPrimeAuditScenario);
+  $("clearEvalBtn")?.addEventListener("click", ztxClearEvaluation);
+  $("verifyBtn")?.addEventListener("click", ztxVerifySelectedXApp);
+  $("restoreBtn")?.addEventListener("click", ztxRestoreSelectedXApp);
+
+  ztxRefreshScenarioConsole();
+});
+
+
+// ------------------------------------------------------------
+// ZTX_PATCH_RUNTIME_TABLE_ALIGNMENT_FAST
+// Fixes column mismatch, removes separate isolated/quarantine confusion,
+// and refreshes using only fast APIs.
+// ------------------------------------------------------------
+
+function ztxNum(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+function ztxFmtScore(v) {
+  const n = ztxNum(v);
+  return n === null ? "N/A" : String(Math.round(n));
+}
+
+function ztxFmtCpu(resources) {
+  const v = ztxNum(resources?.cpu_percent_1core ?? resources?.cpu_percent_1core_2m);
+  return v === null ? "N/A" : `${v.toFixed(1)}%`;
+}
+
+function ztxFmtMem(resources) {
+  const b = ztxNum(resources?.memory_working_set_bytes ?? resources?.memory_usage_bytes);
+  if (b === null) return "N/A";
+  return `${(b / 1024 / 1024).toFixed(1)} Mi`;
+}
+
+function ztxBoolPill(value) {
+  return value
+    ? `<span class="pill compromised">YES</span>`
+    : `<span class="pill healthy">NO</span>`;
+}
+
+function ztxStateClassLocal(state) {
+  const s = String(state || "UNKNOWN").toUpperCase();
+  if (s === "TRUSTED" || s === "RESTORED") return "healthy";
+  if (s === "OBSERVED") return "observed";
+  if (s === "SUSPICIOUS") return "suspicious";
+  if (s === "COMPROMISED" || s === "QUARANTINED") return "compromised";
+  return "unknown";
+}
+
+function ztxPill(text, cls) {
+  return `<span class="pill ${cls || "unknown"}">${esc(text)}</span>`;
+}
+
+function ztxMergeByXapp(statePayload, runtimePayload) {
+  const stateByXapp = {};
+  asArray(statePayload?.xapps).forEach(x => {
+    if (x?.xapp) stateByXapp[x.xapp] = x;
+  });
+
+  return asArray(runtimePayload?.rows).map(r => {
+    const s = stateByXapp[r.xapp] || {};
+    return { runtime: r, trust: s };
+  });
+}
+
+function ztxEffectiveContainment(r, s) {
+  const c = r?.containment || {};
+  if (c.contained === true) return true;
+
+  const service = r?.service || {};
+  const pod = r?.pod || {};
+
+  const quarantineMarked =
+    c.quarantine_marked === true ||
+    c.pod_labelled_quarantined === true ||
+    pod.quarantine_label === true;
+
+  const serviceIsolated =
+    c.service_isolated === true ||
+    service.has_endpoints === false ||
+    Number(service.endpoint_count) === 0;
+
+  return quarantineMarked && serviceIsolated;
+}
+
+function ztxCanonicalScores(s) {
+  let risk = ztxNum(s?.risk_score);
+  let trust = ztxNum(s?.trust_score);
+  const raw = ztxNum(s?.score);
+  const scoreType = String(s?.score_type || "").toLowerCase();
+  const state = String(s?.state || "UNKNOWN").toUpperCase();
+
+  if (risk === null && trust === null && raw !== null) {
+    if (scoreType.includes("risk")) {
+      risk = raw;
+      trust = 100 - risk;
+    } else if (scoreType.includes("trust")) {
+      trust = raw;
+      risk = 100 - trust;
+    } else if (state === "TRUSTED" || state === "RESTORED") {
+      trust = raw;
+      risk = 100 - trust;
+    } else if (state === "COMPROMISED" || state === "QUARANTINED") {
+      risk = 100;
+      trust = 0;
+    } else {
+      trust = raw;
+      risk = 100 - trust;
+    }
+  }
+
+  if (risk === null && trust !== null) risk = 100 - trust;
+  if (trust === null && risk !== null) trust = 100 - risk;
+
+  if (state === "TRUSTED" || state === "RESTORED") {
+    risk = 0;
+    trust = 100;
+  }
+  if (state === "COMPROMISED" || state === "QUARANTINED") {
+    risk = 100;
+    trust = 0;
+  }
+
+  return { risk, trust };
+}
+
+async function ztxFastRefreshDashboard() {
+  const statePromise = apiJson("/csm/state");
+  const runtimePromise = apiJson("/csm/xapps/runtime-lite?namespace=ricxapp");
+
+  const [statePayload, runtimePayload] = await Promise.allSettled([statePromise, runtimePromise]);
+
+  const state = statePayload.status === "fulfilled" ? statePayload.value : {};
+  const runtime = runtimePayload.status === "fulfilled" ? runtimePayload.value : {};
+
+  const rows = ztxMergeByXapp(state, runtime);
+
+  const overall = state?.overall_state || "INITIALIZING";
+  setText("overallState", overall);
+
+  const summary = state?.summary || {};
+  setText("trustedCount", summary.TRUSTED ?? 0);
+  setText("observedCount", summary.OBSERVED ?? 0);
+  setText("suspiciousCount", summary.SUSPICIOUS ?? 0);
+  setText("compromisedCount", summary.COMPROMISED ?? 0);
+  setText("quarantinedCount", summary.QUARANTINED ?? 0);
+
+  const tbody =
+    $("runtimeBody") ||
+    document.querySelector("#runtimeTable tbody") ||
+    document.querySelector("table tbody");
+
+  if (!tbody) return;
+
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="12">No runtime rows returned yet.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map(({ runtime: r, trust: s }) => {
+    const pod = r.pod || {};
+    const svc = r.service || {};
+    const res = r.resources || {};
+
+    const stateText = s.state || "UNKNOWN";
+    const scores = ztxCanonicalScores(s);
+    const contained = ztxEffectiveContainment(r, s);
+
+    const endpointCount = svc.endpoint_count ?? "N/A";
+    const podName = pod.name || "N/A";
+    const readyText = pod.ready_text || "N/A";
+
+    return `
+      <tr>
+        <td><b>${esc(r.xapp || "unknown")}</b></td>
+        <td>${ztxPill(stateText, ztxStateClassLocal(stateText))}</td>
+        <td>${ztxFmtScore(scores.risk)}</td>
+        <td>${ztxFmtScore(scores.trust)}</td>
+        <td>${ztxFmtCpu(res)}</td>
+        <td>${ztxFmtMem(res)}</td>
+        <td>${esc(podName)}</td>
+        <td>${esc(readyText)}</td>
+        <td>${esc(endpointCount)}</td>
+        <td>${ztxBoolPill(contained)}</td>
+        <td>
+          <button class="btn analyze-btn" data-xapp="${esc(r.xapp || "")}">Analyze</button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  const updated = $("updatedAt") || $("runtimeUpdatedAt");
+  if (updated) updated.textContent = "Updated " + new Date().toLocaleTimeString();
+}
+
+// Override old refresh loop with faster one.
+window.refreshDashboard = ztxFastRefreshDashboard;
+window.refreshRuntime = ztxFastRefreshDashboard;
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (location.pathname.includes("dashboard") || location.pathname === "/") {
+    ztxFastRefreshDashboard();
+    setInterval(ztxFastRefreshDashboard, 3000);
+  }
+});
+

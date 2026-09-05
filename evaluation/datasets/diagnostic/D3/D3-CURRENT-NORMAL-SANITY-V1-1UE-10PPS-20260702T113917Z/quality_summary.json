@@ -1,0 +1,25 @@
+{
+  "collector_return_code": 0,
+  "dataset": "D3_CURRENT_NORMAL_SANITY_V1",
+  "endpoint_errors": 0,
+  "expected_rows": 600,
+  "rows": 600,
+  "sample_interval_seconds": {
+    "maximum": 1.018916,
+    "mean": 1.00000926,
+    "p95": 1.0036523499999999,
+    "p99": 1.0079770499999998
+  },
+  "sample_lag_ms": {
+    "maximum": 20.715,
+    "mean": 3.418778333333333,
+    "p95": 6.826049999999998,
+    "p99": 11.359779999999997
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 28,
+    "ok": 572
+  },
+  "schema": "ztx-step53d-current-normal-v1-quality-v1",
+  "timing_errors": 0
+}

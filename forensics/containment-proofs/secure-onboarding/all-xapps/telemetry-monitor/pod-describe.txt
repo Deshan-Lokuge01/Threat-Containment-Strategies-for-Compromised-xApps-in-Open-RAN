@@ -1,0 +1,113 @@
+Name:             telemetry-monitor-667cc6d846-dfrf8
+Namespace:        ricxapp
+Priority:         0
+Service Account:  telemetry-monitor
+Node:             near-rt-ric/192.168.112.129
+Start Time:       Fri, 05 Jun 2026 22:14:52 +0530
+Labels:           app=telemetry-monitor
+                  pod-template-hash=667cc6d846
+                  version=1.0.0
+                  zt-xguard.io/provider=sp1
+                  zt-xguard.io/verified=true
+Annotations:      <none>
+Status:           Running
+SeccompProfile:   RuntimeDefault
+IP:               10.244.0.199
+IPs:
+  IP:           10.244.0.199
+Controlled By:  ReplicaSet/telemetry-monitor-667cc6d846
+Init Containers:
+  fetch-svid:
+    Container ID:  containerd://6875ee293fb8cdfe00204df7b41804f071fa2351ead56ff13bb80ccf6afafa4d
+    Image:         localhost:5000/spire-fetcher:1.0-nonroot
+    Image ID:      sha256:27bc2b1b240c4c264a23f1d4e535959f8515e4313a7f2ea94087386b6cad4d49
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      set -e
+      echo "Waiting for SPIRE socket..."
+      while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+      echo "Socket ready. Fetching SVID..."
+      /opt/spire/bin/spire-agent api fetch x509 \
+        -socketPath /var/run/spire/sockets/spire-agent.sock \
+        -write /svid-data
+      echo "SVID fetched successfully."
+      ls -l /svid-data || true
+      
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 05 Jun 2026 22:15:10 +0530
+      Finished:     Fri, 05 Jun 2026 22:15:11 +0530
+    Ready:          True
+    Restart Count:  2
+    Environment:    <none>
+    Mounts:
+      /svid-data from svid-data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-p5w9l (ro)
+      /var/run/spire/sockets from spiffe-socket (ro)
+Containers:
+  telemetry-monitor:
+    Container ID:   containerd://aed63381b8c49454f475e5f113da63815ece1a47b24c34330956c55c1f4a1db9
+    Image:          localhost:5000/zt-telemetry-monitor:1.0
+    Image ID:       sha256:b8658cd1462391a3f0a24db4285d717bb0283074edd9043cd7f9164bb7232388
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Fri, 05 Jun 2026 22:15:12 +0530
+    Ready:          True
+    Restart Count:  0
+    Liveness:       http-get http://:http/health delay=10s timeout=1s period=15s #success=1 #failure=3
+    Readiness:      http-get http://:http/health delay=10s timeout=1s period=15s #success=1 #failure=3
+    Environment:
+      XAPP_PROFILE_PATH:  /etc/xapp-profile/profile.json
+      XAPP_PORT:          8080
+    Mounts:
+      /etc/svid from svid-data (ro)
+      /etc/xapp-profile from xapp-profile (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-p5w9l (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  spiffe-socket:
+    Type:              CSI (a Container Storage Interface (CSI) volume source)
+    Driver:            csi.spiffe.io
+    FSType:            
+    ReadOnly:          true
+    VolumeAttributes:  <none>
+  svid-data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  xapp-profile:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      telemetry-monitor-profile
+    Optional:  false
+  kube-api-access-p5w9l:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  11m                default-scheduler  Successfully assigned ricxapp/telemetry-monitor-667cc6d846-dfrf8 to near-rt-ric
+  Warning  BackOff    11m                kubelet            Back-off restarting failed container fetch-svid in pod telemetry-monitor-667cc6d846-dfrf8_ricxapp(95f9eb28-f00b-4634-a143-84d032139b64)
+  Normal   Pulled     11m (x3 over 11m)  kubelet            Container image "localhost:5000/spire-fetcher:1.0-nonroot" already present on machine
+  Normal   Created    11m (x3 over 11m)  kubelet            Created container: fetch-svid
+  Normal   Started    11m (x3 over 11m)  kubelet            Started container fetch-svid
+  Normal   Pulled     11m                kubelet            Container image "localhost:5000/zt-telemetry-monitor:1.0" already present on machine
+  Normal   Created    11m                kubelet            Created container: telemetry-monitor
+  Normal   Started    11m                kubelet            Started container telemetry-monitor

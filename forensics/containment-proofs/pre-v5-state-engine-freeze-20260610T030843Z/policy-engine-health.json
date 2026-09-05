@@ -1,0 +1,1 @@
+{"auto_quarantine":true,"component":"zt-xguard-policy-engine","namespace":"zt-xguard","revoke_spire":false,"status":"ok","time":"2026-06-10T03:08:50.542282+00:00","version":"1.0.0-integrated","xapp_namespace":"ricxapp","xapps":["telemetry-monitor","qos-optimizer","traffic-analyzer","resource-optimizer","security-observer"]}

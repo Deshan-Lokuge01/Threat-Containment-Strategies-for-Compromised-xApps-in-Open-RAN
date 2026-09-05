@@ -1,0 +1,2 @@
+NAME                                       READY   STATUS    RESTARTS   AGE   IP             NODE          NOMINATED NODE   READINESS GATES
+zt-xguard-policy-engine-579f576c9c-gtw5l   1/1     Running   0          8h    10.244.0.212   near-rt-ric   <none>           <none>

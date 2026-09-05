@@ -1,0 +1,16 @@
+ztx_kpm_monitor_e2_node_total{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 3
+ztx_kpm_monitor_e2_node_connected{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 1
+ztx_kpm_monitor_e2_node_disconnected{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 2
+ztx_kpm_monitor_subscription_attempts{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 8
+ztx_kpm_monitor_subscription_success{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 0
+ztx_kpm_monitor_subscription_failures{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 7
+ztx_kpm_monitor_subscription_callback_events{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 0
+ztx_kpm_monitor_rmr_messages_total{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 0
+ztx_kpm_monitor_rmr_indications_total{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 0
+ztx_kpm_monitor_rmr_sub_resp_total{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 0
+ztx_kpm_monitor_rmr_sub_failure_total{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 0
+ztx_kpm_monitor_rmr_control_ack_total{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 0
+ztx_kpm_monitor_rmr_control_failure_total{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 0
+ztx_kpm_monitor_rmr_other_total{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 0
+ztx_kpm_monitor_target_e2_connected{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 1
+ztx_kpm_monitor_rmr_ready{xapp="kpm-monitor",role="real-oran-kpm-monitor"} 1

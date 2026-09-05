@@ -1,0 +1,202 @@
+{
+  "time": "2026-06-05T16:02:39Z",
+  "xapp": "traffic-analyzer",
+  "version": "1.0.0",
+  "namespace": "ricxapp",
+  "spiffe_id": "spiffe://example.org/ns/ricxapp/sa/traffic-analyzer",
+  "pod": "traffic-analyzer-b8cb5d96-nfp2n",
+  "service_account": "traffic-analyzer",
+  "result": "DEPLOYED",
+  "attestation_score": 3,
+  "health": {
+  "status": "ok",
+  "xapp": "traffic-analyzer",
+  "role": "traffic-analytics",
+  "hostname": "traffic-analyzer-b8cb5d96-nfp2n",
+  "time": "2026-06-05T16:02:39.371065+00:00"
+},
+  "activity": {
+  "xapp": "traffic-analyzer",
+  "role": "traffic-analytics",
+  "state": "traffic-analytics",
+  "uptime_sec": 14588.98,
+  "heartbeat_age_sec": 2.93,
+  "heartbeat_ok": true,
+  "work_units_processed": 2275117,
+  "ric_activity_counter": 2245,
+  "control_action_counter": 0,
+  "telemetry_samples": 0,
+  "qos_decisions": 0,
+  "traffic_reports": 2241,
+  "resource_recommendations": 0,
+  "security_checks": 0,
+  "ric_service_attempts": 2245,
+  "ric_service_success": 2245,
+  "ric_service_failures": 0,
+  "last_ric_service": "e2mgr",
+  "last_ric_url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+  "last_ric_status": "HTTP_404",
+  "last_ric_time": "2026-06-05T16:02:37.961651+00:00",
+  "last_decision": "processed_1248_traffic_flows",
+  "errors": 0,
+  "time": "2026-06-05T16:02:39.383005+00:00"
+},
+  "ric_check": {
+  "xapp": "traffic-analyzer",
+  "allowed_ric_services": [
+    "e2mgr",
+    "rtmgr",
+    "prometheus"
+  ],
+  "ric_service_attempts": 2246,
+  "ric_service_success": 2246,
+  "ric_service_failures": 0,
+  "last_ric_service": "e2mgr",
+  "last_ric_url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+  "last_ric_status": "HTTP_404",
+  "last_ric_time": "2026-06-05T16:02:39.402192+00:00",
+  "recent_results": [
+    {
+      "time": "2026-06-05T16:00:40.798827+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:00:47.312332+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:00:53.817091+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:01:00.330789+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:01:06.835652+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:01:13.353462+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:01:19.866511+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:01:26.371297+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:01:32.875533+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:01:39.379724+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:01:45.891063+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:01:52.396480+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:01:58.910185+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:02:05.422817+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:02:11.927813+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:02:18.432747+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:02:24.937409+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:02:31.448725+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:02:37.961651+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    },
+    {
+      "time": "2026-06-05T16:02:39.402192+00:00",
+      "service": "e2mgr",
+      "url": "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+      "status": "HTTP_404",
+      "success": true
+    }
+  ],
+  "time": "2026-06-05T16:02:39.402307+00:00"
+}
+}

@@ -1,0 +1,5 @@
+prompt_utc=2026-06-30T10:04:50Z
+prompt_unix_ns=1782813890504720105
+planned_elapsed_s=300
+operation_name=ZTX-T1499-KPIMON-CPU-Resource-Exhaustion-Step50-Official
+adversary=ZT-XGuard T1499 KPIMON CPU Resource Exhaustion Pilot V2

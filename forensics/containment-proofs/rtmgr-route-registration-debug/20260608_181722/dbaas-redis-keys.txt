@@ -1,0 +1,8 @@
+### Redis keys matching route/xapp/appmgr
+{appmgr},3EQqywZ5rVLLcIe2sMAZP4oP4ko
+{submgr_restSubsDb},3Eqg3GjeZCafZp1NuhaH80QjLUy
+{submgr_restSubsDb},3EqfXPctfaunBvI8k9UyNbF33Tx
+{submgr_restSubsDb},3Er1fHyiRA3IqOfuryXWF7yH0sb
+{submgr_restSubsDb},3EqfME72zZMO4l8b8FmgqOkY8e2
+{submgr_restSubsDb},3ETlHx6UF44XrHJ6UyWbDFVEyGq
+{appmgr},3EQqcDFMc0mLBcz4v6r2J7TIsz7

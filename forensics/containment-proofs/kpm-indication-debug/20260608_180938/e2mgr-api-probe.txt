@@ -1,0 +1,50 @@
+
+### GET /v1/nodeb/states
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Mon, 08 Jun 2026 12:39:44 GMT
+Content-Length: 418
+
+[{"inventoryName":"gnb_001_001_00019b","globalNbId":{"plmnId":"00F110","nbId":"0000000000000110011011"},"connectionStatus":"DISCONNECTED"},{"inventoryName":"gnbd_001_001_00019b_0","globalNbId":{"plmnId":"00F110","nbId":"0000000000000110011011"},"connectionStatus":"CONNECTED"},{"inventoryName":"gnbc_001_001_00019b_0","globalNbId":{"plmnId":"00F110","nbId":"0000000000000110011011"},"connectionStatus":"DISCONNECTED"}]
+### GET /v1/nodeb/ids
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+Date: Mon, 08 Jun 2026 12:39:44 GMT
+Content-Length: 53
+
+{"errorCode":404,"errorMessage":"Resource not found"}
+### GET /v1/ranfunctions
+HTTP/1.1 404 Not Found
+Content-Type: text/plain; charset=utf-8
+X-Content-Type-Options: nosniff
+Date: Mon, 08 Jun 2026 12:39:44 GMT
+Content-Length: 19
+
+404 page not found
+
+### GET /v1/health/ready
+HTTP/1.1 404 Not Found
+Content-Type: text/plain; charset=utf-8
+X-Content-Type-Options: nosniff
+Date: Mon, 08 Jun 2026 12:39:44 GMT
+Content-Length: 19
+
+404 page not found
+
+### GET /ric/v1/health/ready
+HTTP/1.1 404 Not Found
+Content-Type: text/plain; charset=utf-8
+X-Content-Type-Options: nosniff
+Date: Mon, 08 Jun 2026 12:39:44 GMT
+Content-Length: 19
+
+404 page not found
+
+### GET /ric/v1/nodeb/states
+HTTP/1.1 404 Not Found
+Content-Type: text/plain; charset=utf-8
+X-Content-Type-Options: nosniff
+Date: Mon, 08 Jun 2026 12:39:44 GMT
+Content-Length: 19
+
+404 page not found

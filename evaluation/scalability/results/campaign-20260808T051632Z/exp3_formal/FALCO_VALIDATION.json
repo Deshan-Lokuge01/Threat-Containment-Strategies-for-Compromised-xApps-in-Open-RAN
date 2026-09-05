@@ -1,0 +1,15 @@
+{
+  "ZTX-A1_CONFIG_FROZEN": "PASS",
+  "rules_orig_sha256": "93b29677f6257a2f74e78198a9633973a21ab13431148dab4cae178d947cd217",
+  "rules_new_sha256": "3e466483ee6809739363c0df80cfac82e940d827b30ac82d70c18c9e139a6146",
+  "change": "Added macro ztx_declared_shell_entrypoint (proc.vpid=1 AND exact cmdline) exempting hw-go 'sh -c /hw-go' and hw-python 'sh -c run-hw-python.py' PID-1 entrypoints from ZTX-A1; added 'and not ztx_declared_shell_entrypoint' to the rule.",
+  "validation": {
+    "hw-go_startup_exempted": true,
+    "hw-python_startup_exempted": true,
+    "hw-go_attack_shell_still_detected": true,
+    "hw-python_attack_shell_still_detected": true
+  },
+  "attack_shell_cmdline_observed": "sh -c :",
+  "note": "Non-PID-1 injected attack shell still fires ZTX-A1; only the exact immutable PID-1 image entrypoints are exempted. Config frozen for all formal trials.",
+  "frozen_utc": "2026-08-08T08:09:56Z"
+}

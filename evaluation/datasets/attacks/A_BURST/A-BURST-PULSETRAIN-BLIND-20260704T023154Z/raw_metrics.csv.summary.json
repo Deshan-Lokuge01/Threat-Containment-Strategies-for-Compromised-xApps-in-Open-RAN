@@ -1,0 +1,13 @@
+{
+  "endpoint_errors": 0,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/attacks/A_BURST/A-BURST-PULSETRAIN-BLIND-20260704T023154Z/raw_metrics.csv",
+  "profile": "ATTACK_A_BURST_PULSETRAIN_BLIND",
+  "resource_counter_resets": 0,
+  "rows_written": 2835,
+  "run_id": "A-BURST-PULSETRAIN-BLIND-20260704T023154Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 2835,
+  "timing_errors": 0
+}

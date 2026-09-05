@@ -1,0 +1,54 @@
+{
+  "xapp": "__XAPP_NAME__",
+  "role": "qos-optimization",
+  "controls": {
+    "expected_cpu_class": "medium",
+    "expected_memory_class": "medium",
+    "expected_ric_activity": true,
+    "expected_control_activity": true,
+    "expected_shell": false,
+    "expected_sensitive_file_access": false,
+    "expected_external_egress": false,
+    "heartbeat_period_sec": 5,
+    "workload_intensity": "medium",
+    "allowed_ric_services": [
+      "e2mgr",
+      "rtmgr",
+      "a1mediator",
+      "prometheus"
+    ],
+    "max_api_rate_per_min": 120
+  },
+  "messaging": {
+    "ports": [
+      {
+        "name": "http_service",
+        "container": "__XAPP_NAME__",
+        "port": 8080,
+        "description": "HTTP REST API for xApp runtime status"
+      }
+    ]
+  },
+  "security_monitoring": {
+    "compromise_indicators": [
+      "unexpected_shell_spawn",
+      "sensitive_file_access",
+      "service_account_token_access",
+      "unexpected_external_egress",
+      "high_cpu_without_ric_activity",
+      "stale_heartbeat"
+    ],
+    "containment_actions": [
+      "label_as_quarantined",
+      "deny_all_network_policy",
+      "preserve_pod_for_forensics"
+    ]
+  },
+  "runtime_counters": {
+    "telemetry_samples": false,
+    "qos_decisions": true,
+    "traffic_reports": false,
+    "resource_recommendations": false,
+    "security_checks": false
+  }
+}

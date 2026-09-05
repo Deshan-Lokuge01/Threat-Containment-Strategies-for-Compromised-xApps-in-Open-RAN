@@ -1,0 +1,44 @@
+﻿schema: ztx-frozen-resource-detector-v1
+step: 42
+frozen_utc: 2026-06-28T17:04:04.3456172Z
+model_scope: kpimon_resource_behavior_anomaly_detector
+selected_candidate:
+  window_seconds: 5
+  half_life_seconds: 3
+  lambda: 0.206299
+  lambda_source: config/model_candidates_v1.yaml formula lambda = 1 - 2^(-1 / half_life_seconds)
+  warning_quantile: 0.975
+  upper_control_limit_quantile: 0.995
+  persistence_horizon_states: 10
+  persistence_required_count: 8
+selection_rationale:
+  primary_rule: fastest candidate among the lowest N3 clean T2-tail candidates with high clean true-negative rate
+  n3_upper_false_positive_rate: 0.005148741418764302
+  n3_upper_true_negative_rate: 0.9948512585812357
+  n3_persistent_upper_false_positive_rate: 0.0
+  first_scored_state_seconds: 24
+features:
+  - M1_log1p
+  - M3_run_pod_centered
+  - M4_identity
+  - M5_log1p
+  - M6_log1p
+m3_policy:
+  non_fitting_run_policy: median_of_frozen_n1_n2_m3_offsets_for_non_fitting_runs
+  reference_offset_bytes: 21358592.0
+  offset_fit_from_evaluation_data: false
+public_states:
+  - NORMAL
+  - SUSPICIOUS
+  - COMPROMISED
+compromise_policy: COMPROMISED requires corroborating evidence; resource score alone produces SUSPICIOUS at most in live operation.
+forbidden_after_freeze:
+  - refit_transform
+  - refit_center_or_scale
+  - refit_covariance
+  - refit_mewma_state_covariance
+  - change_lambda
+  - change_window_size
+  - change_thresholds
+  - change_persistence_rule
+  - fit_m3_offset_from_evaluation_data

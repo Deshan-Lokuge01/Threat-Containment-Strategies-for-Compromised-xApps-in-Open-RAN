@@ -1,0 +1,2 @@
+n_scores,t2_p50,t2_p95,t2_p99,t2_maximum,warning_false_positive_rate,upper_false_positive_rate,persistent_upper_false_positive_rate,public_normal_occupancy,public_suspicious_occupancy,compromised_occupancy
+1745,2.5107209859404414,11.864433559889331,17.71573215196824,29.48743263747415,0.03954154727793696,0.002292263610315186,0.0,0.960458452722063,0.03954154727793696,0.0

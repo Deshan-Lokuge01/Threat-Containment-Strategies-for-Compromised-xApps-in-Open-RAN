@@ -1,0 +1,89 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Endpoints",
+            "metadata": {
+                "creationTimestamp": "2026-06-23T06:57:00Z",
+                "labels": {
+                    "app": "telemetry-monitor",
+                    "endpoints.kubernetes.io/managed-by": "endpoint-controller",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "telemetry-monitor",
+                "namespace": "ricxapp",
+                "resourceVersion": "4237214",
+                "uid": "21747238-f2db-4948-aea3-6a72d265ff21"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Endpoints",
+            "metadata": {
+                "creationTimestamp": "2026-06-23T07:11:16Z",
+                "labels": {
+                    "app": "qos-optimizer",
+                    "endpoints.kubernetes.io/managed-by": "endpoint-controller",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "qos-optimizer",
+                "namespace": "ricxapp",
+                "resourceVersion": "4237164",
+                "uid": "6b3001a2-5b11-4fac-8ed1-50f68b571a76"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Endpoints",
+            "metadata": {
+                "creationTimestamp": "2026-06-23T07:11:17Z",
+                "labels": {
+                    "app": "traffic-analyzer",
+                    "endpoints.kubernetes.io/managed-by": "endpoint-controller",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "traffic-analyzer",
+                "namespace": "ricxapp",
+                "resourceVersion": "4237239",
+                "uid": "d439efd0-60a8-41d6-a075-b8f1a8e1bfee"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Endpoints",
+            "metadata": {
+                "creationTimestamp": "2026-06-23T07:11:17Z",
+                "labels": {
+                    "app": "resource-optimizer",
+                    "endpoints.kubernetes.io/managed-by": "endpoint-controller",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "resource-optimizer",
+                "namespace": "ricxapp",
+                "resourceVersion": "4237252",
+                "uid": "3365deab-536b-4520-afdc-2d036f3cca6f"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Endpoints",
+            "metadata": {
+                "creationTimestamp": "2026-06-23T07:11:18Z",
+                "labels": {
+                    "app": "security-observer",
+                    "endpoints.kubernetes.io/managed-by": "endpoint-controller",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "security-observer",
+                "namespace": "ricxapp",
+                "resourceVersion": "4237228",
+                "uid": "9dd16bff-06f6-45dd-9e4b-1b23a5ec2567"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

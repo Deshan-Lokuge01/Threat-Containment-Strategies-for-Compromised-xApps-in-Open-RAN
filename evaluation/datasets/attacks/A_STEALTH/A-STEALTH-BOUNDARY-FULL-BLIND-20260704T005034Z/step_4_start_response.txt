@@ -1,0 +1,3 @@
+1423
+root        1423  1.0  0.0  50212  6536 ?        SL   01:45   0:00 stress-ng --cpu 1 --cpu-load 40 --timeout 900s --metrics-brief
+root        1428  0.0  0.0  50212  2156 ?        R    01:45   0:00 stress-ng-cpu

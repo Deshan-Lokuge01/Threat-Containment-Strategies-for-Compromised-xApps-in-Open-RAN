@@ -1,0 +1,51 @@
+{
+  "name": "traffic-analyzer",
+  "version": "1.0.0",
+  "provider": "sp1",
+  "containers": [
+    {
+      "name": "traffic-analyzer",
+      "image": {
+        "registry": "localhost:5000",
+        "name": "zt-traffic-analyzer",
+        "tag": "1.0",
+        "digest": "sha256:6486a85f6129dc067c7f1c380fe5123eed755168fb4b08f418f52b229cf90ec5",
+        "reference": "localhost:5000/zt-traffic-analyzer:1.0",
+        "immutable_reference": "localhost:5000/zt-traffic-analyzer@sha256:6486a85f6129dc067c7f1c380fe5123eed755168fb4b08f418f52b229cf90ec5"
+      }
+    }
+  ],
+  "messaging": {
+    "ports": [
+      {
+        "name": "http_service",
+        "container": "traffic-analyzer",
+        "port": 8080,
+        "description": "HTTP API for health, profile, activity, RIC reachability, and metrics"
+      }
+    ]
+  },
+  "livenessProbe": {
+    "httpGet": {
+      "path": "/health",
+      "port": 8080
+    },
+    "initialDelaySeconds": 5,
+    "periodSeconds": 15
+  },
+  "readinessProbe": {
+    "httpGet": {
+      "path": "/health",
+      "port": 8080
+    },
+    "initialDelaySeconds": 5,
+    "periodSeconds": 15
+  },
+  "security": {
+    "serviceAccount": "traffic-analyzer",
+    "spiffeID": "spiffe://example.org/ns/ricxapp/sa/traffic-analyzer",
+    "requiresSVID": true,
+    "runAsNonRoot": false,
+    "allowPrivilegeEscalation": true
+  }
+}

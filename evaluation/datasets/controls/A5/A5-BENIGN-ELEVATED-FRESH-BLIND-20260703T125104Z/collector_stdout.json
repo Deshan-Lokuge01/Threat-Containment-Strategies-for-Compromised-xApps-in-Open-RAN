@@ -1,0 +1,13 @@
+{
+  "endpoint_errors": 0,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/controls/A5/A5-BENIGN-ELEVATED-FRESH-BLIND-20260703T125104Z/raw_metrics.csv",
+  "profile": "CONTROL_A5_BENIGN_ELEVATED_FRESH_BLIND",
+  "resource_counter_resets": 0,
+  "rows_written": 1500,
+  "run_id": "A5-BENIGN-ELEVATED-FRESH-BLIND-20260703T125104Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 1500,
+  "timing_errors": 0
+}

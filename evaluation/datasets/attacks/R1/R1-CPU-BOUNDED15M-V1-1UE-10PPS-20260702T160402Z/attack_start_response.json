@@ -1,0 +1,9 @@
+{
+  "scenario": "R1_CPU_SINGLE_VECTOR_BOUNDED15M",
+  "started_utc": "2026-07-02T16:14:08Z",
+  "attack_start_elapsed_s": 600,
+  "duration_seconds": 900,
+  "cpu_workers": 1,
+  "cpu_load_percent": 20,
+  "tool": "stress-ng inside fixed KPIMON v1 container"
+}

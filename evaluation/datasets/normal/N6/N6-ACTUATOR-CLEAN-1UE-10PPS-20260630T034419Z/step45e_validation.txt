@@ -1,0 +1,11 @@
+status=ready
+dataset=N6
+role=actuator-dormant-clean-evaluation-for-v2
+expected_pod=ricxapp-kpimon-go-687d9645b6-snlkl
+expected_uid=e577ccc2-ab4d-4a07-b5c9-33bbdcc1779b
+expected_image_id=127.0.0.1:80/kpimon-ocudu-cell@sha256:bbc43f0d77461721815ce2cee2e12c4a39a62b418d262a9d146938dde00c678f
+ping_pid=44572
+frozen_model_archive_sha256=47d631da4dd165b7f0527a8749443e54e90c3284215b0aec7358e3f364fe7856
+actuator_expected=present
+stress_ng_expected=dormant
+caldera_operation_expected=none

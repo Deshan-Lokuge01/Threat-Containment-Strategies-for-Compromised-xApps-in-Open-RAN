@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZT-XGuard — Zero-Trust SOC Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='soc.css') }}?v={{ ASSET_VER|default('1') }}">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><i class="mark" id="brandMark"></i><b>ZT&#8209;XGUARD</b><span>Zero-Trust SOC</span></div>
+    <div class="legend" aria-hidden="true">
+      <div class="lg"><i style="background:var(--normal)"></i>Normal</div>
+      <div class="lg"><i style="background:var(--suspicious)"></i>Suspicious</div>
+      <div class="lg"><i style="background:var(--compromised)"></i>Compromised</div>
+      <div class="lg"><i style="background:var(--isolated)"></i>Isolated</div>
+      <div class="lg"><i style="background:var(--ran)"></i>RAN</div>
+    </div>
+    <div class="overall" id="overall"><span class="dot"></span><span id="overallTxt">All Normal</span></div>
+    <div class="clock" id="clock">--:--:--</div>
+  </header>
+
+  <div class="main">
+    <!-- LEFT -->
+    <div class="col">
+      <div class="card">
+        <h3>Console</h3>
+        <nav class="nav">
+          <a class="on" id="navOverview"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</a>
+          <a class="invnav" id="navInvestigate"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/><path d="M21 21l-4.3-4.3"/></svg>Investigation Center<span class="ext" id="navInvCount"></span></a>
+        </nav>
+      </div>
+      <div class="card">
+        <h3>RAN · E2 Link <span class="sub" id="ranPlmn">—</span></h3>
+        <div class="ranrows" id="ranRows"></div>
+      </div>
+      <div class="card grow" id="cardPolicy">
+        <h3>Policy Engine <span class="sub">fleet-wide enforcement</span></h3>
+        <div class="polwrap" id="polWrap"></div>
+      </div>
+      <div class="card graph gfirst">
+        <h3>CPU Usage <span class="sub">millicores</span></h3>
+        <div class="chart-legend" id="legCpu"></div>
+        <canvas id="cCpu"></canvas>
+      </div>
+      <div class="card graph">
+        <h3>Memory <span class="sub">MB working set</span></h3>
+        <div class="chart-legend" id="legMem"></div>
+        <canvas id="cMem"></canvas>
+      </div>
+    </div>
+
+    <!-- CENTRE -->
+    <div class="mid">
+      <div class="stage" id="stage">
+        <div class="grid-bg"></div>
+        <div class="tierlabel" style="top:8px">ZERO-TRUST PLANE</div>
+        <div class="k8sbadge" title="Kubernetes control plane" aria-hidden="true">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path fill="var(--surface)" stroke="var(--infra-dim)" stroke-width="2" d="M50 4 L85.96 21.32 L94.85 60.24 L69.96 91.45 L30.04 91.45 L5.15 60.24 L14.04 21.32 Z"/>
+            <g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none">
+              <circle cx="50" cy="52" r="18"/>
+              <line x1="50" y1="52" x2="50" y2="30"/>
+              <line x1="50" y1="52" x2="67.20" y2="38.28"/>
+              <line x1="50" y1="52" x2="71.45" y2="56.90"/>
+              <line x1="50" y1="52" x2="59.55" y2="71.82"/>
+              <line x1="50" y1="52" x2="40.45" y2="71.82"/>
+              <line x1="50" y1="52" x2="28.55" y2="56.90"/>
+              <line x1="50" y1="52" x2="32.80" y2="38.28"/>
+            </g>
+            <g fill="currentColor">
+              <circle cx="50" cy="52" r="4.4"/>
+              <circle cx="50" cy="30" r="3"/><circle cx="67.20" cy="38.28" r="3"/><circle cx="71.45" cy="56.90" r="3"/>
+              <circle cx="59.55" cy="71.82" r="3"/><circle cx="40.45" cy="71.82" r="3"/><circle cx="28.55" cy="56.90" r="3"/><circle cx="32.80" cy="38.28" r="3"/>
+            </g>
+          </svg>
+        </div>
+        <div class="tierlabel" style="top:29%">xApps · ricxapp</div>
+        <div class="tierlabel" style="top:54%">RIC PLATFORM · ricplt</div>
+        <div class="tierlabel" style="bottom:7px">RAN · open5GS / gNB / UE</div>
+        <div class="selchip" id="selchip"><span class="sd"></span><b id="chipName">kpimon-go</b><span class="m" id="chipState">NORMAL</span><span class="m" id="chipMetrics"></span></div>
+        <div class="stbtns">
+          <button class="btn" id="btnAll">Show all</button>
+          <button class="btn" id="btnReset">Reset layout</button>
+        </div>
+        <svg id="edges"><g id="edgeG"></g></svg>
+        <div id="nodes"></div>
+        <!-- forensic vault (materializes bottom-right during a restore) -->
+        <div class="vault" id="vault"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="2.5" y="7" width="19" height="13" rx="2"/><path d="M8.5 7V5.2A1.7 1.7 0 0 1 10.2 3.5h3.6A1.7 1.7 0 0 1 15.5 5.2V7"/><path d="M2.5 12.5h19"/><rect x="10.4" y="11" width="3.2" height="3" rx=".6"/></svg><span class="vlabel">Evidence Vault</span></div>
+        <!-- T2 dwell countdown (small, top-left free space, resource attacks only) -->
+        <div class="dwellcount" id="dwellCount" hidden>
+          <span class="dcnum" id="dcNum">30</span>
+          <span class="dctext"><b id="dcName">kpimon-go</b><span>s → auto-isolate</span></span>
+        </div>
+        <!-- attack console launcher, bottom-right -->
+        <button class="atklaunch iconly" id="navAttack" title="Attack Console" aria-label="Attack Console"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></button>
+        <div class="incbar" id="incbar">
+          <div class="ih"><span class="sev" id="incSev">CRITICAL</span><span class="iname" id="incName">—</span><span class="imeta" id="incMeta"></span><button class="incbtn" id="incIsolate" hidden>Immediate Isolation</button></div>
+          <div class="pflow" id="pflow"></div>
+        </div>
+      </div>
+      <!-- LIVE THREAT FEED (real recent detections/containments) -->
+      <div class="threatfeed" id="threatFeed"><div class="tfhead">LIVE THREAT FEED</div><div class="tfbody" id="tfBody"><span class="tfempty">no events · monitoring</span></div></div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col">
+      <div class="card">
+        <h3>xApp Fleet Status <span class="sub" id="fleetN">4 xApps</span></h3>
+        <div class="tiles">
+          <div class="tile normal"><div class="n" id="cnt-NORMAL">4</div><div class="l">Normal</div></div>
+          <div class="tile suspicious"><div class="n" id="cnt-SUSPICIOUS">0</div><div class="l">Suspicious</div></div>
+          <div class="tile compromised"><div class="n" id="cnt-COMPROMISED">0</div><div class="l">Compromised</div></div>
+          <div class="tile isolated"><div class="n" id="cnt-ISOLATED">0</div><div class="l">Isolated</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Detection &amp; Containment</h3>
+        <div class="detdiv">Detection latency · dual channel</div>
+        <div class="detrows" id="detRows"></div>
+        <div class="detdiv">Containment mechanisms <span id="latVerify"></span></div>
+        <div class="lat" id="latList"></div>
+        <div class="lfoot" id="latFoot">no active containment · awaiting incident</div>
+      </div>
+      <div class="card grow" id="cardSvid">
+        <h3>Identity Health <span class="sub">SPIFFE / SVID</span></h3>
+        <div class="svidwrap" id="svidWrap"></div>
+      </div>
+      <div class="card graph gfirst">
+        <h3>Network RX <span class="sub">KB/s</span></h3>
+        <div class="chart-legend" id="legRx"></div>
+        <canvas id="cRx"></canvas>
+      </div>
+      <div class="card graph">
+        <h3>Network TX <span class="sub">KB/s</span></h3>
+        <div class="chart-legend" id="legTx"></div>
+        <canvas id="cTx"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ATTACK CONSOLE VIEW (hidden until nav → Attack Console) -->
+  <div class="atkview" id="atkView" hidden>
+    <div class="invtop atktop">
+      <button class="xdback" id="atkBack">&larr; Overview</button>
+      <div class="invtitle"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg><b>Attack Console</b><span class="invsub">adversary emulation · real container exec</span></div>
+    </div>
+    <div class="atkgrid">
+      <div class="card atktargets">
+        <h3>Target xApp <span class="sub">real exec into live container</span></h3>
+        <div class="atk-xapps" id="atkXapps"></div>
+        <div class="atkcaps" id="atkCaps"></div>
+      </div>
+      <div class="card atkcatalog">
+        <h3>Attack Catalog <span class="sub" id="atkSel">select a target</span></h3>
+        <div class="atk-attacks" id="atkAttacks"></div>
+        <div class="atknote">Attacks run a real command inside the selected xApp's container via the Kubernetes exec API — Falco detects the syscall and the policy engine contains the pod. Nothing is simulated.</div>
+      </div>
+      <div class="card atklogcard">
+        <h3>Attack Log <span class="sub" id="atkLogN"></span></h3>
+        <div class="atk-log" id="atkLog"></div>
+      </div>
+      <!-- live attack execution playback (right side) -->
+      <div class="card atkexec" id="atkExec">
+        <h3>Attack Execution <span class="sub" id="axeSub">idle · awaiting launch</span><button class="axe-replay" id="axeReplay" hidden>⟳ Replay</button></h3>
+        <div class="axe-idle" id="axeIdle">Pick a target xApp and press <b>Launch</b> on an attack. This panel replays the real execution — the exact command run inside the container, how ZT‑XGuard detects it at the kernel, the policy decision, and the containment it triggers — so the whole kill‑chain is visible end to end.</div>
+        <div class="axe-body" id="axeBody" hidden>
+          <div class="axe-head"><span class="axe-name" id="axeName">—</span><span class="axe-tech" id="axeTech"></span></div>
+          <div class="axe-scene" id="axeScene"><div class="asc-cap" id="ascCap"></div></div>
+          <div class="axe-term">
+            <div class="axe-tbar"><span class="axe-tprompt">TERMINAL</span><span id="axeTarget">exec target</span></div>
+            <div class="axe-tcmd" id="axeCmd"></div>
+          </div>
+          <div class="axe-steps" id="axeSteps"></div>
+          <div class="axe-impact" id="axeImpact"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- XAPP DETAIL VIEW (opened by double-clicking an xApp circle) -->
+  <div class="xdview" id="xdView" hidden>
+    <div class="xdtop">
+      <button class="xdback" id="xdBack">&larr; Overview</button>
+      <div class="xdtitle"><span class="xdsd" id="xdSd"></span><b id="xdName">—</b><span class="xdstate" id="xdState">NORMAL</span></div>
+      <div class="xdupd" id="xdUpd"></div>
+    </div>
+
+    <!-- row 1: T2 gauges | detection & containment | mechanism latency | event log -->
+    <div class="xdrow xdrow1">
+      <div class="card xdcard">
+        <h3>T² Resource Gauges <span class="sub" id="xdT2Sub"></span></h3>
+        <div class="xdt2" id="xdT2Gauges"></div>
+      </div>
+      <div class="card xdcard">
+        <h3>Detection <span class="sub">what's being detected</span></h3>
+        <div class="detdiv">Behavior · Resource</div>
+        <div class="detrows" id="xdDetRows"></div>
+      </div>
+      <div class="card xdcard">
+        <h3>Containment Latency <span id="xdLatVerify"></span></h3>
+        <div class="lat" id="xdLatList"></div>
+        <div class="lfoot" id="xdLatFoot">no active containment</div>
+      </div>
+      <div class="card xdcard">
+        <h3>Event Log <span class="sub" id="xdEvN"></span></h3>
+        <div class="atk-log xdscroll" id="xdEvents"></div>
+      </div>
+    </div>
+
+    <!-- row 2: throttle | xApp-scoped topology map | isolation verification -->
+    <div class="xdrow xdrow2">
+      <div class="card xdcard xdthrottle">
+        <h3>CPU Throttle <span class="sub">on confirmed anomaly</span></h3>
+        <div id="xdThrottle"></div>
+      </div>
+      <div class="card xdcard xdmapcard">
+        <h3>xApp Topology <span class="sub" id="xdMapSub">scoped connections</span></h3>
+        <div class="xdmap" id="xdMap"><div class="grid-bg"></div><svg id="xdMapSvg"><g id="xdMapEdgeG"></g></svg><div id="xdMapNodes"></div></div>
+      </div>
+      <div class="card xdcard xdverifycard">
+        <div class="xdmaphead">
+          <h3>Isolation Verification</h3>
+          <div class="xdisohero" id="xdIsoHero"><span class="xdisodot"></span><span class="xdisotxt">not yet checked</span></div>
+        </div>
+        <div class="xdchecks" id="xdChecks"></div>
+        <div class="xdterm" id="xdTerm">
+          <div class="xdtermhead"><span class="xdtermtitle">verification terminal</span><span class="xdtermtgt" id="xdTermTarget"></span></div>
+          <div class="xdtermbody" id="xdTermBody"><div class="xdtermline dim">$ type a verification command below and press Enter…</div></div>
+          <div class="xdtermprompt">
+            <span class="xdps1">$</span>
+            <input type="text" id="xdCmdInput" class="xdcmdinput" spellcheck="false" autocomplete="off" placeholder="verify · iptables · ingress · egress · labels · netpol · svid · help   (↑ history)">
+            <button class="xdcmdrun" id="xdCmdRun">Run</button>
+          </div>
+        </div>
+        <div class="xdactions">
+          <button class="xdbtn xdverify" id="xdBtnVerify"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>Verify Isolation</button>
+          <button class="xdbtn xdisonow" id="xdBtnIsolate"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.6 18a1.8 1.8 0 001.5 2.7h15.8a1.8 1.8 0 001.5-2.7L13.7 3.9a1.8 1.8 0 00-3.4 0z"/></svg>Isolate Now</button>
+          <button class="xdbtn xdrestore" id="xdBtnRestore"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>Restore</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- row 3: 4 resource graphs, side by side, homepage styling, one fixed colour per graph -->
+    <div class="xdgraphhead">
+      <span class="xdrangelbl">Resource Graphs <i>Prometheus · cAdvisor</i></span>
+      <div class="xdranges" id="xdRanges">
+        <button data-r="900">15m</button><button data-r="1800" class="on">30m</button><button data-r="3600">1h</button><button data-r="7200">2h</button>
+      </div>
+    </div>
+    <div class="xdrow xdrow2g">
+      <div class="card xdcard xdgcard">
+        <h3>CPU <span class="sub" id="xdCpuNow"></span></h3>
+        <canvas id="xdCCpu"></canvas>
+      </div>
+      <div class="card xdcard xdgcard">
+        <h3>Memory <span class="sub" id="xdMemNow"></span></h3>
+        <canvas id="xdCMem"></canvas>
+      </div>
+      <div class="card xdcard xdgcard">
+        <h3>Network RX <span class="sub" id="xdRxNow"></span></h3>
+        <canvas id="xdCRx"></canvas>
+      </div>
+      <div class="card xdcard xdgcard">
+        <h3>Network TX <span class="sub" id="xdTxNow"></span></h3>
+        <canvas id="xdCTx"></canvas>
+      </div>
+    </div>
+
+    <!-- row 4 (bottom): renew-svid log (1/3 width) | main container log (rest) -->
+    <div class="xdrow xdrow4">
+      <div class="card xdcard xdlogcard xdlognarrow">
+        <h3>renew-svid logs <span class="sub">SPIFFE identity sidecar</span></h3>
+        <pre class="xdlog xdscroll" id="xdLogSvid"></pre>
+      </div>
+      <div class="card xdcard xdlogcard xdlogwide">
+        <h3>Main container logs <span class="sub" id="xdLogMainSub"></span></h3>
+        <pre class="xdlog xdscroll" id="xdLogMain"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- INCIDENT INVESTIGATION CENTER (forensic vault) -->
+  <div class="invview" id="invView" hidden>
+    <div class="invtop">
+      <button class="xdback" id="invBack">&larr; Overview</button>
+      <div class="invtitle"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/><path d="M21 21l-4.3-4.3"/></svg><b>Incident Investigation Center</b><span class="invsub" id="invSub">forensic evidence vault</span></div>
+      <div class="invmeta" id="invMeta"></div>
+    </div>
+    <div class="invgrid">
+      <div class="card invlist">
+        <h3>Incidents <span class="sub" id="invCount"></span></h3>
+        <div class="invfilter"><input type="text" id="invSearch" placeholder="filter by xApp / signal / id…"></div>
+        <div class="invrows" id="invRows"></div>
+      </div>
+      <div class="card invdetail" id="invDetail">
+        <div class="invempty" id="invEmpty">Select an incident to inspect its forensic record.</div>
+        <div class="invbody" id="invBody" hidden></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='soc.js') }}?v={{ ASSET_VER|default('1') }}"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+=== ping ===
+  81705   81704 ping            ping -i 0.1 10.45.1.1
+=== no stress-ng ===
+=== E2 ===
+[{"inventoryName":"gnbd_001_001_00019b_0","globalNbId":{"plmnId":"00F110","nbId":"0000000000000110011011"},"connectionStatus":"CONNECTED"}]=== actuator ===
+{"active":false}
+=== runtime metrics ===
+kpimon_image=127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v4-actuator-c-r1pilot

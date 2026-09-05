@@ -1,0 +1,234 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"telemetry-monitor\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"telemetry-monitor\",\"namespace\":\"ricxapp\"},\"spec\":{\"ports\":[{\"name\":\"http\",\"port\":8080,\"protocol\":\"TCP\",\"targetPort\":\"http\"}],\"selector\":{\"app\":\"telemetry-monitor\"},\"type\":\"ClusterIP\"}}\n"
+                },
+                "creationTimestamp": "2026-06-23T06:57:00Z",
+                "labels": {
+                    "app": "telemetry-monitor",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "telemetry-monitor",
+                "namespace": "ricxapp",
+                "resourceVersion": "3694431",
+                "uid": "1c3e05a5-c33e-48e7-b6c4-247decffd80b"
+            },
+            "spec": {
+                "clusterIP": "10.103.112.168",
+                "clusterIPs": [
+                    "10.103.112.168"
+                ],
+                "internalTrafficPolicy": "Cluster",
+                "ipFamilies": [
+                    "IPv4"
+                ],
+                "ipFamilyPolicy": "SingleStack",
+                "ports": [
+                    {
+                        "name": "http",
+                        "port": 8080,
+                        "protocol": "TCP",
+                        "targetPort": "http"
+                    }
+                ],
+                "selector": {
+                    "app": "telemetry-monitor"
+                },
+                "sessionAffinity": "None",
+                "type": "ClusterIP"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"qos-optimizer\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"qos-optimizer\",\"namespace\":\"ricxapp\"},\"spec\":{\"ports\":[{\"name\":\"http\",\"port\":8080,\"protocol\":\"TCP\",\"targetPort\":\"http\"}],\"selector\":{\"app\":\"qos-optimizer\"},\"type\":\"ClusterIP\"}}\n"
+                },
+                "creationTimestamp": "2026-06-23T07:11:16Z",
+                "labels": {
+                    "app": "qos-optimizer",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "qos-optimizer",
+                "namespace": "ricxapp",
+                "resourceVersion": "3702808",
+                "uid": "3a8575a5-ea1c-4e6d-8c11-81b3fbee05c1"
+            },
+            "spec": {
+                "clusterIP": "10.106.32.221",
+                "clusterIPs": [
+                    "10.106.32.221"
+                ],
+                "internalTrafficPolicy": "Cluster",
+                "ipFamilies": [
+                    "IPv4"
+                ],
+                "ipFamilyPolicy": "SingleStack",
+                "ports": [
+                    {
+                        "name": "http",
+                        "port": 8080,
+                        "protocol": "TCP",
+                        "targetPort": "http"
+                    }
+                ],
+                "selector": {
+                    "app": "qos-optimizer"
+                },
+                "sessionAffinity": "None",
+                "type": "ClusterIP"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"traffic-analyzer\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"traffic-analyzer\",\"namespace\":\"ricxapp\"},\"spec\":{\"ports\":[{\"name\":\"http\",\"port\":8080,\"protocol\":\"TCP\",\"targetPort\":\"http\"}],\"selector\":{\"app\":\"traffic-analyzer\"},\"type\":\"ClusterIP\"}}\n"
+                },
+                "creationTimestamp": "2026-06-23T07:11:17Z",
+                "labels": {
+                    "app": "traffic-analyzer",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "traffic-analyzer",
+                "namespace": "ricxapp",
+                "resourceVersion": "3702600",
+                "uid": "18a61438-ba35-44a8-b8bb-15859464db17"
+            },
+            "spec": {
+                "clusterIP": "10.98.63.179",
+                "clusterIPs": [
+                    "10.98.63.179"
+                ],
+                "internalTrafficPolicy": "Cluster",
+                "ipFamilies": [
+                    "IPv4"
+                ],
+                "ipFamilyPolicy": "SingleStack",
+                "ports": [
+                    {
+                        "name": "http",
+                        "port": 8080,
+                        "protocol": "TCP",
+                        "targetPort": "http"
+                    }
+                ],
+                "selector": {
+                    "app": "traffic-analyzer"
+                },
+                "sessionAffinity": "None",
+                "type": "ClusterIP"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"resource-optimizer\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"resource-optimizer\",\"namespace\":\"ricxapp\"},\"spec\":{\"ports\":[{\"name\":\"http\",\"port\":8080,\"protocol\":\"TCP\",\"targetPort\":\"http\"}],\"selector\":{\"app\":\"resource-optimizer\"},\"type\":\"ClusterIP\"}}\n"
+                },
+                "creationTimestamp": "2026-06-23T07:11:17Z",
+                "labels": {
+                    "app": "resource-optimizer",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "resource-optimizer",
+                "namespace": "ricxapp",
+                "resourceVersion": "3694438",
+                "uid": "8cededf5-cb3b-4d9a-8bb0-d2b340085652"
+            },
+            "spec": {
+                "clusterIP": "10.111.194.2",
+                "clusterIPs": [
+                    "10.111.194.2"
+                ],
+                "internalTrafficPolicy": "Cluster",
+                "ipFamilies": [
+                    "IPv4"
+                ],
+                "ipFamilyPolicy": "SingleStack",
+                "ports": [
+                    {
+                        "name": "http",
+                        "port": 8080,
+                        "protocol": "TCP",
+                        "targetPort": "http"
+                    }
+                ],
+                "selector": {
+                    "app": "resource-optimizer"
+                },
+                "sessionAffinity": "None",
+                "type": "ClusterIP"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"security-observer\",\"zt-xguard/component\":\"custom-xapp\"},\"name\":\"security-observer\",\"namespace\":\"ricxapp\"},\"spec\":{\"ports\":[{\"name\":\"http\",\"port\":8080,\"protocol\":\"TCP\",\"targetPort\":\"http\"}],\"selector\":{\"app\":\"security-observer\"},\"type\":\"ClusterIP\"}}\n"
+                },
+                "creationTimestamp": "2026-06-23T07:11:18Z",
+                "labels": {
+                    "app": "security-observer",
+                    "zt-xguard/component": "custom-xapp"
+                },
+                "name": "security-observer",
+                "namespace": "ricxapp",
+                "resourceVersion": "3694421",
+                "uid": "d8e62a13-da4c-4f68-9e33-93991c150ac7"
+            },
+            "spec": {
+                "clusterIP": "10.97.176.81",
+                "clusterIPs": [
+                    "10.97.176.81"
+                ],
+                "internalTrafficPolicy": "Cluster",
+                "ipFamilies": [
+                    "IPv4"
+                ],
+                "ipFamilyPolicy": "SingleStack",
+                "ports": [
+                    {
+                        "name": "http",
+                        "port": 8080,
+                        "protocol": "TCP",
+                        "targetPort": "http"
+                    }
+                ],
+                "selector": {
+                    "app": "security-observer"
+                },
+                "sessionAffinity": "None",
+                "type": "ClusterIP"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

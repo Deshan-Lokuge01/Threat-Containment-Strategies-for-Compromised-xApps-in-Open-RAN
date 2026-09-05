@@ -1,0 +1,564 @@
+/* ZTX_FINAL_STABLE_UI_V3
+   Dashboard + Scenario Console stable frontend.
+   - State vocabulary: NORMAL, OBSERVED, SUSPICIOUS, COMPROMISED
+   - Containment is separate from state
+   - Scenario buttons use /csm/scenarios/<id>/run
+*/
+
+const ZTX_NS = "ricxapp";
+const ZTX_REFRESH_MS = 3000;
+const ZTX_XAPPS = [
+  "telemetry-monitor",
+  "qos-optimizer",
+  "traffic-analyzer",
+  "resource-optimizer",
+  "security-observer"
+];
+
+const $ = (id) => document.getElementById(id);
+
+function esc(v) {
+  return String(v ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function arr(v) {
+  return Array.isArray(v) ? v : [];
+}
+
+function obj(v) {
+  return v && typeof v === "object" && !Array.isArray(v) ? v : {};
+}
+
+function num(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+function setText(id, value) {
+  const el = $(id);
+  if (el) el.textContent = value ?? 0;
+}
+
+function pill(text, cls) {
+  return `<span class="pill ${cls || "unknown"}">${esc(text)}</span>`;
+}
+
+function apiPublicState(raw) {
+  const s = String(raw || "NORMAL").toUpperCase().trim();
+
+  if (["NORMAL", "TRUSTED", "HEALTHY", "RESTORED", "UNKNOWN", "INITIALIZING"].includes(s)) return "NORMAL";
+  if (s === "OBSERVED") return "OBSERVED";
+  if (["SUSPICIOUS", "DEGRADED"].includes(s)) return "SUSPICIOUS";
+  if (["COMPROMISED", "QUARANTINED", "CONTAINED"].includes(s)) return "COMPROMISED";
+
+  return "NORMAL";
+}
+
+function stateClass(state) {
+  const s = apiPublicState(state);
+  if (s === "NORMAL") return "healthy";
+  if (s === "OBSERVED") return "observed";
+  if (s === "SUSPICIOUS") return "degraded";
+  if (s === "COMPROMISED") return "compromised";
+  return "unknown";
+}
+
+function score(v) {
+  const n = num(v);
+  return n === null ? "N/A" : String(Math.round(n));
+}
+
+function scoreForState(stateObj, runtimeObj) {
+  const state = apiPublicState(stateObj?.state || runtimeObj?.trust_state);
+
+  if (state === "NORMAL") return { risk: 0, trust: 100 };
+  if (state === "OBSERVED") return { risk: 20, trust: 80 };
+  if (state === "SUSPICIOUS") return { risk: 60, trust: 40 };
+  if (state === "COMPROMISED") return { risk: 100, trust: 0 };
+
+  return { risk: "N/A", trust: "N/A" };
+}
+
+function fmtCpu(resources) {
+  const v = num(resources?.cpu_percent_1core ?? resources?.cpu_percent_1core_2m);
+  return v === null ? "N/A" : `${v.toFixed(1)}%`;
+}
+
+function fmtMemory(resources) {
+  const b = num(resources?.memory_working_set_bytes ?? resources?.memory_usage_bytes);
+  if (b === null) return "N/A";
+  return `${(b / 1024 / 1024).toFixed(1)} MiB`;
+}
+
+/*
+  Final containment rule:
+  Dashboard Containment = YES only when traffic is actually isolated.
+  Old pod quarantine labels alone are not enough.
+*/
+function effectiveContainment(runtimeObj) {
+  const c = obj(runtimeObj?.containment);
+  const svc = obj(runtimeObj?.service);
+  const endpointCount = num(svc.endpoint_count);
+
+  if (endpointCount !== null && endpointCount > 0) return false;
+  if (endpointCount === 0) return true;
+  if (svc.has_endpoints === false) return true;
+  if (c.service_isolated === true && c.contained === true) return true;
+
+  return false;
+}
+
+async function apiJson(url, options = {}) {
+  const res = await fetch(url, options);
+  const text = await res.text();
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {
+      ok: false,
+      error: "non_json_response",
+      status: res.status,
+      body: text.slice(0, 300)
+    };
+  }
+}
+
+function hideCurrentPageButton() {
+  const path = location.pathname.toLowerCase();
+
+  document.querySelectorAll("a, button").forEach((el) => {
+    const text = String(el.textContent || "").trim().toLowerCase();
+
+    if ((path === "/" || path.includes("dashboard")) && text === "runtime dashboard") {
+      el.style.display = "none";
+    }
+
+    if ((path.includes("scenario") || path.includes("attack") || path.includes("evaluation")) &&
+        (text === "attack simulation" || text === "scenario + evaluation")) {
+      el.style.display = "none";
+    }
+  });
+}
+
+/* ---------------- Dashboard ---------------- */
+
+let dashboardBusy = false;
+let lastDashboardRows = "";
+
+function runtimeBody() {
+  return $("runtimeTableBody") || $("runtimeBody") || document.querySelector("#runtimeTable tbody") || document.querySelector("table tbody");
+}
+
+function mergeRows(statePayload, runtimePayload) {
+  const stateByXapp = {};
+  arr(statePayload?.xapps).forEach((x) => {
+    if (x?.xapp) stateByXapp[x.xapp] = x;
+  });
+
+  return arr(runtimePayload?.rows).map((r) => ({
+    runtime: r,
+    state: stateByXapp[r.xapp] || {}
+  }));
+}
+
+function renderDashboardSummary(statePayload) {
+  const summary = obj(statePayload?.summary);
+
+  const normal = summary.NORMAL ?? summary.TRUSTED ?? 0;
+
+  setText("trustedCount", normal);
+  setText("normalCount", normal);
+  setText("observedCount", summary.OBSERVED ?? 0);
+  setText("suspiciousCount", summary.SUSPICIOUS ?? 0);
+  setText("compromisedCount", summary.COMPROMISED ?? 0);
+  setText("quarantinedCount", 0);
+
+  const overall = apiPublicState(statePayload?.overall_state);
+  setText("overallState", overall);
+
+  const overallEl = $("overallState");
+  if (overallEl) overallEl.className = `overall ${stateClass(overall)}`;
+}
+
+function renderDashboardTable(rows) {
+  const tbody = runtimeBody();
+  if (!tbody) return;
+
+  if (!rows.length) {
+    if (!lastDashboardRows) {
+      tbody.innerHTML = `<tr><td colspan="11">Waiting for runtime data...</td></tr>`;
+    }
+    return;
+  }
+
+  const html = rows.map(({ runtime, state }) => {
+    const r = obj(runtime);
+    const s = obj(state);
+    const pod = obj(r.pod);
+    const svc = obj(r.service);
+    const resources = obj(r.resources);
+
+    const xapp = r.xapp || "unknown";
+    const publicState = apiPublicState(s.state || r.trust_state);
+    const sc = scoreForState({ state: publicState }, r);
+    const endpointCount = svc.endpoint_count ?? "N/A";
+    const contained = effectiveContainment(r);
+
+    const podName = pod.name || "N/A";
+    const readyText = pod.ready_text || (pod.ready ? "1/1" : "0/1");
+
+    return `
+      <tr>
+        <td><strong>${esc(xapp)}</strong></td>
+        <td>${pill(publicState, stateClass(publicState))}</td>
+        <td>${score(sc.risk)}</td>
+        <td>${score(sc.trust)}</td>
+        <td>${fmtCpu(resources)}</td>
+        <td>${fmtMemory(resources)}</td>
+        <td class="mono">${esc(podName)}</td>
+        <td>${pill(readyText, pod.ready ? "healthy" : "bad")}</td>
+        <td>${pill(endpointCount, num(endpointCount) === 0 ? "bad" : "healthy")}</td>
+        <td>${contained ? pill("YES", "contained") : pill("NO", "healthy")}</td>
+        <td>
+          <button class="btn secondary"
+            style="padding:4px 10px;font-size:.75rem"
+            onclick="location.href='/analyze?xapp=${encodeURIComponent(xapp)}&pod=${encodeURIComponent(podName)}'">
+            Analyze
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  lastDashboardRows = html;
+  tbody.innerHTML = html;
+
+  const updated = $("updatedAt") || $("runtimeUpdatedAt") || $("lastUpdated");
+  if (updated) updated.textContent = "Updated " + new Date().toLocaleTimeString();
+}
+
+async function refreshDashboard() {
+  if (dashboardBusy) return;
+  dashboardBusy = true;
+
+  try {
+    const [stateResult, runtimeResult] = await Promise.allSettled([
+      apiJson("/csm/state"),
+      apiJson(`/csm/xapps/runtime-lite?namespace=${encodeURIComponent(ZTX_NS)}`)
+    ]);
+
+    const statePayload = stateResult.status === "fulfilled" ? stateResult.value : {};
+    const runtimePayload = runtimeResult.status === "fulfilled" ? runtimeResult.value : {};
+
+    renderDashboardSummary(statePayload);
+    renderDashboardTable(mergeRows(statePayload, runtimePayload));
+  } catch (err) {
+    console.warn("[ZT-XGuard] dashboard refresh failed", err);
+  } finally {
+    dashboardBusy = false;
+  }
+}
+
+async function primeNormalState() {
+  await Promise.allSettled(ZTX_XAPPS.map((xapp) =>
+    apiJson("/csm/intent/ingest", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        xapp,
+        signal: "clean_baseline",
+        source: "dashboard_prime_normal"
+      })
+    })
+  ));
+
+  await refreshDashboard();
+}
+
+/* ---------------- Scenario Console ---------------- */
+
+function scenarioGrid() {
+  return $("scenarioGrid") || $("scenariosGrid") || $("attackGrid");
+}
+
+function scenarioBox() {
+  return $("scenarioBox") || $("attackBox");
+}
+
+function evaluationBox() {
+  return $("evaluationBox");
+}
+
+function recentResults() {
+  return $("recentResults") || $("scenarioResults") || $("attackResults");
+}
+
+function containmentBox() {
+  return $("containmentBox");
+}
+
+function xappSelect() {
+  return $("xappSelect") || $("targetXapp") || $("scenarioXapp");
+}
+
+function normalizeScenarios(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.scenarios)) return payload.scenarios;
+  if (Array.isArray(payload?.items)) return payload.items;
+  if (Array.isArray(payload?.data)) return payload.data;
+  return [];
+}
+
+function scenarioId(s) {
+  return s.id || s.scenario_id || s.name || "unknown";
+}
+
+function scenarioTitle(s) {
+  return s.title || s.name || scenarioId(s);
+}
+
+function scenarioTarget(s) {
+  return s.target_xapp || s.default_xapp || "telemetry-monitor";
+}
+
+function renderScenarioGrid(scenarios) {
+  const grid = scenarioGrid();
+  if (!grid) return;
+
+  if (!scenarios.length) {
+    grid.innerHTML = `<div class="empty">No scenarios returned from API.</div>`;
+    return;
+  }
+
+  grid.innerHTML = scenarios.map((s) => {
+    const id = scenarioId(s);
+    const title = scenarioTitle(s);
+    const category = s.category || (s.malicious ? "attack" : "benign");
+    const target = scenarioTarget(s);
+    const desc = s.description || s.summary || s.signal || "";
+
+    return `
+      <div class="scenario-card">
+        <div class="scenario-meta">${esc(category)}</div>
+        <h3>${esc(id)} — ${esc(title)}</h3>
+        <p>${esc(desc)}</p>
+        <div class="small-muted">Default target: <b>${esc(target)}</b></div>
+        <button class="btn run-scenario-btn"
+          data-scenario-id="${esc(id)}"
+          data-xapp="${esc(target)}">
+          Run Scenario
+        </button>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderRecentResults(items) {
+  const box = recentResults();
+  if (!box) return;
+
+  const results = arr(items);
+  if (!results.length) {
+    box.innerHTML = `<div class="empty">No scenario results yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = results.slice(0, 10).map((r) => {
+    const cls = r.pass === true ? "healthy" : r.classification === "FN" || r.classification === "FP" ? "bad" : "observed";
+    return `
+      <div class="event-card">
+        ${pill(r.classification || "RESULT", cls)}
+        <b>${esc(r.scenario_id || r.id || "scenario")}</b>
+        <span>${esc(r.xapp || "")}</span>
+        <span>${esc(r.actual_state || r.state || "")}</span>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderEvaluation(summaryPayload) {
+  const s = obj(summaryPayload);
+  const counts = obj(s.counts || s.summary || s);
+
+  setText("tpCount", counts.TP ?? s.TP ?? 0);
+  setText("tnCount", counts.TN ?? s.TN ?? 0);
+  setText("fpCount", counts.FP ?? s.FP ?? 0);
+  setText("fnCount", counts.FN ?? s.FN ?? 0);
+  setText("totalRuns", s.total_runs ?? counts.total ?? s.total ?? 0);
+
+  const passRate = s.pass_rate ?? s.pass_rate_percent ?? s.accuracy_percent;
+  const passEl = $("evalPassRate");
+  if (passEl) {
+    if (passRate === undefined || passRate === null) {
+      passEl.textContent = "--";
+    } else {
+      passEl.textContent = `${Number(passRate).toFixed(1)}%`;
+    }
+  }
+
+  const box = evaluationBox();
+  if (box) box.textContent = JSON.stringify(s, null, 2);
+}
+
+async function loadXappSelect() {
+  const select = xappSelect();
+  if (!select) return;
+
+  select.innerHTML = ZTX_XAPPS.map((x) => `<option value="${esc(x)}">${esc(x)}</option>`).join("");
+}
+
+async function refreshScenarioConsole() {
+  const grid = scenarioGrid();
+  if (grid) grid.innerHTML = `<div class="empty">Loading scenarios...</div>`;
+
+  const [scenarioResult, evalResult] = await Promise.allSettled([
+    apiJson("/csm/scenarios"),
+    apiJson("/csm/evaluation/summary")
+  ]);
+
+  const scenarioPayload = scenarioResult.status === "fulfilled" ? scenarioResult.value : {};
+  const evalPayload = evalResult.status === "fulfilled" ? evalResult.value : {};
+
+  renderScenarioGrid(normalizeScenarios(scenarioPayload));
+  renderRecentResults(scenarioPayload.last_results || scenarioPayload.results || []);
+  renderEvaluation(evalPayload);
+  await loadXappSelect();
+}
+
+async function runScenario(id, defaultXapp) {
+  const target = xappSelect()?.value || defaultXapp || "telemetry-monitor";
+  const btn = document.querySelector(`[data-scenario-id="${CSS.escape(id)}"]`);
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Running...";
+  }
+
+  const result = await apiJson(`/csm/scenarios/${encodeURIComponent(id)}/run`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      xapp: target,
+      target_xapp: target,
+      namespace: ZTX_NS
+    })
+  });
+
+  const sBox = scenarioBox();
+  if (sBox) sBox.textContent = JSON.stringify(result, null, 2);
+
+  await Promise.allSettled([
+    apiJson("/csm/evaluation/summary").then(renderEvaluation),
+    apiJson("/csm/scenarios").then((p) => renderRecentResults(p.last_results || p.results || []))
+  ]);
+
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = "Run Scenario";
+  }
+
+  return result;
+}
+
+async function clearEvaluation() {
+  const result = await apiJson("/csm/evaluation/clear", { method: "POST" });
+
+  const sBox = scenarioBox();
+  if (sBox) sBox.textContent = JSON.stringify(result, null, 2);
+
+  await refreshScenarioConsole();
+}
+
+async function verifySelectedXapp() {
+  const xapp = xappSelect()?.value || "telemetry-monitor";
+  const result = await apiJson("/csm/containment/verify", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ xapp, namespace: ZTX_NS })
+  });
+
+  const box = containmentBox();
+  if (box) box.textContent = JSON.stringify(result, null, 2);
+}
+
+async function restoreSelectedXapp() {
+  const xapp = xappSelect()?.value || "telemetry-monitor";
+  const result = await apiJson("/csm/containment/restore", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ xapp, namespace: ZTX_NS })
+  });
+
+  const box = containmentBox();
+  if (box) box.textContent = JSON.stringify(result, null, 2);
+
+  await refreshScenarioConsole();
+}
+
+/* ---------------- Init ---------------- */
+
+document.addEventListener("click", (ev) => {
+  const runBtn = ev.target.closest(".run-scenario-btn");
+  if (runBtn) {
+    ev.preventDefault();
+    runScenario(runBtn.dataset.scenarioId, runBtn.dataset.xapp);
+    return;
+  }
+
+  const text = String(ev.target?.textContent || "").trim().toLowerCase();
+
+  if (text === "refresh") {
+    ev.preventDefault();
+    if (scenarioGrid()) refreshScenarioConsole();
+    else refreshDashboard();
+    return;
+  }
+
+  if (text.includes("prime audit")) {
+    ev.preventDefault();
+    if (scenarioGrid()) primeNormalState().then(refreshScenarioConsole);
+    else primeNormalState();
+    return;
+  }
+
+  if (text.includes("clear results")) {
+    ev.preventDefault();
+    clearEvaluation();
+    return;
+  }
+
+  if (text === "verify") {
+    ev.preventDefault();
+    verifySelectedXapp();
+    return;
+  }
+
+  if (text.includes("restore")) {
+    ev.preventDefault();
+    restoreSelectedXapp();
+    return;
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  hideCurrentPageButton();
+
+  const page = String(document.body?.dataset?.page || "").toLowerCase();
+  const path = location.pathname.toLowerCase();
+
+  if (page.includes("scenario") || path.includes("scenario") || path.includes("attack") || scenarioGrid()) {
+    refreshScenarioConsole();
+    return;
+  }
+
+  if (path === "/" || path.includes("dashboard")) {
+    refreshDashboard();
+    setInterval(refreshDashboard, ZTX_REFRESH_MS);
+  }
+});

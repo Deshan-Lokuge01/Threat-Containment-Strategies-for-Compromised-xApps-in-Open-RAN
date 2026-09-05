@@ -1,0 +1,284 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/restartedAt: "2026-06-08T23:04:32+05:30"
+      zt-xguard.io/admission-control: kyverno
+      zt-xguard.io/chart-generated-by: zt-xguard-smo
+      zt-xguard.io/descriptor-sha256: bdd061c65ff42b220e8fddb1f3b961c1f90497e9e4c7b83364d87912cb8f2f7f
+      zt-xguard.io/image-digest: sha256:b8658cd1462391a3f0a24db4285d717bb0283074edd9043cd7f9164bb7232388
+      zt-xguard.io/profile-hash: dcc447ef9310dfb30f396ad8dc9eeab94e9de40f30dcbea9e566e8afe7d95bd4
+    creationTimestamp: "2026-06-08T18:08:55Z"
+    generateName: telemetry-monitor-8555f8bb8f-
+    generation: 1
+    labels:
+      app: telemetry-monitor
+      pod-template-hash: 8555f8bb8f
+      version: 1.0.0
+      zt-xguard.io/provider: sp1
+      zt-xguard.io/verified: "true"
+    name: telemetry-monitor-8555f8bb8f-tlxrw
+    namespace: ricxapp
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: telemetry-monitor-8555f8bb8f
+      uid: 6c2d84f9-1b26-4b19-80a9-f1773abaa86d
+    resourceVersion: "1859949"
+    uid: 7d6af4cc-6745-4801-93c2-a12872d42a9e
+  spec:
+    containers:
+    - env:
+      - name: XAPP_PROFILE_PATH
+        value: /etc/xapp-profile/profile.json
+      - name: XAPP_PORT
+        value: "8080"
+      image: localhost:5000/zt-telemetry-monitor:1.0
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: http
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 15
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: telemetry-monitor
+      ports:
+      - containerPort: 8080
+        name: http
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: http
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 15
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources: {}
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: false
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /etc/svid
+        name: svid-data
+        readOnly: true
+      - mountPath: /etc/xapp-profile
+        name: xapp-profile
+        readOnly: true
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-rbnqx
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "Waiting for SPIRE socket..."
+        while [ ! -S /var/run/spire/sockets/spire-agent.sock ]; do sleep 1; done
+        echo "Socket ready. Fetching SVID..."
+        /opt/spire/bin/spire-agent api fetch x509 \
+          -socketPath /var/run/spire/sockets/spire-agent.sock \
+          -write /svid-data
+        echo "SVID fetched successfully."
+        ls -l /svid-data || true
+      image: localhost:5000/spire-fetcher:1.0-nonroot
+      imagePullPolicy: IfNotPresent
+      name: fetch-svid
+      resources: {}
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/spire/sockets
+        name: spiffe-socket
+        readOnly: true
+      - mountPath: /svid-data
+        name: svid-data
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-rbnqx
+        readOnly: true
+    nodeName: near-rt-ric
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 10001
+      fsGroupChangePolicy: OnRootMismatch
+      runAsGroup: 10001
+      runAsNonRoot: true
+      runAsUser: 10001
+      seccompProfile:
+        type: RuntimeDefault
+    serviceAccount: telemetry-monitor
+    serviceAccountName: telemetry-monitor
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - csi:
+        driver: csi.spiffe.io
+        readOnly: true
+      name: spiffe-socket
+    - emptyDir: {}
+      name: svid-data
+    - configMap:
+        defaultMode: 420
+        name: telemetry-monitor-profile
+      name: xapp-profile
+    - name: kube-api-access-rbnqx
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-06-09T12:01:31Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-06-08T18:09:11Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-06-09T12:38:38Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-06-09T12:38:38Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-06-08T18:08:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://74fc383a5cb5b44fc545aeb62120993fac49eb8efffc5ad3be242814a8e0e3a6
+      image: localhost:5000/zt-telemetry-monitor:1.0
+      imageID: sha256:4137dc0f8c2855b5ed0567dec587fd19cb5ab7688cf5582d85c02b76cf596012
+      lastState:
+        terminated:
+          containerID: containerd://6bf12d84a405ede206ed566f013f26dec543a5d74d5cb54f199d55787f7b108d
+          exitCode: 255
+          finishedAt: "2026-06-09T12:00:41Z"
+          reason: Unknown
+          startedAt: "2026-06-09T06:10:09Z"
+      name: telemetry-monitor
+      ready: true
+      resources: {}
+      restartCount: 2
+      started: true
+      state:
+        running:
+          startedAt: "2026-06-09T12:28:18Z"
+      user:
+        linux:
+          gid: 10001
+          supplementalGroups:
+          - 10001
+          uid: 10001
+      volumeMounts:
+      - mountPath: /etc/svid
+        name: svid-data
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /etc/xapp-profile
+        name: xapp-profile
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-rbnqx
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.112.129
+    hostIPs:
+    - ip: 192.168.112.129
+    initContainerStatuses:
+    - containerID: containerd://3d60b75d3a882ded645d24ab4e63cfec3ac8b78693e92655fa7b2351fc2a269c
+      image: localhost:5000/spire-fetcher:1.0-nonroot
+      imageID: sha256:27bc2b1b240c4c264a23f1d4e535959f8515e4313a7f2ea94087386b6cad4d49
+      lastState: {}
+      name: fetch-svid
+      ready: true
+      resources: {}
+      restartCount: 5
+      started: false
+      state:
+        terminated:
+          containerID: containerd://3d60b75d3a882ded645d24ab4e63cfec3ac8b78693e92655fa7b2351fc2a269c
+          exitCode: 0
+          finishedAt: "2026-06-09T12:28:17Z"
+          reason: Completed
+          startedAt: "2026-06-09T12:01:31Z"
+      user:
+        linux:
+          gid: 10001
+          supplementalGroups:
+          - 10001
+          uid: 10001
+      volumeMounts:
+      - mountPath: /var/run/spire/sockets
+        name: spiffe-socket
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /svid-data
+        name: svid-data
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-rbnqx
+        readOnly: true
+        recursiveReadOnly: Disabled
+    phase: Running
+    podIP: 10.244.0.179
+    podIPs:
+    - ip: 10.244.0.179
+    qosClass: BestEffort
+    startTime: "2026-06-08T18:08:55Z"
+kind: List
+metadata:
+  resourceVersion: ""

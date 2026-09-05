@@ -1,0 +1,593 @@
+{
+  "events": [
+    {
+      "count": 1,
+      "firstTimestamp": "2026-09-01T08:03:24+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113764",
+        "uid": "5da6b4a3-5669-4f45-88c9-03c33a71382b"
+      },
+      "lastTimestamp": "2026-09-01T08:03:24+00:00",
+      "message": "Successfully assigned ricxapp/ricxapp-trafficxapp-656f95dfd4-g8nz7 to near-rt-ric",
+      "metadata": {
+        "creationTimestamp": "2026-09-01T08:03:24+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:source": {
+                "f:component": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kube-scheduler",
+            "operation": "Update",
+            "time": "2026-09-01T08:03:24+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7.18d123b90b629b02",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113770",
+        "uid": "05cdfa3a-6c10-4907-8d59-5fb81dbfd3f9"
+      },
+      "reason": "Scheduled",
+      "reportingComponent": "default-scheduler",
+      "reportingInstance": "",
+      "source": {
+        "component": "default-scheduler"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 30,
+      "firstTimestamp": "2026-09-01T08:03:25+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113769",
+        "uid": "5da6b4a3-5669-4f45-88c9-03c33a71382b"
+      },
+      "lastTimestamp": "2026-09-01T08:31:30+00:00",
+      "message": "Unable to retrieve some image pull secrets (127-0-0-1-80); attempting to pull the image may not succeed.",
+      "metadata": {
+        "creationTimestamp": "2026-09-01T08:03:25+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-09-01T08:31:30+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7.18d123b920c03b1e",
+        "namespace": "ricxapp",
+        "resourceVersion": "5117443",
+        "uid": "337ec390-5c36-4f70-ac5e-6e385b5f0f0e"
+      },
+      "reason": "FailedToRetrieveImagePullSecret",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Warning"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-09-01T08:03:26+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.initContainers{fetch-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113769",
+        "uid": "5da6b4a3-5669-4f45-88c9-03c33a71382b"
+      },
+      "lastTimestamp": "2026-09-01T08:03:26+00:00",
+      "message": "Container image \"docker.io/library/zt-spire-fetcher:1.0\" already present on machine",
+      "metadata": {
+        "creationTimestamp": "2026-09-01T08:03:26+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-09-01T08:03:26+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7.18d123b95a21a911",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113780",
+        "uid": "8d1fc2b1-9693-4ed3-b4e0-5667c5d008a9"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-09-01T08:03:26+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.initContainers{fetch-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113769",
+        "uid": "5da6b4a3-5669-4f45-88c9-03c33a71382b"
+      },
+      "lastTimestamp": "2026-09-01T08:03:26+00:00",
+      "message": "Created container: fetch-svid",
+      "metadata": {
+        "creationTimestamp": "2026-09-01T08:03:26+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-09-01T08:03:26+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7.18d123b95dbdd757",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113781",
+        "uid": "3fbdbd66-77bd-4b78-ad98-9a2470abf5c9"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-09-01T08:03:26+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.initContainers{fetch-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113769",
+        "uid": "5da6b4a3-5669-4f45-88c9-03c33a71382b"
+      },
+      "lastTimestamp": "2026-09-01T08:03:26+00:00",
+      "message": "Started container fetch-svid",
+      "metadata": {
+        "creationTimestamp": "2026-09-01T08:03:26+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-09-01T08:03:26+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7.18d123b973358d85",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113782",
+        "uid": "7dbfdd6a-5314-45c7-9944-0de25a93b6b8"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-09-01T08:03:31+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{trafficxapp}",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113769",
+        "uid": "5da6b4a3-5669-4f45-88c9-03c33a71382b"
+      },
+      "lastTimestamp": "2026-09-01T08:03:31+00:00",
+      "message": "Container image \"127.0.0.1:80/trafficxapp:latest\" already present on machine",
+      "metadata": {
+        "creationTimestamp": "2026-09-01T08:03:31+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-09-01T08:03:31+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7.18d123ba8d426674",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113798",
+        "uid": "3d0be2fc-0ed8-4656-ab5c-1a4d669d06f5"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-09-01T08:03:31+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{trafficxapp}",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113769",
+        "uid": "5da6b4a3-5669-4f45-88c9-03c33a71382b"
+      },
+      "lastTimestamp": "2026-09-01T08:03:31+00:00",
+      "message": "Created container: trafficxapp",
+      "metadata": {
+        "creationTimestamp": "2026-09-01T08:03:31+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-09-01T08:03:31+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7.18d123ba95b159ad",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113799",
+        "uid": "00442446-c6ee-48bf-984f-8a467bc4e31a"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-09-01T08:03:31+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{trafficxapp}",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113769",
+        "uid": "5da6b4a3-5669-4f45-88c9-03c33a71382b"
+      },
+      "lastTimestamp": "2026-09-01T08:03:31+00:00",
+      "message": "Started container trafficxapp",
+      "metadata": {
+        "creationTimestamp": "2026-09-01T08:03:31+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-09-01T08:03:31+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7.18d123baa8ff9429",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113800",
+        "uid": "19b39a7f-cd80-4398-b8cc-1e441cfb38ee"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-09-01T08:03:31+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{renew-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113769",
+        "uid": "5da6b4a3-5669-4f45-88c9-03c33a71382b"
+      },
+      "lastTimestamp": "2026-09-01T08:03:31+00:00",
+      "message": "Container image \"docker.io/library/zt-spire-fetcher:1.0\" already present on machine",
+      "metadata": {
+        "creationTimestamp": "2026-09-01T08:03:31+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-09-01T08:03:31+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7.18d123baa97e895f",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113802",
+        "uid": "a22eda12-f6a9-46a2-9a7e-f5d6c687f408"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-09-01T08:03:31+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{renew-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113769",
+        "uid": "5da6b4a3-5669-4f45-88c9-03c33a71382b"
+      },
+      "lastTimestamp": "2026-09-01T08:03:31+00:00",
+      "message": "Created container: renew-svid",
+      "metadata": {
+        "creationTimestamp": "2026-09-01T08:03:31+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-09-01T08:03:31+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7.18d123baac2f581e",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113803",
+        "uid": "9cf1d8e9-fccd-473a-9d27-125d8f56a970"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    },
+    {
+      "count": 1,
+      "firstTimestamp": "2026-09-01T08:03:31+00:00",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{renew-svid}",
+        "kind": "Pod",
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113769",
+        "uid": "5da6b4a3-5669-4f45-88c9-03c33a71382b"
+      },
+      "lastTimestamp": "2026-09-01T08:03:31+00:00",
+      "message": "Started container renew-svid",
+      "metadata": {
+        "creationTimestamp": "2026-09-01T08:03:31+00:00",
+        "managedFields": [
+          {
+            "apiVersion": "v1",
+            "fieldsType": "FieldsV1",
+            "fieldsV1": {
+              "f:count": {},
+              "f:firstTimestamp": {},
+              "f:involvedObject": {},
+              "f:lastTimestamp": {},
+              "f:message": {},
+              "f:reason": {},
+              "f:reportingComponent": {},
+              "f:reportingInstance": {},
+              "f:source": {
+                "f:component": {},
+                "f:host": {}
+              },
+              "f:type": {}
+            },
+            "manager": "kubelet",
+            "operation": "Update",
+            "time": "2026-09-01T08:03:31+00:00"
+          }
+        ],
+        "name": "ricxapp-trafficxapp-656f95dfd4-g8nz7.18d123bab83d6475",
+        "namespace": "ricxapp",
+        "resourceVersion": "5113805",
+        "uid": "b7a1a02b-cbe7-444c-98a0-3fd828aa5f8f"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "near-rt-ric",
+      "source": {
+        "component": "kubelet",
+        "host": "near-rt-ric"
+      },
+      "type": "Normal"
+    }
+  ]
+}

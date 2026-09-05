@@ -1,0 +1,263 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zt-xguard
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: zt-xguard-policy-engine
+  namespace: zt-xguard
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zt-xguard-evidence-pvc
+  namespace: zt-xguard
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: zt-xguard-policy-engine-observer
+  namespace: ricxapp
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+      - events
+      - services
+      - endpoints
+      - serviceaccounts
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - replicasets
+    verbs:
+      - get
+      - list
+      - watch
+
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - get
+      - list
+      - watch
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: zt-xguard-policy-engine-observer
+  namespace: ricxapp
+subjects:
+  - kind: ServiceAccount
+    name: zt-xguard-policy-engine
+    namespace: zt-xguard
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: zt-xguard-policy-engine-observer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zt-xguard-policy-engine
+  namespace: zt-xguard
+  labels:
+    app: zt-xguard-policy-engine
+spec:
+  replicas: 1
+
+  strategy:
+    type: Recreate
+
+  selector:
+    matchLabels:
+      app: zt-xguard-policy-engine
+
+  template:
+    metadata:
+      labels:
+        app: zt-xguard-policy-engine
+        zt-xguard.io/mode: observation
+
+    spec:
+      serviceAccountName: zt-xguard-policy-engine
+      automountServiceAccountToken: true
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+        - name: policy-engine
+          image: docker.io/library/zt-xguard-policy-engine:laptop-observe-v1
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 5000
+              name: http
+              protocol: TCP
+
+          env:
+            - name: ENGINE_VERSION
+              value: laptop-observe-v1
+
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+
+            - name: XAPP_NAMESPACE
+              value: ricxapp
+
+            - name: TRUST_DOMAIN
+              value: oran.fyp.local
+
+            - name: TRUSTED_PROVIDER
+              value: sp1
+
+            - name: APPROVED_REGISTRY_PREFIX
+              value: ""
+
+            - name: STRICT_IMAGE_ID_MATCH
+              value: "false"
+
+            - name: AUTO_QUARANTINE
+              value: "false"
+
+            - name: REVOKE_SPIRE
+              value: "false"
+
+            - name: ALLOW_DESTRUCTIVE_ACTIONS
+              value: "false"
+
+            - name: CONTAINMENT_MODE
+              value: service
+
+            - name: SPIRE_SERVER_POD
+              value: spire-server-0
+
+            - name: SPIRE_NAMESPACE
+              value: spire-server
+
+            - name: SPIRE_CONTAINER
+              value: spire-server
+
+            - name: SPIRE_BIN
+              value: /opt/spire/bin/spire-server
+
+            - name: SCAN_INTERVAL_SEC
+              value: "0"
+
+            - name: EVIDENCE_DIR
+              value: /evidence
+
+            - name: REQUEST_TIMEOUT
+              value: "2.0"
+
+            - name: ACTIVITY_TIMEOUT
+              value: "2.0"
+
+            - name: PROMETHEUS_URL
+              value: http://r4-infrastructure-prometheus-server.ricplt.svc.cluster.local:80
+
+            - name: PROMETHEUS_TIMEOUT
+              value: "2.0"
+
+            - name: XAPP_LIST
+              value: >-
+                telemetry-monitor,qos-optimizer,traffic-analyzer,
+                resource-optimizer,security-observer,
+                ricxapp-hw-python,ricxapp-hw-go,
+                ricxapp-trafficxapp,ricxapp-kpimon-go
+
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 8
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 4
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            capabilities:
+              drop:
+                - ALL
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+
+          volumeMounts:
+            - name: evidence
+              mountPath: /evidence
+
+      volumes:
+        - name: evidence
+          persistentVolumeClaim:
+            claimName: zt-xguard-evidence-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zt-xguard-policy-engine
+  namespace: zt-xguard
+spec:
+  type: ClusterIP
+
+  selector:
+    app: zt-xguard-policy-engine
+
+  ports:
+    - name: http
+      port: 5000
+      targetPort: http
+      protocol: TCP

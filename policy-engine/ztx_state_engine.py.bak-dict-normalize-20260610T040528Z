@@ -1,0 +1,334 @@
+#!/usr/bin/env python3
+"""ZT-XGuard V5 state-machine decision engine.
+
+Pure decision logic: no Flask, no Kubernetes API calls.
+The Flask policy engine collects evidence, then calls evaluate_state().
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field, asdict
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional, Tuple
+
+STATE_ENGINE_VERSION = "5.3-state-machine"
+
+TRUSTED = "TRUSTED"
+OBSERVED = "OBSERVED"
+SUSPICIOUS = "SUSPICIOUS"
+COMPROMISED = "COMPROMISED"
+QUARANTINED = "QUARANTINED"
+RESTORED = "RESTORED"
+UNKNOWN = "UNKNOWN"
+IGNORED = "IGNORED"
+
+CRITICAL_SIGNALS = {
+    "unexpected_shell": "R-CRIT-01",
+    "sensitive_file_access": "R-CRIT-02",
+    "serviceaccount_token_access": "R-CRIT-03",
+    "external_egress": "R-CRIT-04",
+    "integrity_mismatch": "R-CRIT-05",
+    "image_digest_mismatch": "R-CRIT-06",
+    "profile_hash_mismatch": "R-CRIT-07",
+    "verified_label_missing": "R-CRIT-08",
+    "malicious_tool_execution": "R-CRIT-09",
+}
+
+IDENTITY_CRITICAL_SIGNALS = {
+    "spiffe_mismatch": "R-ID-01",
+    "identity_mismatch": "R-ID-02",
+    "serviceaccount_mismatch": "R-ID-03",
+    "svid_missing": "R-ID-04",
+    "svid_invalid": "R-ID-05",
+    "svid_expired": "R-ID-06",
+    "spire_registration_missing": "R-ID-07",
+}
+
+BENIGN_SIGNALS = {"clean_baseline", "normal_heartbeat", "normal_qos_activity"}
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _as_bool(value: Any, default: bool = False) -> bool:
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)):
+        return bool(value)
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes", "y", "ok"}
+    return bool(value)
+
+
+def _as_float(value: Any, default: Optional[float] = None) -> Optional[float]:
+    try:
+        if value is None or value == "":
+            return default
+        return float(value)
+    except Exception:
+        return default
+
+
+def _get_nested(obj: Dict[str, Any], path: List[str], default: Any = None) -> Any:
+    cur: Any = obj
+    for key in path:
+        if not isinstance(cur, dict):
+            return default
+        cur = cur.get(key)
+    return default if cur is None else cur
+
+
+@dataclass
+class StateDecision:
+    xapp: str
+    signal: str
+    previous_state: str
+    detection_state: str
+    decision_state: str
+    containment_required: bool
+    containment_action: str
+    action: str
+    score: int
+    confidence: float
+    severity: str
+    rule_ids: List[str] = field(default_factory=list)
+    reasons: List[str] = field(default_factory=list)
+    layers: Dict[str, List[str]] = field(default_factory=dict)
+    evidence_sources: Dict[str, bool] = field(default_factory=dict)
+    transition: Dict[str, str] = field(default_factory=dict)
+    snapshot: Dict[str, Any] = field(default_factory=dict)
+    time: str = field(default_factory=utc_now)
+    engine_version: str = STATE_ENGINE_VERSION
+
+    def to_dict(self) -> Dict[str, Any]:
+        data = asdict(self)
+        # Backward-compat aliases used by existing V4 Flask code.
+        data["state"] = self.decision_state
+        return data
+
+
+class DecisionBuilder:
+    def __init__(self, xapp: str, signal: str, previous_state: str, snapshot: Dict[str, Any]):
+        self.xapp = xapp
+        self.signal = signal
+        self.previous_state = (previous_state or UNKNOWN).upper()
+        self.snapshot = snapshot or {}
+        self.score = 100
+        self.confidence = 0.50
+        self.severity = "INFO"
+        self.state = TRUSTED
+        self.containment_required = False
+        self.containment_action = "NONE"
+        self.rule_ids: List[str] = []
+        self.reasons: List[str] = []
+        self.layers: Dict[str, List[str]] = {
+            "L1_runtime_exploitation": [],
+            "L2_identity_svid": [],
+            "L3_resource_behavior": [],
+            "L4_communication": [],
+            "L5_integrity": [],
+            "L6_correlation": [],
+        }
+
+    def add(self, layer: str, rule_id: str, reason: str, penalty: int = 0) -> None:
+        if rule_id and rule_id not in self.rule_ids:
+            self.rule_ids.append(rule_id)
+        self.reasons.append(reason)
+        self.layers.setdefault(layer, []).append(reason)
+        self.score = max(0, self.score - int(penalty or 0))
+
+    def set_state(self, state: str, severity: str, confidence: float, contain: bool = False, action: str = "NONE") -> None:
+        self.state = state
+        self.severity = severity
+        self.confidence = confidence
+        self.containment_required = contain
+        self.containment_action = action
+
+    def result(self, evidence_sources: Dict[str, bool]) -> StateDecision:
+        action = "FORENSIC_QUARANTINE" if self.containment_required else (
+            "EVIDENCE_ONLY" if self.state == SUSPICIOUS else "INCREASE_MONITORING" if self.state == OBSERVED else "MONITOR"
+        )
+        return StateDecision(
+            xapp=self.xapp,
+            signal=self.signal,
+            previous_state=self.previous_state,
+            detection_state=self.state,
+            decision_state=self.state,
+            containment_required=self.containment_required,
+            containment_action=self.containment_action,
+            action=action,
+            score=self.score,
+            confidence=round(float(self.confidence), 3),
+            severity=self.severity,
+            rule_ids=self.rule_ids,
+            reasons=self.reasons,
+            layers=self.layers,
+            evidence_sources=evidence_sources,
+            transition={"from": self.previous_state, "to": self.state},
+            snapshot=self.snapshot,
+        )
+
+
+def evaluate_state(
+    *,
+    xapp: str,
+    signal: str,
+    profile: Optional[Dict[str, Any]] = None,
+    evidence: Optional[Dict[str, Any]] = None,
+    snapshot: Optional[Dict[str, Any]] = None,
+    previous_state: str = UNKNOWN,
+) -> Dict[str, Any]:
+    """Return an explainable V5 state-machine decision.
+
+    This function intentionally separates detection_state from containment_action.
+    CPU/memory/resource anomalies alone do not quarantine. Critical deterministic
+    compromise evidence and identity/integrity violations can quarantine.
+    """
+    xapp = str(xapp or "unknown")
+    signal = str(signal or "unknown").strip().lower()
+    profile = profile or {}
+    evidence = evidence or {}
+    snapshot = snapshot or {}
+
+    activity = snapshot.get("activity") or evidence.get("activity") or {}
+    metrics = snapshot.get("metrics") or evidence.get("metrics") or {}
+    identity = snapshot.get("identity") or evidence.get("identity") or {}
+    integrity = snapshot.get("integrity") or evidence.get("integrity") or {}
+
+    evidence_sources = {
+        "falco": bool(evidence.get("raw_event") or evidence.get("falco_event") or evidence.get("source") == "falco"),
+        "prometheus": bool(evidence.get("prometheus") or metrics.get("prometheus")),
+        "cadvisor": bool(evidence.get("cadvisor") or metrics.get("cadvisor")),
+        "svid": bool(identity or evidence.get("svid") or signal.startswith("svid") or "spiffe" in signal),
+        "kubernetes": bool(evidence.get("pod") or evidence.get("kubernetes") or snapshot.get("kubernetes")),
+        "xapp_activity": bool(activity),
+        "integrity": bool(integrity or "integrity" in signal or "hash" in signal),
+    }
+
+    b = DecisionBuilder(
+        xapp=xapp,
+        signal=signal,
+        previous_state=previous_state,
+        snapshot={
+            "activity_ok": snapshot.get("ok"),
+            "heartbeat_ok": activity.get("heartbeat_ok"),
+            "heartbeat_age_sec": activity.get("heartbeat_age_sec"),
+            "work_units_processed": activity.get("work_units_processed"),
+            "cpu_usage_percent": metrics.get("cpu_usage_percent"),
+            "memory_usage_bytes": metrics.get("memory_usage_bytes"),
+            "svid_certificate_present": identity.get("svid_certificate_present"),
+            "svid_key_present": identity.get("svid_key_present"),
+            "expected_spiffe_id": identity.get("expected_spiffe_id") or evidence.get("expected_spiffe_id"),
+            "actual_spiffe_id": identity.get("actual_spiffe_id") or evidence.get("actual_spiffe_id"),
+        },
+    )
+
+    # Explicit out-of-scope / ignored signals.
+    if signal in {"ignored", "out_of_scope", "event_not_mapped_to_controlled_xapp"}:
+        b.add("L6_correlation", "R-SCOPE-01", "event outside controlled xApp scope", 0)
+        b.set_state(IGNORED, "INFO", 0.99, contain=False)
+        return b.result(evidence_sources).to_dict()
+
+    # Benign controls.
+    if signal in BENIGN_SIGNALS:
+        b.add("L3_resource_behavior", "R-BENIGN-01", f"{signal}_profile_consistent", 0)
+        b.set_state(TRUSTED, "INFO", 0.90, contain=False)
+        return b.result(evidence_sources).to_dict()
+
+    # Critical deterministic runtime signals.
+    if signal in CRITICAL_SIGNALS:
+        rule_id = CRITICAL_SIGNALS[signal]
+        if signal == "external_egress" and _as_bool(profile.get("expected_external_egress"), False):
+            b.add("L4_communication", "R-COMM-ALLOW-01", "external egress allowed by xApp profile", 0)
+            b.set_state(OBSERVED, "LOW", 0.65, contain=False)
+        else:
+            layer = "L4_communication" if signal == "external_egress" else "L1_runtime_exploitation"
+            if "integrity" in signal or "hash" in signal or "digest" in signal or "verified" in signal:
+                layer = "L5_integrity"
+            b.add(layer, rule_id, f"{signal}_is_high_confidence_compromise_indicator", 100)
+            b.set_state(COMPROMISED, "CRITICAL", 0.98, contain=True, action="SERVICE_ISOLATION_AND_IDENTITY_CONTAINMENT")
+        return b.result(evidence_sources).to_dict()
+
+    # Identity/SVID violations.
+    if signal in IDENTITY_CRITICAL_SIGNALS:
+        rule_id = IDENTITY_CRITICAL_SIGNALS[signal]
+        running = _as_bool(evidence.get("running"), True)
+        if running:
+            b.add("L2_identity_svid", rule_id, f"running_xapp_has_identity_violation:{signal}", 80)
+            b.set_state(COMPROMISED, "CRITICAL", 0.94, contain=True, action="SERVICE_ISOLATION_AND_SVID_REVOCATION")
+        else:
+            b.add("L2_identity_svid", rule_id, f"identity_violation_observed_before_runtime:{signal}", 40)
+            b.set_state(SUSPICIOUS, "HIGH", 0.80, contain=False)
+        return b.result(evidence_sources).to_dict()
+
+    # Resource anomaly: CPU/memory must be correlated, not direct quarantine.
+    if signal in {"high_cpu", "cpu_spike", "high_memory", "memory_spike"}:
+        expected_high = _as_bool(profile.get("expected_high_workload"), False)
+        valid_activity = _as_bool(evidence.get("valid_activity"), True)
+        heartbeat_ok = _as_bool(activity.get("heartbeat_ok"), True)
+        work_units = _as_float(activity.get("work_units_processed"), 0.0) or 0.0
+        stale_heartbeat = not heartbeat_ok or _as_bool(evidence.get("stale_heartbeat"), False)
+
+        if signal in {"high_memory", "memory_spike"}:
+            b.add("L3_resource_behavior", "R-METRIC-02", "memory_anomaly_observed", 20)
+        else:
+            b.add("L3_resource_behavior", "R-METRIC-01", "cpu_anomaly_observed", 20)
+
+        if expected_high and valid_activity and heartbeat_ok:
+            b.add("L3_resource_behavior", "R-PROFILE-01", "resource_usage_matches_declared_xapp_intent_and_valid_activity", 0)
+            b.set_state(OBSERVED, "LOW", 0.70, contain=False)
+        else:
+            reason = "resource_usage_not_profile_consistent_or_activity_invalid"
+            if stale_heartbeat:
+                reason += ";heartbeat_degraded"
+            b.add("L3_resource_behavior", "R-PROFILE-02", reason, 20)
+            b.set_state(SUSPICIOUS, "MEDIUM", 0.76, contain=False)
+
+    elif signal in {"profile_output_drift", "output_profile_drift"}:
+        b.add("L3_resource_behavior", "R-BEH-01", "xapp_output_or_activity_deviates_from_declared_intent", 35)
+        b.set_state(SUSPICIOUS, "MEDIUM", 0.78, contain=False)
+
+    elif signal in {"ric_service_probe", "unexpected_ric_probe"}:
+        allowed = profile.get("allowed_ric_services") or []
+        target = str(evidence.get("target") or "")
+        if target and target in allowed:
+            b.add("L4_communication", "R-COMM-ALLOW-02", "ric_service_contact_allowed_by_profile", 0)
+            b.set_state(OBSERVED, "LOW", 0.65, contain=False)
+        else:
+            b.add("L4_communication", "R-COMM-01", "unexpected_ric_service_probe", 35)
+            b.set_state(SUSPICIOUS, "MEDIUM", 0.78, contain=False)
+
+    elif signal == "unexpected_peer_contact":
+        allowed = profile.get("allowed_peers") or []
+        peer = str(evidence.get("peer") or "")
+        if peer and peer in allowed:
+            b.add("L4_communication", "R-COMM-ALLOW-03", "peer_contact_allowed_by_profile", 0)
+            b.set_state(OBSERVED, "LOW", 0.65, contain=False)
+        else:
+            b.add("L4_communication", "R-COMM-02", "unexpected_cross_xapp_or_peer_contact", 35)
+            b.set_state(SUSPICIOUS, "MEDIUM", 0.78, contain=False)
+
+    else:
+        b.add("L6_correlation", "R-UNKNOWN-01", f"unclassified_signal_observed:{signal}", 10)
+        b.set_state(OBSERVED, "LOW", 0.60, contain=False)
+
+    # Correlation escalation. This is what makes the engine a state machine,
+    # not only a direct signal mapper.
+    correlated = evidence.get("correlated_signals") or []
+    if isinstance(correlated, str):
+        correlated = [x.strip() for x in correlated.split(",") if x.strip()]
+
+    suspicious_context = 0
+    suspicious_context += len(correlated)
+    suspicious_context += 1 if _as_bool(evidence.get("stale_heartbeat"), False) else 0
+    suspicious_context += 1 if _as_bool(evidence.get("svid_invalid"), False) else 0
+    suspicious_context += 1 if _as_bool(evidence.get("unknown_process"), False) else 0
+    suspicious_context += 1 if _as_bool(evidence.get("profile_drift"), False) else 0
+
+    if b.state == SUSPICIOUS and suspicious_context >= 2:
+        b.add("L6_correlation", "R-CORR-01", "multiple_suspicious_indicators_within_correlation_window", 30)
+        b.set_state(COMPROMISED, "HIGH", 0.90, contain=True, action="SERVICE_ISOLATION_AFTER_CORRELATION")
+
+    return b.result(evidence_sources).to_dict()

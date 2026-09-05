@@ -1,0 +1,33 @@
+run K=1 repetition=1
+  successes=1/1 launch_skew_ms=0.0
+run K=1 repetition=2
+  successes=1/1 launch_skew_ms=0.0
+run K=1 repetition=3
+  successes=1/1 launch_skew_ms=0.0
+run K=2 repetition=1
+  successes=2/2 launch_skew_ms=0.25
+run K=2 repetition=2
+  successes=2/2 launch_skew_ms=0.082
+run K=2 repetition=3
+  successes=2/2 launch_skew_ms=0.074
+run K=3 repetition=1
+  successes=3/3 launch_skew_ms=0.129
+run K=3 repetition=2
+  successes=3/3 launch_skew_ms=0.185
+run K=3 repetition=3
+  successes=3/3 launch_skew_ms=0.644
+run K=4 repetition=1
+  successes=4/4 launch_skew_ms=0.765
+run K=4 repetition=2
+  successes=4/4 launch_skew_ms=0.785
+run K=4 repetition=3
+Traceback (most recent call last):
+  File "/home/nearric/Desktop/FYP/zt-xguard/experiments/scalability/run_physical_real_xapps.py", line 541, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/nearric/Desktop/FYP/zt-xguard/experiments/scalability/run_physical_real_xapps.py", line 526, in main
+    cell = run_cell(k, repetition)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nearric/Desktop/FYP/zt-xguard/experiments/scalability/run_physical_real_xapps.py", line 309, in run_cell
+    raise RuntimeError(f"unreachable baseline in K={k} rep={repetition}: {baseline}")
+RuntimeError: unreachable baseline in K=4 rep=2: {'ricxapp-kpimon-go': True, 'ricxapp-trafficxapp': True, 'ricxapp-hw-go': True, 'ricxapp-hw-python': False}

@@ -1,0 +1,2 @@
+"dataset_id","window_seconds","half_life_seconds","lambda_value","warning_quantile","upper_quantile","horizon_states","required_count","persistent_upper_false_positive_rate","persistent_upper_true_negative_rate","episode_count","max_episode_length","total_flagged_states","state_rule"
+"N3","5","3","0.206299","0.975","0.995","10","8","0.0","1.0","0","0","0","COMPROMISED if upper-limit count in horizon >= required_count; otherwise threshold states remain candidate evidence"

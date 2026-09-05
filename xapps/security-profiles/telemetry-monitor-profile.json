@@ -1,0 +1,5 @@
+{
+  "allowed_ric_services": ["e2mgr"],
+  "allowed_peers": [],
+  "expected_external_egress": false
+}

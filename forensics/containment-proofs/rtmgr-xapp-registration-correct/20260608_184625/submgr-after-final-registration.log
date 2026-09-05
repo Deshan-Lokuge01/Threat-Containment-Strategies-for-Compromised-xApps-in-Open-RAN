@@ -1,0 +1,4 @@
+{"ts":1780924641039,"crit":"INFO","id":"submgr","mdc":{"CONTAINER_NAME":"","HOST_NAME":"","PID":"1","POD_NAME":"","SERVICE_NAME":"","SYSTEM_NAME":"","time":"2026-06-08T13:17:21"},"msg":"Serving subscriptions on 0.0.0.0:8088\n"}
+1780924735276 1/RMR [INFO] sends: ts=1780924735 src=service-ricplt-submgr-rmr.ricplt:4560 target=10.102.233.54:38000 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780924735276 1/RMR [INFO] sends: ts=1780924735 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-e2mgr-rmr.ricplt:3801 open=0 succ=0 fail=0 (hard=0 soft=0)
+1780924735276 1/RMR [INFO] sends: ts=1780924735 src=service-ricplt-submgr-rmr.ricplt:4560 target=service-ricplt-a1mediator-rmr.ricplt:4562 open=0 succ=0 fail=0 (hard=0 soft=0)

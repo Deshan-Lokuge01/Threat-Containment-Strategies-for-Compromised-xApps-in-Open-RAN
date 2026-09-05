@@ -1,0 +1,47 @@
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction 05426b34-fa43-4af1-a66e-06c678cc69e6
+[*] Submitting results for link 05426b34-fa43-4af1-a66e-06c678cc69e6 via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction 8ec501d4-e4ab-4b1c-899f-6619a0ec446a
+[*] Submitting results for link 8ec501d4-e4ab-4b1c-899f-6619a0ec446a via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction 74d339d9-a204-4a49-81bc-9abfca907e7a
+[+] Beacon (HTTP): ALIVE
+[*] Submitting results for link 74d339d9-a204-4a49-81bc-9abfca907e7a via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction e1c94a26-9ed1-4599-b5f9-a50b165830bc
+[*] Submitting results for link e1c94a26-9ed1-4599-b5f9-a50b165830bc via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE

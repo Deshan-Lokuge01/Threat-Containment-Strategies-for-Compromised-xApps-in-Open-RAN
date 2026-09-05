@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering
+\caption{Streaming statistical-detector logical capacity. Per-cell cycle latency against the 1\,Hz (1000\,ms) detector deadline, 3 repetitions per $N$.}
+\label{tab:scal-detector}
+\begin{tabular}{rrrrrr}
+\toprule
+$N$ streams & Updates & Mean (ms) & p95 (ms) & Max (ms) & Deadline misses \\
+\midrule
+1 & 1,500 & 0.046 & 0.087 & 0.718 & 0 \\
+2 & 3,000 & 0.090 & 0.158 & 0.763 & 0 \\
+3 & 4,500 & 0.178 & 0.400 & 3.153 & 0 \\
+4 & 6,000 & 0.202 & 0.458 & 4.690 & 0 \\
+5 & 7,500 & 0.345 & 0.870 & 11.237 & 0 \\
+6 & 9,000 & 0.419 & 0.923 & 9.194 & 0 \\
+7 & 10,500 & 0.419 & 0.910 & 4.715 & 0 \\
+8 & 12,000 & 0.429 & 0.905 & 3.252 & 0 \\
+9 & 13,500 & 0.443 & 0.895 & 2.277 & 0 \\
+10 & 15,000 & 0.453 & 0.809 & 2.375 & 0 \\
+11 & 16,500 & 0.628 & 1.376 & 20.367 & 0 \\
+12 & 18,000 & 0.613 & 1.283 & 14.114 & 0 \\
+\midrule
+\textbf{Total} & \textbf{117,000} & \multicolumn{3}{c}{--} & \textbf{0} \\
+\bottomrule
+\end{tabular}
+\end{table}

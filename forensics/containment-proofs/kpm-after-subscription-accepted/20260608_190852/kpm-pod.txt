@@ -1,0 +1,1 @@
+kpm-monitor-7c86d5784-9ks94           1/1     Running   0          4m48s   10.244.0.226   near-rt-ric   <none>           <none>

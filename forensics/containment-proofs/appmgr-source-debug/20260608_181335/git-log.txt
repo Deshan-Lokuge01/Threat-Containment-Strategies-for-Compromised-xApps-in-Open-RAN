@@ -1,0 +1,5 @@
+2f70f24 Fix CVE-2024-34073
+b8bdc7b Preparing release Image
+3a812f7 Preparation for M release
+b1b7849 RIC-1074: Update base OS to ubuntu22.04 and golang to 1.22
+4c05932 J release: Release container Image

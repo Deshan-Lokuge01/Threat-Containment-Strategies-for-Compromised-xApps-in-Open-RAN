@@ -1,0 +1,17 @@
+Name:                     service-ricplt-xapp-onboarder-http
+Namespace:                ricplt
+Labels:                   app=ricplt-xapp-onboarder
+                          zt-xguard.io/chart-repo-alias=true
+Annotations:              <none>
+Selector:                 <none>
+Type:                     ClusterIP
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.100.6.185
+IPs:                      10.100.6.185
+Port:                     http  8080/TCP
+TargetPort:               8090/TCP
+Endpoints:                192.168.112.129:8090
+Session Affinity:         None
+Internal Traffic Policy:  Cluster
+Events:                   <none>

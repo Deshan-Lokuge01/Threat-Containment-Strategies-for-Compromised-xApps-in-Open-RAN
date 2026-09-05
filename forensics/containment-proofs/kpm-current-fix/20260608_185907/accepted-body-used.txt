@@ -1,0 +1,1 @@
+Using accepted body: evidence/rtmgr-xapp-registration-correct/20260608_184625/ACCEPTED-rtmgr-xapp-callback-body.json

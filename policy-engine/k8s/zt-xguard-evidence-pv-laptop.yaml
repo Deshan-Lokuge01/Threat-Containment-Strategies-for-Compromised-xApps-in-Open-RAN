@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zt-xguard-evidence-pv
+  labels:
+    app.kubernetes.io/part-of: zt-xguard
+spec:
+  capacity:
+    storage: 1Gi
+
+  volumeMode: Filesystem
+
+  accessModes:
+    - ReadWriteOnce
+
+  persistentVolumeReclaimPolicy: Retain
+
+  storageClassName: ""
+
+  hostPath:
+    path: /home/nearric/Desktop/FYP/zt-xguard/evidence/policy-engine
+    type: Directory
+
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - near-rt-ric

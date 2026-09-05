@@ -1,0 +1,15 @@
+NAME                                                        READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+deployment-ricplt-a1mediator-f4888dfd7-sfz69                1/1     Running   0          9d      10.244.0.13    near-rt-ric   <none>           <none>
+deployment-ricplt-alarmmanager-7f984cdf77-jtq7d             1/1     Running   0          9d      10.244.0.18    near-rt-ric   <none>           <none>
+deployment-ricplt-appmgr-79cff89dd5-nmgp9                   1/1     Running   0          127m    10.244.0.216   near-rt-ric   <none>           <none>
+deployment-ricplt-e2mgr-7d798c54b7-wpgbz                    1/1     Running   0          2d17h   10.244.0.204   near-rt-ric   <none>           <none>
+deployment-ricplt-e2term-alpha-7b56999c99-69n2s             1/1     Running   0          2d17h   10.244.0.205   near-rt-ric   <none>           <none>
+deployment-ricplt-o1mediator-6fb8f84c97-pzkk8               1/1     Running   0          9d      10.244.0.17    near-rt-ric   <none>           <none>
+deployment-ricplt-rtmgr-698c7cb758-4cbkj                    1/1     Running   0          3h5m    10.244.0.213   near-rt-ric   <none>           <none>
+deployment-ricplt-submgr-76b98fb9c7-c2frr                   1/1     Running   0          3h5m    10.244.0.214   near-rt-ric   <none>           <none>
+deployment-ricplt-vespamgr-848f7bb874-bg9zn                 1/1     Running   0          9d      10.244.0.16    near-rt-ric   <none>           <none>
+r4-influxdb-influxdb2-0                                     1/1     Running   0          9d      10.244.0.65    near-rt-ric   <none>           <none>
+r4-infrastructure-kong-78657d8f48-qxcz6                     2/2     Running   0          9d      10.244.0.7     near-rt-ric   <none>           <none>
+r4-infrastructure-prometheus-alertmanager-b9cc56766-kzn97   2/2     Running   0          9d      10.244.0.5     near-rt-ric   <none>           <none>
+r4-infrastructure-prometheus-server-6476958975-vgcfh        1/1     Running   0          9d      10.244.0.6     near-rt-ric   <none>           <none>
+statefulset-ricplt-dbaas-server-0                           1/1     Running   0          9d      10.244.0.8     near-rt-ric   <none>           <none>

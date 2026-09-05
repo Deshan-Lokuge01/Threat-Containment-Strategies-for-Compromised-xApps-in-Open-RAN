@@ -1,0 +1,18 @@
+{
+  "xapp": "telemetry-monitor",
+  "role": "telemetry-monitoring",
+  "expected_cpu_class": "low",
+  "expected_memory_class": "low",
+  "expected_external_egress": false,
+  "expected_cross_xapp_comm": false,
+  "expected_ric_activity": true,
+  "expected_control_activity": false,
+  "expected_shell": false,
+  "expected_sensitive_file_access": false,
+  "heartbeat_period_sec": 5,
+  "workload_intensity": "low",
+  "allowed_ric_services": [
+    "submgr"
+  ],
+  "max_api_rate_per_min": 60
+}

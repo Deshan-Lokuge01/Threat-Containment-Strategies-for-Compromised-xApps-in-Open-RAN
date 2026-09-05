@@ -1,0 +1,307 @@
+/* ZTX_DASHBOARD_NO_FLICKER_NORMAL_STATE_V1 */
+
+const RUNTIME_NAMESPACE = "ricxapp";
+const REFRESH_MS = 3000;
+const XAPPS = [
+  "telemetry-monitor",
+  "qos-optimizer",
+  "traffic-analyzer",
+  "resource-optimizer",
+  "security-observer"
+];
+
+const $ = (id) => document.getElementById(id);
+
+function esc(v) {
+  return String(v ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function arr(v) {
+  return Array.isArray(v) ? v : [];
+}
+
+function obj(v) {
+  return v && typeof v === "object" && !Array.isArray(v) ? v : {};
+}
+
+function setText(id, value) {
+  const el = $(id);
+  if (el) el.textContent = value ?? 0;
+}
+
+function n(v) {
+  const x = Number(v);
+  return Number.isFinite(x) ? x : null;
+}
+
+function fmtScore(v) {
+  const x = n(v);
+  return x === null ? "N/A" : String(Math.round(x));
+}
+
+function fmtCpu(resources) {
+  const x = n(resources?.cpu_percent_1core ?? resources?.cpu_percent_1core_2m);
+  return x === null ? "N/A" : `${x.toFixed(1)}%`;
+}
+
+function fmtBytes(v) {
+  const x = n(v);
+  if (x === null) return "N/A";
+  if (x >= 1024 * 1024 * 1024) return `${(x / (1024 * 1024 * 1024)).toFixed(2)} GiB`;
+  if (x >= 1024 * 1024) return `${(x / (1024 * 1024)).toFixed(1)} MiB`;
+  if (x >= 1024) return `${(x / 1024).toFixed(1)} KiB`;
+  return `${x} B`;
+}
+
+function pill(text, cls) {
+  return `<span class="pill ${cls || "unknown"}">${esc(text)}</span>`;
+}
+
+function statePublic(raw) {
+  const s = String(raw || "NORMAL").toUpperCase();
+
+  if (["NORMAL", "TRUSTED", "HEALTHY", "RESTORED", "UNKNOWN", "INITIALIZING"].includes(s)) return "NORMAL";
+  if (s === "OBSERVED") return "OBSERVED";
+  if (["SUSPICIOUS", "DEGRADED"].includes(s)) return "SUSPICIOUS";
+  if (["COMPROMISED", "QUARANTINED", "CONTAINED"].includes(s)) return "COMPROMISED";
+
+  return "NORMAL";
+}
+
+function stateClass(state) {
+  const s = statePublic(state);
+  if (s === "NORMAL") return "healthy";
+  if (s === "OBSERVED") return "observed";
+  if (s === "SUSPICIOUS") return "degraded";
+  if (s === "COMPROMISED") return "compromised";
+  return "unknown";
+}
+
+function scoresFor(trust, runtime) {
+  const state = statePublic(trust?.state || runtime?.trust_state);
+  let risk = n(trust?.risk_score ?? runtime?.risk_score);
+  let trustScore = n(trust?.trust_score ?? runtime?.trust_score);
+
+  if (state === "NORMAL") {
+    risk = 0;
+    trustScore = 100;
+  } else if (state === "OBSERVED") {
+    if (risk === null) risk = 20;
+    if (trustScore === null) trustScore = 80;
+  } else if (state === "SUSPICIOUS") {
+    if (risk === null || risk < 50) risk = 60;
+    if (trustScore === null || trustScore > 50) trustScore = 40;
+  } else if (state === "COMPROMISED") {
+    risk = 100;
+    trustScore = 0;
+  }
+
+  return { risk, trustScore };
+}
+
+function effectiveContainment(runtime, trust) {
+  const rawState = String(trust?.raw_state || trust?.state || runtime?.trust_state || "").toUpperCase();
+
+  const cont = obj(runtime?.containment);
+  const svc = obj(runtime?.service);
+  const pod = obj(runtime?.pod);
+
+  const quarantineMarked =
+    cont.quarantine_marked === true ||
+    cont.pod_labelled_quarantined === true ||
+    pod.quarantine_label === true ||
+    rawState === "QUARANTINED" ||
+    rawState === "CONTAINED";
+
+  const endpointCount = n(svc.endpoint_count);
+  const serviceIsolated =
+    cont.service_isolated === true ||
+    svc.has_endpoints === false ||
+    endpointCount === 0;
+
+  if (cont.contained === true) return true;
+  if (quarantineMarked) return true;
+  if (rawState === "QUARANTINED" || rawState === "CONTAINED") return true;
+
+  return quarantineMarked && serviceIsolated;
+}
+
+async function apiJson(url, options = {}) {
+  const res = await fetch(url, options);
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { ok: false, error: "non_json_response", body: text.slice(0, 300), status: res.status };
+  }
+}
+
+function setStatus(text) {
+  const el = $("lastUpdated");
+  if (el) el.textContent = text;
+}
+
+let refreshInFlight = false;
+let lastGoodTableHtml = "";
+
+function mergeRows(statePayload, runtimePayload) {
+  const stateByXapp = {};
+  arr(statePayload?.xapps).forEach((x) => {
+    if (x?.xapp) stateByXapp[x.xapp] = x;
+  });
+
+  const runtimeRows = arr(runtimePayload?.rows);
+  return runtimeRows.map((r) => ({
+    runtime: r,
+    trust: stateByXapp[r.xapp] || {}
+  }));
+}
+
+function renderSummary(statePayload) {
+  const summary = obj(statePayload?.summary);
+
+  const normal =
+    summary.NORMAL ??
+    summary.TRUSTED ??
+    0;
+
+  setText("normalCount", normal);
+  setText("trustedCount", normal);
+  setText("observedCount", summary.OBSERVED ?? 0);
+  setText("suspiciousCount", summary.SUSPICIOUS ?? 0);
+  setText("compromisedCount", summary.COMPROMISED ?? 0);
+
+  const overall = statePublic(statePayload?.overall_state);
+  setText("overallState", overall);
+
+  const overallEl = $("overallState");
+  if (overallEl) overallEl.className = `overall ${stateClass(overall)}`;
+}
+
+function renderTable(rows) {
+  const body = $("runtimeTableBody");
+  if (!body) return;
+
+  if (!rows.length) {
+    if (!lastGoodTableHtml) {
+      body.innerHTML = `<tr><td colspan="11">Waiting for runtime data...</td></tr>`;
+    }
+    return;
+  }
+
+  const html = rows.map(({ runtime, trust }) => {
+    const r = obj(runtime);
+    const t = obj(trust);
+    const pod = obj(r.pod);
+    const svc = obj(r.service);
+    const resources = obj(r.resources);
+
+    const xapp = r.xapp || "unknown";
+    let displayState = statePublic(t.state || r.trust_state);
+
+    if (displayState === "NORMAL" && !pod.ready && n(svc.endpoint_count) === 0) {
+      displayState = "OBSERVED";
+    }
+
+    const scores = scoresFor({ ...t, state: displayState }, r);
+    const contained = effectiveContainment(r, t);
+
+    const endpointCount = svc.endpoint_count ?? "N/A";
+    const podName = pod.name || "N/A";
+    const ready = pod.ready
+      ? pill(pod.ready_text || "Ready", "healthy")
+      : pill(pod.ready_text || "Not Ready", "bad");
+
+    const rowClass = contained ? "row-contained" : "";
+
+    return `
+      <tr class="${rowClass}">
+        <td><strong>${esc(xapp)}</strong></td>
+        <td>${pill(displayState, stateClass(displayState))}</td>
+        <td>${fmtScore(scores.risk)}</td>
+        <td>${fmtScore(scores.trustScore)}</td>
+        <td>${fmtCpu(resources)}</td>
+        <td>${fmtBytes(resources.memory_working_set_bytes ?? resources.memory_usage_bytes)}</td>
+        <td class="mono">${esc(podName)}</td>
+        <td>${ready}</td>
+        <td>${pill(endpointCount, n(endpointCount) === 0 ? "bad" : "healthy")}</td>
+        <td>${contained ? pill("YES", "contained") : pill("NO", "healthy")}</td>
+        <td>
+          <button class="btn secondary"
+            style="padding:4px 10px;font-size:.75rem"
+            onclick="window.location.href='/analyze?xapp=${encodeURIComponent(xapp)}&pod=${encodeURIComponent(podName)}'">
+            Analyze
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  lastGoodTableHtml = html;
+  body.innerHTML = html;
+}
+
+async function refreshDashboard() {
+  if (refreshInFlight) return;
+  refreshInFlight = true;
+
+  try {
+    const [stateSettled, runtimeSettled] = await Promise.allSettled([
+      apiJson("/csm/state"),
+      apiJson(`/csm/xapps/runtime-lite?namespace=${encodeURIComponent(RUNTIME_NAMESPACE)}`)
+    ]);
+
+    const statePayload = stateSettled.status === "fulfilled" ? stateSettled.value : {};
+    const runtimePayload = runtimeSettled.status === "fulfilled" ? runtimeSettled.value : {};
+
+    renderSummary(statePayload);
+
+    const rows = mergeRows(statePayload, runtimePayload);
+    renderTable(rows);
+
+    setStatus(`Updated ${new Date().toLocaleTimeString()}`);
+  } catch (err) {
+    console.warn("[ZT-XGuard] dashboard refresh failed", err);
+    setStatus(`Refresh error ${new Date().toLocaleTimeString()}`);
+  } finally {
+    refreshInFlight = false;
+  }
+}
+
+async function primeNormalState() {
+  await Promise.allSettled(XAPPS.map((xapp) =>
+    apiJson("/csm/intent/ingest", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        xapp,
+        signal: "clean_baseline",
+        source: "dashboard_prime_normal"
+      })
+    })
+  ));
+
+  await refreshDashboard();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (!(location.pathname === "/" || location.pathname.includes("dashboard"))) return;
+
+  $("refreshBtn")?.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    refreshDashboard();
+  });
+
+  $("primeAuditBtn")?.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    primeNormalState();
+  });
+
+  refreshDashboard();
+  setInterval(refreshDashboard, REFRESH_MS);
+});

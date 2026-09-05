@@ -1,0 +1,22 @@
+deployment.apps/telemetry-monitor scaled
+deployment.apps/qos-optimizer scaled
+deployment.apps/traffic-analyzer scaled
+deployment.apps/resource-optimizer scaled
+deployment.apps/security-observer scaled
+pod/qos-optimizer-65d9ff648f-9xztz condition met
+pod/resource-optimizer-67c9c87446-bl9n6 condition met
+pod/security-observer-fff65554f-4v58r condition met
+pod/telemetry-monitor-b94497666-qhtjn condition met
+pod/traffic-analyzer-7c5c577dc4-sc825 condition met
+deployment.apps/telemetry-monitor scaled
+deployment.apps/qos-optimizer scaled
+deployment.apps/traffic-analyzer scaled
+deployment.apps/resource-optimizer scaled
+deployment.apps/security-observer scaled
+Waiting for deployment "telemetry-monitor" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "telemetry-monitor" rollout to finish: 0 of 1 updated replicas are available...
+deployment "telemetry-monitor" successfully rolled out
+deployment "qos-optimizer" successfully rolled out
+deployment "traffic-analyzer" successfully rolled out
+deployment "resource-optimizer" successfully rolled out
+deployment "security-observer" successfully rolled out

@@ -1,0 +1,545 @@
+#!/usr/bin/env python3
+import json
+import hashlib
+import math
+import os
+import socket
+import threading
+import time
+import urllib.error
+import urllib.request
+from datetime import datetime, timezone
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+RIC_SERVICE_CANDIDATES = {
+    "appmgr": [
+        "http://service-ricplt-appmgr-http.ricplt.svc.cluster.local:8080",
+        "http://service-ricplt-appmgr-http.ricplt.svc.cluster.local:8080/ric/v1/health/ready",
+        "http://service-ricplt-appmgr-http.ricplt.svc.cluster.local:8080/ric/v1/xapps",
+    ],
+    "e2mgr": [
+        "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800",
+        "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800/v1/nodeb/states",
+        "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800/v1/nodeb/ids",
+    ],
+    "submgr": [
+        "http://service-ricplt-submgr-http.ricplt.svc.cluster.local:3800",
+        "http://service-ricplt-submgr-http.ricplt.svc.cluster.local:3800/ric/v1/subscriptions",
+        "http://service-ricplt-submgr-http.ricplt.svc.cluster.local:3800/ric/v1/health/ready",
+    ],
+    "rtmgr": [
+        "http://service-ricplt-rtmgr-http.ricplt.svc.cluster.local:3800",
+        "http://service-ricplt-rtmgr-http.ricplt.svc.cluster.local:3800/ric/v1/getdebuginfo",
+    ],
+    "a1mediator": [
+        "http://service-ricplt-a1mediator-http.ricplt.svc.cluster.local:10000",
+        "http://service-ricplt-a1mediator-http.ricplt.svc.cluster.local:10000/a1-p/healthcheck",
+    ],
+    "prometheus": [
+        "http://r4-infrastructure-prometheus-server.ricplt.svc.cluster.local:80/-/ready",
+        "http://r4-infrastructure-prometheus-server.ricplt.svc.cluster.local:80/api/v1/query?query=up",
+    ],
+}
+
+def now_iso():
+    return datetime.now(timezone.utc).isoformat()
+
+def cpu_work(duration_sec: float, complexity: int):
+    end = time.time() + duration_sec
+    result = 0.0
+    while time.time() < end:
+        for i in range(complexity):
+            result += math.sin(i) * math.cos(i % 17)
+    return result
+
+class XAppRuntime:
+    def __init__(self, default_profile, behavior_fn):
+        self.profile_path = os.environ.get("XAPP_PROFILE_PATH", "/etc/xapp-profile/profile.json")
+        self.port = int(os.environ.get("XAPP_PORT", "8080"))
+        self.default_profile = default_profile
+        self.behavior_fn = behavior_fn
+        self.profile = self.load_profile()
+        self.state = {
+            "start_time": time.time(), "last_heartbeat": time.time(),
+            "work_units_processed": 0, "ric_activity_counter": 0, "control_action_counter": 0,
+            "telemetry_samples": 0, "qos_decisions": 0, "traffic_reports": 0,
+            "resource_recommendations": 0, "security_checks": 0, "errors": 0,
+            "mode": "starting", "last_decision": "none",
+            "ric_service_attempts": 0, "ric_service_success": 0, "ric_service_failures": 0,
+            "last_ric_service": "none", "last_ric_url": "none", "last_ric_status": "not_checked",
+            "last_ric_time": "never", "ric_results": [],
+
+            "peer_contact_attempts": 0, "peer_contact_success": 0, "peer_contact_failures": 0,
+            "last_peer_contacted": "none", "last_peer_url": "none", "last_peer_status": "not_checked",
+            "last_peer_time": "never", "peer_results": [],
+
+            # RIC-context awareness fields. These are parsed from real RIC platform
+            # services, not synthetic workload endpoints.
+            "ric_aware": False,
+            "appmgr_reachable": False,
+            "e2mgr_reachable": False,
+            "known_e2_nodes": 0,
+            "connected_e2_nodes": 0,
+            "disconnected_e2_nodes": 0,
+            "appmgr_xapp_count": 0,
+            "observed_ric_xapps": [],
+            "ric_context_last_check": "never"
+        }
+
+    def load_profile(self):
+        """
+        Load xApp profile with SMO-mounted controls as the canonical source.
+
+        The app.py DEFAULT_PROFILE is only a fallback. During verified onboarding,
+        the SMO mounts /etc/xapp-profile/profile.json from the verified ConfigMap.
+        That mounted file stores approved behaviour under "controls". Those controls
+        must override any duplicated top-level defaults so runtime /profile,
+        /activity, /ric-check, and policy-engine checks all use the same source.
+        """
+        profile = dict(self.default_profile)
+
+        try:
+            with open(self.profile_path, "r") as f:
+                mounted = json.load(f)
+
+            if isinstance(mounted, dict):
+                profile.update(mounted)
+
+                controls = mounted.get("controls")
+                if isinstance(controls, dict):
+                    # Canonicalize approved SMO controls into top-level compatibility
+                    # fields used by older runtime code paths.
+                    for key, value in controls.items():
+                        profile[key] = value
+
+                    # Keep the canonical controls block explicit in /profile.
+                    profile["controls"] = controls
+
+        except Exception as e:
+            profile["profile_load_error"] = str(e)
+
+        return profile
+
+    def record_ric_result(self, service, url, status, success):
+        result = {"time": now_iso(), "service": service, "url": url, "status": status, "success": success}
+        self.state["last_ric_service"] = service
+        self.state["last_ric_url"] = url
+        self.state["last_ric_status"] = status
+        self.state["last_ric_time"] = result["time"]
+        self.state["ric_results"].append(result)
+        self.state["ric_results"] = self.state["ric_results"][-20:]
+
+    def probe_url(self, service, url):
+        self.state["ric_service_attempts"] += 1
+        try:
+            req = urllib.request.Request(url, method="GET", headers={
+                "User-Agent": f"zt-xguard-{self.profile.get('xapp')}",
+                "Accept": "application/json,text/plain,*/*",
+            })
+            with urllib.request.urlopen(req, timeout=float(os.environ.get("RIC_PROBE_TIMEOUT_SEC", "0.35"))) as response:
+                code = response.getcode()
+                self.state["ric_service_success"] += 1
+                self.record_ric_result(service, url, f"HTTP_{code}", True)
+                return True
+        except urllib.error.HTTPError as e:
+            self.state["ric_service_success"] += 1
+            self.record_ric_result(service, url, f"HTTP_{e.code}", True)
+            return True
+        except Exception as e:
+            self.state["ric_service_failures"] += 1
+            self.record_ric_result(service, url, f"FAILED_{type(e).__name__}", False)
+            return False
+
+    def fetch_json(self, service, url):
+        """
+        Fetch JSON from a RIC platform service and record the result.
+        Unlike probe_url(), this method returns parsed content so xApps can
+        expose meaningful RIC context such as E2 node counts and AppMgr xApp list.
+        """
+        self.state["ric_service_attempts"] += 1
+        try:
+            req = urllib.request.Request(url, method="GET", headers={
+                "User-Agent": f"zt-xguard-{self.profile.get('xapp')}",
+                "Accept": "application/json,text/plain,*/*",
+            })
+            with urllib.request.urlopen(req, timeout=float(os.environ.get("RIC_PROBE_TIMEOUT_SEC", "1.2"))) as response:
+                code = response.getcode()
+                raw = response.read().decode("utf-8", errors="replace")
+                try:
+                    data = json.loads(raw) if raw else None
+                except Exception:
+                    data = {"raw": raw[:1000]}
+
+                self.state["ric_service_success"] += 1
+                self.record_ric_result(service, url, f"HTTP_{code}", True)
+                return True, data
+        except urllib.error.HTTPError as e:
+            raw = ""
+            try:
+                raw = e.read().decode("utf-8", errors="replace")
+            except Exception:
+                pass
+            self.state["ric_service_failures"] += 1
+            self.record_ric_result(service, url, f"HTTP_{e.code}", False)
+            return False, {"error": f"HTTP_{e.code}", "body": raw[:1000]}
+        except Exception as e:
+            self.state["ric_service_failures"] += 1
+            self.record_ric_result(service, url, f"FAILED_{type(e).__name__}", False)
+            return False, {"error": type(e).__name__, "message": str(e)}
+
+    def check_ric_context(self):
+        """
+        Build a compact RIC context snapshot from real Near-RT RIC services.
+        This gives the xApp realistic RIC-aware behaviour without requiring
+        a full E2SM-KPM indication pipeline.
+        """
+        self.state["ric_aware"] = True
+        self.state["ric_context_last_check"] = now_iso()
+
+        # AppMgr: list deployed xApps known by the RIC platform.
+        appmgr_url = "http://service-ricplt-appmgr-http.ricplt.svc.cluster.local:8080/ric/v1/xapps"
+        appmgr_ok, appmgr_data = self.fetch_json("appmgr", appmgr_url)
+        self.state["appmgr_reachable"] = bool(appmgr_ok)
+
+        observed = []
+        if isinstance(appmgr_data, list):
+            for item in appmgr_data:
+                if isinstance(item, dict) and item.get("name"):
+                    observed.append(str(item.get("name")))
+        self.state["observed_ric_xapps"] = observed[:20]
+        self.state["appmgr_xapp_count"] = len(observed)
+
+        # E2Mgr: list known E2 nodes and connection status.
+        e2mgr_url = "http://service-ricplt-e2mgr-http.ricplt.svc.cluster.local:3800/v1/nodeb/states"
+        e2mgr_ok, e2mgr_data = self.fetch_json("e2mgr", e2mgr_url)
+        self.state["e2mgr_reachable"] = bool(e2mgr_ok)
+
+        known = connected = disconnected = 0
+        if isinstance(e2mgr_data, list):
+            known = len(e2mgr_data)
+            for node in e2mgr_data:
+                if not isinstance(node, dict):
+                    continue
+                status = str(node.get("connectionStatus", "")).upper()
+                if status == "CONNECTED":
+                    connected += 1
+                elif status == "DISCONNECTED":
+                    disconnected += 1
+
+        self.state["known_e2_nodes"] = known
+        self.state["connected_e2_nodes"] = connected
+        self.state["disconnected_e2_nodes"] = disconnected
+
+        return {
+            "appmgr_reachable": self.state["appmgr_reachable"],
+            "e2mgr_reachable": self.state["e2mgr_reachable"],
+            "known_e2_nodes": known,
+            "connected_e2_nodes": connected,
+            "disconnected_e2_nodes": disconnected,
+            "appmgr_xapp_count": self.state["appmgr_xapp_count"],
+        }
+
+    def check_ric_services(self):
+        allowed = self.profile.get("allowed_ric_services", [])
+        if not allowed:
+            self.record_ric_result("none", "none", "SKIPPED_NO_ALLOWED_RIC_SERVICES", True)
+            return False
+        for service in allowed:
+            for url in RIC_SERVICE_CANDIDATES.get(service, []):
+                if self.probe_url(service, url):
+                    self.state["ric_activity_counter"] += 1
+                    return True
+        return False
+
+    def record_peer_result(self, peer, url, status, success):
+        result = {"time": now_iso(), "peer": peer, "url": url, "status": status, "success": success}
+        self.state["last_peer_contacted"] = peer
+        self.state["last_peer_url"] = url
+        self.state["last_peer_status"] = status
+        self.state["last_peer_time"] = result["time"]
+        self.state["peer_results"].append(result)
+        self.state["peer_results"] = self.state["peer_results"][-20:]
+
+    def probe_peer(self, peer, url):
+        self.state["peer_contact_attempts"] += 1
+        try:
+            req = urllib.request.Request(url, method="GET", headers={
+                "User-Agent": f"zt-xguard-{self.profile.get('xapp')}",
+                "Accept": "application/json,text/plain,*/*",
+            })
+            with urllib.request.urlopen(req, timeout=float(os.environ.get("PEER_PROBE_TIMEOUT_SEC", "0.5"))) as response:
+                code = response.getcode()
+                self.state["peer_contact_success"] += 1
+                self.record_peer_result(peer, url, f"HTTP_{code}", True)
+                return True
+        except urllib.error.HTTPError as e:
+            self.state["peer_contact_success"] += 1
+            self.record_peer_result(peer, url, f"HTTP_{e.code}", True)
+            return True
+        except Exception as e:
+            self.state["peer_contact_failures"] += 1
+            self.record_peer_result(peer, url, f"FAILED_{type(e).__name__}", False)
+            return False
+
+    def check_peers(self):
+        """Contact every xApp listed in profile['allowed_peers'].
+
+        Unlike check_ric_services() (which stops at the first reachable
+        service), this contacts all declared peers every cycle - the point
+        is to demonstrate/exercise each declared relationship, not just
+        confirm reachability of any one of them.
+        """
+        allowed = self.profile.get("allowed_peers", [])
+        if not allowed:
+            self.record_peer_result("none", "none", "SKIPPED_NO_ALLOWED_PEERS", True)
+            return False
+        namespace = os.environ.get("XAPP_NAMESPACE", "ricxapp")
+        any_ok = False
+        for peer in allowed:
+            url = f"http://{peer}.{namespace}.svc.cluster.local:8080/health"
+            if self.probe_peer(peer, url):
+                any_ok = True
+        return any_ok
+
+    def workload_loop(self):
+        heartbeat_period = int(self.profile.get("heartbeat_period_sec", 5))
+        while True:
+            try:
+                self.state["last_heartbeat"] = time.time()
+                self.behavior_fn(self)
+            except Exception as e:
+                self.state["errors"] += 1
+                self.state["last_decision"] = f"error={type(e).__name__}: {str(e)}"
+            time.sleep(heartbeat_period)
+
+    def activity_payload(self):
+        uptime = time.time() - self.state["start_time"]
+        heartbeat_age = time.time() - self.state["last_heartbeat"]
+        return {
+            "xapp": self.profile.get("xapp"), "role": self.profile.get("role"), "state": self.state["mode"],
+            "uptime_sec": round(uptime, 2), "heartbeat_age_sec": round(heartbeat_age, 2),
+            "heartbeat_ok": heartbeat_age <= int(self.profile.get("heartbeat_period_sec", 5)) * 3,
+            "work_units_processed": self.state["work_units_processed"],
+            "ric_activity_counter": self.state["ric_activity_counter"],
+            "control_action_counter": self.state["control_action_counter"],
+            "telemetry_samples": self.state["telemetry_samples"],
+            "qos_decisions": self.state["qos_decisions"],
+            "traffic_reports": self.state["traffic_reports"],
+            "resource_recommendations": self.state["resource_recommendations"],
+            "security_checks": self.state["security_checks"],
+            "ric_service_attempts": self.state["ric_service_attempts"],
+            "ric_service_success": self.state["ric_service_success"],
+            "ric_service_failures": self.state["ric_service_failures"],
+            "last_ric_service": self.state["last_ric_service"],
+            "last_ric_url": self.state["last_ric_url"],
+            "last_ric_status": self.state["last_ric_status"],
+            "last_ric_time": self.state["last_ric_time"],
+            "peer_contact_attempts": self.state["peer_contact_attempts"],
+            "peer_contact_success": self.state["peer_contact_success"],
+            "peer_contact_failures": self.state["peer_contact_failures"],
+            "last_peer_contacted": self.state["last_peer_contacted"],
+            "last_peer_url": self.state["last_peer_url"],
+            "last_peer_status": self.state["last_peer_status"],
+            "last_peer_time": self.state["last_peer_time"],
+            "ric_aware": self.state["ric_aware"],
+            "appmgr_reachable": self.state["appmgr_reachable"],
+            "e2mgr_reachable": self.state["e2mgr_reachable"],
+            "known_e2_nodes": self.state["known_e2_nodes"],
+            "connected_e2_nodes": self.state["connected_e2_nodes"],
+            "disconnected_e2_nodes": self.state["disconnected_e2_nodes"],
+            "appmgr_xapp_count": self.state["appmgr_xapp_count"],
+            "observed_ric_xapps": self.state["observed_ric_xapps"],
+            "ric_context_last_check": self.state["ric_context_last_check"],
+            "last_decision": self.state["last_decision"], "errors": self.state["errors"], "time": now_iso(),
+        }
+
+    def metrics_payload(self):
+        heartbeat_age = time.time() - self.state["last_heartbeat"]
+        xapp = self.profile.get("xapp")
+        role = self.profile.get("role")
+        return f'''# HELP xapp_work_units_processed Total legitimate work units processed
+# TYPE xapp_work_units_processed counter
+xapp_work_units_processed{{xapp="{xapp}",role="{role}"}} {self.state["work_units_processed"]}
+# HELP xapp_ric_activity_counter Logical RIC-aware activity counter
+# TYPE xapp_ric_activity_counter counter
+xapp_ric_activity_counter{{xapp="{xapp}",role="{role}"}} {self.state["ric_activity_counter"]}
+# HELP xapp_control_action_counter Simulated control action counter
+# TYPE xapp_control_action_counter counter
+xapp_control_action_counter{{xapp="{xapp}",role="{role}"}} {self.state["control_action_counter"]}
+# HELP xapp_ric_service_attempts_total RIC service probe attempts
+# TYPE xapp_ric_service_attempts_total counter
+xapp_ric_service_attempts_total{{xapp="{xapp}",role="{role}"}} {self.state["ric_service_attempts"]}
+# HELP xapp_ric_service_success_total Successful RIC service reachability checks
+# TYPE xapp_ric_service_success_total counter
+xapp_ric_service_success_total{{xapp="{xapp}",role="{role}"}} {self.state["ric_service_success"]}
+# HELP xapp_ric_service_failures_total Failed RIC service reachability checks
+# TYPE xapp_ric_service_failures_total counter
+xapp_ric_service_failures_total{{xapp="{xapp}",role="{role}"}} {self.state["ric_service_failures"]}
+# HELP xapp_peer_contact_attempts_total Peer xApp contact attempts
+# TYPE xapp_peer_contact_attempts_total counter
+xapp_peer_contact_attempts_total{{xapp="{xapp}",role="{role}"}} {self.state["peer_contact_attempts"]}
+# HELP xapp_peer_contact_success_total Successful peer xApp contacts
+# TYPE xapp_peer_contact_success_total counter
+xapp_peer_contact_success_total{{xapp="{xapp}",role="{role}"}} {self.state["peer_contact_success"]}
+# HELP xapp_peer_contact_failures_total Failed peer xApp contacts
+# TYPE xapp_peer_contact_failures_total counter
+xapp_peer_contact_failures_total{{xapp="{xapp}",role="{role}"}} {self.state["peer_contact_failures"]}
+# HELP xapp_known_e2_nodes Number of E2 nodes known by E2Mgr
+# TYPE xapp_known_e2_nodes gauge
+xapp_known_e2_nodes{{xapp="{xapp}",role="{role}"}} {self.state["known_e2_nodes"]}
+# HELP xapp_connected_e2_nodes Number of connected E2 nodes reported by E2Mgr
+# TYPE xapp_connected_e2_nodes gauge
+xapp_connected_e2_nodes{{xapp="{xapp}",role="{role}"}} {self.state["connected_e2_nodes"]}
+# HELP xapp_disconnected_e2_nodes Number of disconnected E2 nodes reported by E2Mgr
+# TYPE xapp_disconnected_e2_nodes gauge
+xapp_disconnected_e2_nodes{{xapp="{xapp}",role="{role}"}} {self.state["disconnected_e2_nodes"]}
+# HELP xapp_heartbeat_age_seconds Seconds since last heartbeat
+# TYPE xapp_heartbeat_age_seconds gauge
+xapp_heartbeat_age_seconds{{xapp="{xapp}",role="{role}"}} {round(heartbeat_age, 2)}
+# HELP xapp_errors_total Total internal xApp errors
+# TYPE xapp_errors_total counter
+xapp_errors_total{{xapp="{xapp}",role="{role}"}} {self.state["errors"]}
+'''
+
+
+    def _sha256_file(self, path):
+        try:
+            h = hashlib.sha256()
+            with open(path, "rb") as f:
+                for chunk in iter(lambda: f.read(65536), b""):
+                    h.update(chunk)
+            return h.hexdigest()
+        except Exception:
+            return "unavailable"
+
+    def ready_payload(self):
+        activity = self.activity_payload()
+        profile_loaded = self.profile.get("xapp") not in [None, "", "null"]
+        heartbeat_ok = bool(activity.get("heartbeat_ok"))
+        errors_ok = int(self.state.get("errors", 0)) == 0
+
+        ready = profile_loaded and heartbeat_ok and errors_ok
+
+        return {
+            "status": "ready" if ready else "not_ready",
+            "ready": ready,
+            "xapp": self.profile.get("xapp"),
+            "role": self.profile.get("role"),
+            "hostname": socket.gethostname(),
+            "checks": {
+                "profile_loaded": profile_loaded,
+                "heartbeat_ok": heartbeat_ok,
+                "errors_ok": errors_ok
+            },
+            "activity": {
+                "uptime_sec": activity.get("uptime_sec"),
+                "heartbeat_age_sec": activity.get("heartbeat_age_sec"),
+                "work_units_processed": activity.get("work_units_processed"),
+                "errors": activity.get("errors")
+            },
+            "time": now_iso()
+        }
+
+    def identity_payload(self):
+        svid_dir = os.environ.get("SVID_DIR", "/etc/svid")
+        cert_candidates = [
+            os.path.join(svid_dir, "svid.0.pem"),
+            os.path.join(svid_dir, "svid.pem"),
+            os.path.join(svid_dir, "cert.pem"),
+        ]
+        key_candidates = [
+            os.path.join(svid_dir, "svid.0.key"),
+            os.path.join(svid_dir, "svid.key"),
+            os.path.join(svid_dir, "key.pem"),
+        ]
+
+        cert_path = next((x for x in cert_candidates if os.path.exists(x)), "not_found")
+        key_path = next((x for x in key_candidates if os.path.exists(x)), "not_found")
+
+        expected_spiffe = "spiffe://example.org/ns/ricxapp/sa/{}".format(self.profile.get("xapp"))
+
+        return {
+            "trusted_source": "self_reported_only",
+            "warning": "Authoritative identity must be verified externally by ZT-XGuard using Kubernetes ServiceAccount and SPIRE/SVID evidence.",
+            "xapp": self.profile.get("xapp"),
+            "role": self.profile.get("role"),
+            "hostname": socket.gethostname(),
+            "expected_spiffe_id": expected_spiffe,
+            "svid_directory": svid_dir,
+            "svid_certificate_present": cert_path != "not_found",
+            "svid_key_present": key_path != "not_found",
+            "svid_certificate_path": cert_path,
+            "svid_key_path": key_path,
+            "time": now_iso()
+        }
+
+    def integrity_payload(self):
+        profile_hash = self._sha256_file(self.profile_path)
+
+        svid_dir = os.environ.get("SVID_DIR", "/etc/svid")
+        cert_candidates = [
+            os.path.join(svid_dir, "svid.0.pem"),
+            os.path.join(svid_dir, "svid.pem"),
+            os.path.join(svid_dir, "cert.pem"),
+        ]
+        cert_path = next((x for x in cert_candidates if os.path.exists(x)), None)
+
+        return {
+            "trusted_source": "self_reported_only",
+            "warning": "Authoritative integrity must be verified externally by ZT-XGuard using image digest, chart metadata, descriptor hash, profile hash, and SMO evidence.",
+            "xapp": self.profile.get("xapp"),
+            "role": self.profile.get("role"),
+            "hostname": socket.gethostname(),
+            "profile_path": self.profile_path,
+            "profile_sha256": profile_hash,
+            "svid_certificate_sha256": self._sha256_file(cert_path) if cert_path else "unavailable",
+            "runtime_expected_controls": {
+                "expected_shell": self.profile.get("expected_shell"),
+                "expected_sensitive_file_access": self.profile.get("expected_sensitive_file_access"),
+                "expected_external_egress": self.profile.get("expected_external_egress"),
+                "expected_cross_xapp_comm": self.profile.get("expected_cross_xapp_comm")
+            },
+            "time": now_iso()
+        }
+
+    def start(self):
+        runtime = self
+        class Handler(BaseHTTPRequestHandler):
+            def _send_json(self, code, data):
+                body = json.dumps(data, indent=2).encode()
+                self.send_response(code); self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body))); self.end_headers(); self.wfile.write(body)
+            def _send_text(self, code, text):
+                body = text.encode()
+                self.send_response(code); self.send_header("Content-Type", "text/plain")
+                self.send_header("Content-Length", str(len(body))); self.end_headers(); self.wfile.write(body)
+            def log_message(self, fmt, *args):
+                print(f"{now_iso()} {self.client_address[0]} {fmt % args}", flush=True)
+            def do_GET(self):
+                if self.path == "/health":
+                    self._send_json(200, {"status": "ok", "xapp": runtime.profile.get("xapp"), "role": runtime.profile.get("role"), "hostname": socket.gethostname(), "time": now_iso()})
+                elif self.path == "/ready":
+                    payload = runtime.ready_payload()
+                    self._send_json(200 if payload.get("ready") else 503, payload)
+                elif self.path == "/profile":
+                    self._send_json(200, runtime.profile)
+                elif self.path == "/activity":
+                    self._send_json(200, runtime.activity_payload())
+                elif self.path == "/ric-check":
+                    runtime.check_ric_services()
+                    self._send_json(200, {"xapp": runtime.profile.get("xapp"), "allowed_ric_services": runtime.profile.get("allowed_ric_services", []), "ric_service_attempts": runtime.state["ric_service_attempts"], "ric_service_success": runtime.state["ric_service_success"], "ric_service_failures": runtime.state["ric_service_failures"], "last_ric_service": runtime.state["last_ric_service"], "last_ric_url": runtime.state["last_ric_url"], "last_ric_status": runtime.state["last_ric_status"], "last_ric_time": runtime.state["last_ric_time"], "recent_results": runtime.state["ric_results"], "time": now_iso()})
+                elif self.path == "/peer-check":
+                    runtime.check_peers()
+                    self._send_json(200, {"xapp": runtime.profile.get("xapp"), "allowed_peers": runtime.profile.get("allowed_peers", []), "peer_contact_attempts": runtime.state["peer_contact_attempts"], "peer_contact_success": runtime.state["peer_contact_success"], "peer_contact_failures": runtime.state["peer_contact_failures"], "last_peer_contacted": runtime.state["last_peer_contacted"], "last_peer_url": runtime.state["last_peer_url"], "last_peer_status": runtime.state["last_peer_status"], "last_peer_time": runtime.state["last_peer_time"], "recent_results": runtime.state["peer_results"], "time": now_iso()})
+                elif self.path == "/identity":
+                    self._send_json(200, runtime.identity_payload())
+                elif self.path == "/integrity":
+                    self._send_json(200, runtime.integrity_payload())
+                elif self.path == "/metrics":
+                    self._send_text(200, runtime.metrics_payload())
+                else:
+                    self._send_json(404, {"error": "not found", "path": self.path})
+        print(f"[ZT-XGuard] Starting {self.profile.get('xapp')} role={self.profile.get('role')} on port {self.port}", flush=True)
+        print(f"[ZT-XGuard] Allowed RIC services: {self.profile.get('allowed_ric_services', [])}", flush=True)
+        threading.Thread(target=self.workload_loop, daemon=True).start()
+        ThreadingHTTPServer(("0.0.0.0", self.port), Handler).serve_forever()

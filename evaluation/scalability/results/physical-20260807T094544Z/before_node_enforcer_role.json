@@ -1,0 +1,46 @@
+{
+    "apiVersion": "rbac.authorization.k8s.io/v1",
+    "kind": "Role",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"rbac.authorization.k8s.io/v1\",\"kind\":\"Role\",\"metadata\":{\"annotations\":{},\"labels\":{\"app.kubernetes.io/part-of\":\"zt-xguard\"},\"name\":\"zt-xguard-node-enforcer-exec\",\"namespace\":\"kube-system\"},\"rules\":[{\"apiGroups\":[\"\"],\"resourceNames\":[\"canal-xc7mj\"],\"resources\":[\"pods/exec\"],\"verbs\":[\"get\",\"create\"]},{\"apiGroups\":[\"\"],\"resources\":[\"pods\"],\"verbs\":[\"get\",\"list\"]}]}\n"
+        },
+        "creationTimestamp": "2026-07-23T14:31:47Z",
+        "labels": {
+            "app.kubernetes.io/part-of": "zt-xguard"
+        },
+        "name": "zt-xguard-node-enforcer-exec",
+        "namespace": "kube-system",
+        "resourceVersion": "3577716",
+        "uid": "283590a5-e4b9-4442-99cf-fcd4305adc7d"
+    },
+    "rules": [
+        {
+            "apiGroups": [
+                ""
+            ],
+            "resourceNames": [
+                "canal-4ldk7"
+            ],
+            "resources": [
+                "pods/exec"
+            ],
+            "verbs": [
+                "get",
+                "create"
+            ]
+        },
+        {
+            "apiGroups": [
+                ""
+            ],
+            "resources": [
+                "pods"
+            ],
+            "verbs": [
+                "get",
+                "list"
+            ]
+        }
+    ]
+}

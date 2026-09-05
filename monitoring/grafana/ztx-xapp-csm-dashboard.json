@@ -1,0 +1,200 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "ztx-xapp-csm",
+    "title": "ZT-XGuard xApp CSM Monitoring",
+    "tags": ["zt-xguard", "o-ran", "xapp", "security", "csm"],
+    "timezone": "browser",
+    "schemaVersion": 39,
+    "version": 1,
+    "refresh": "5s",
+    "time": {
+      "from": "now-30m",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "type": "stat",
+        "title": "Active xApps Reporting Metrics",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "count(count by (xapp) (xapp_work_units_processed))",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "type": "stat",
+        "title": "xApps With Errors",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "count(xapp_errors_total > 0)",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0}
+      },
+      {
+        "id": 3,
+        "type": "stat",
+        "title": "Max Heartbeat Age",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "max(xapp_heartbeat_age_seconds)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {"unit": "s"},
+          "overrides": []
+        },
+        "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0}
+      },
+      {
+        "id": 4,
+        "type": "stat",
+        "title": "RIC Service Failures",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "sum(xapp_ric_service_failures_total)",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0}
+      },
+      {
+        "id": 5,
+        "type": "timeseries",
+        "title": "xApp Work Unit Rate",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "sum by (xapp, role) (rate(xapp_work_units_processed[1m]))",
+            "legendFormat": "{{xapp}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4}
+      },
+      {
+        "id": 6,
+        "type": "timeseries",
+        "title": "xApp Heartbeat Age",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "xapp_heartbeat_age_seconds",
+            "legendFormat": "{{xapp}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {"unit": "s"},
+          "overrides": []
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4}
+      },
+      {
+        "id": 7,
+        "type": "timeseries",
+        "title": "RIC Activity Rate",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "sum by (xapp, role) (rate(xapp_ric_activity_counter[1m]))",
+            "legendFormat": "{{xapp}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12}
+      },
+      {
+        "id": 8,
+        "type": "timeseries",
+        "title": "Control Action Rate",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "sum by (xapp, role) (rate(xapp_control_action_counter[1m]))",
+            "legendFormat": "{{xapp}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12}
+      },
+      {
+        "id": 9,
+        "type": "timeseries",
+        "title": "RIC Service Failure Rate",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "sum by (xapp, role) (rate(xapp_ric_service_failures_total[1m]))",
+            "legendFormat": "{{xapp}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 20}
+      },
+      {
+        "id": 10,
+        "type": "timeseries",
+        "title": "xApp Error Rate",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "sum by (xapp, role) (rate(xapp_errors_total[1m]))",
+            "legendFormat": "{{xapp}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 20}
+      },
+      {
+        "id": 11,
+        "type": "timeseries",
+        "title": "Pod CPU Usage - xApps",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"ricxapp\", container!=\"\", pod=~\".*(telemetry-monitor|qos-optimizer|traffic-analyzer|resource-optimizer|security-observer).*\"}[1m]))",
+            "legendFormat": "{{pod}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {"unit": "cores"},
+          "overrides": []
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 28}
+      },
+      {
+        "id": 12,
+        "type": "timeseries",
+        "title": "Pod Memory Usage - xApps",
+        "datasource": {"type": "prometheus", "uid": "ztx-prometheus"},
+        "targets": [
+          {
+            "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"ricxapp\", container!=\"\", pod=~\".*(telemetry-monitor|qos-optimizer|traffic-analyzer|resource-optimizer|security-observer).*\"})",
+            "legendFormat": "{{pod}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {"unit": "bytes"},
+          "overrides": []
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 28}
+      }
+    ]
+  },
+  "overwrite": true,
+  "folderId": 0
+}

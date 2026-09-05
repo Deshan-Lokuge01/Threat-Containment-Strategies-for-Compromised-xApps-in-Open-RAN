@@ -1,0 +1,73 @@
+============================================================
+ STEP 48B: N6 ACTUATOR-DORMANT CLEAN COLLECTION
+============================================================
+Run ID: N6-ACTUATOR-CLEAN-1UE-10PPS-20260630T034419Z
+Output: /home/nearric/Desktop/FYP/zt-xguard/data/normal/N6/N6-ACTUATOR-CLEAN-1UE-10PPS-20260630T034419Z
+Started UTC: 2026-06-30T03:44:19Z
+
+--- 1. Verify frozen v2 model ---
+./execution_environment.json: OK
+./step45_report.md: OK
+./step45_summary.json: OK
+./step45_v2_clean_score_ecdf.pdf: OK
+./step45_v2_clean_score_ecdf.png: OK
+./step45_v2_n4_posthoc_timeline.pdf: OK
+./step45_v2_n4_posthoc_timeline.png: OK
+./v2_frozen_mewma_location.csv: OK
+./v2_frozen_mewma_state_covariance.csv: OK
+./v2_frozen_mewma_state_precision.csv: OK
+./v2_frozen_model_spec.yaml: OK
+./v2_frozen_thresholds_and_persistence.csv: OK
+./v2_n3_score_summary_by_candidate.csv: OK
+./v2_n3_scores_W10_H10.csv: OK
+./v2_n3_scores_W10_H15.csv: OK
+./v2_n3_scores_W10_H20.csv: OK
+./v2_n3_scores_W10_H3.csv: OK
+./v2_n3_scores_W10_H5.csv: OK
+./v2_n3_scores_W5_H10.csv: OK
+./v2_n3_scores_W5_H15.csv: OK
+./v2_n3_scores_W5_H20.csv: OK
+./v2_n3_scores_W5_H3.csv: OK
+./v2_n3_scores_W5_H5.csv: OK
+./v2_n3_scores_W8_H10.csv: OK
+./v2_n3_scores_W8_H15.csv: OK
+./v2_n3_scores_W8_H20.csv: OK
+./v2_n3_scores_W8_H3.csv: OK
+./v2_n3_scores_W8_H5.csv: OK
+./v2_n3_threshold_persistence_candidates.csv: OK
+./v2_n4_posthoc_metrics.csv: OK
+./v2_n4_posthoc_scores.csv: OK
+./v2_selected_n3_scores.csv: OK
+./v2_window_features_W10_N1.csv: OK
+./v2_window_features_W10_N2.csv: OK
+./v2_window_features_W10_N3.csv: OK
+./v2_window_features_W5_N1.csv: OK
+./v2_window_features_W5_N2.csv: OK
+./v2_window_features_W5_N3.csv: OK
+./v2_window_features_W8_N1.csv: OK
+./v2_window_features_W8_N2.csv: OK
+./v2_window_features_W8_N3.csv: OK
+ztx-step45-v2-frozen-model.tar.gz: OK
+n5_v2_freeze_binding.json: OK
+--- 2. Verify latest N6 actuator-dormant readiness ---
+validation.txt: OK
+runtime_metrics_preflight.json: OK
+e2_state_initial.json: OK
+kpimon_pod.yaml: OK
+kpimon_deployment.yaml: OK
+process_check.txt: OK
+stress_ng_check.txt: OK
+PASS: Readiness verified: /home/nearric/Desktop/FYP/zt-xguard/data/normal/N6/readiness/N6-ACTUATOR-READINESS-20260630T034113Z
+--- 3. Bind current kpimon pod ---
+PASS: kpimon bound: pod=ricxapp-kpimon-go-687d9645b6-snlkl host_pid=45199
+--- 4. Verify clean workload ---
+  44572   44571 ping            ping -i 0.1 10.45.1.1
+PASS: Clean workload verified.
+--- 5. Save start evidence ---
+--- 6. Run collector for 30 minutes ---
+python3: can't open file '/home/nearric/Desktop/FYP/zt-xguard/collector/collect_resources.py': [Errno 2] No such file or directory
+--- 7. Save end evidence ---
+--- 8. Build quality summary ---
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/home/nearric/Desktop/FYP/zt-xguard/data/normal/N6/N6-ACTUATOR-CLEAN-1UE-10PPS-20260630T034419Z/raw_metrics.csv'

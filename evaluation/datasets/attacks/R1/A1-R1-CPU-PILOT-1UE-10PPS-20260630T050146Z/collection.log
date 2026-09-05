@@ -1,0 +1,84 @@
+============================================================
+ STEP 49C: CONTROLLED R1 CPU PILOT ATTACK COLLECTION
+============================================================
+Run ID: A1-R1-CPU-PILOT-1UE-10PPS-20260630T050146Z
+Output: /home/nearric/Desktop/FYP/zt-xguard/data/attacks/R1/A1-R1-CPU-PILOT-1UE-10PPS-20260630T050146Z
+Duration: 1800 s
+Attack: R1_CPU_PILOT_SAFE at +300s for 60s
+Started UTC: 2026-06-30T05:01:46Z
+
+--- 1. Verify clean workload and no CALDERA/attack pod contamination ---
+  44572   44571 ping            ping -i 0.1 10.45.1.1
+--- 2. Resolve KPIMON target ---
+pod=ricxapp-kpimon-go-7bf6985688-fj8q4
+pod_uid=e85eebb9-e353-4c10-8b57-c27201e05279
+pod_ip=10.244.0.112
+image=127.0.0.1:80/kpimon-ocudu-cell:ztx-experiment-v4-actuator-c-r1pilot
+host_pid=206844
+cgroup=/sys/fs/cgroup/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pode85eebb9_e353_4c10_8b57_c27201e05279.slice/cri-containerd-3fd958246bc029c3367c51e71149ac130135ff579fcc80a3de033ea3a0a276d9.scope
+metrics_url=http://10.244.0.112:9090/ztx/metrics
+actuator_url=http://10.244.0.112:18080
+E0630 10:32:17.628566  226418 websocket.go:297] Unknown stream id 1, discarding message
+--- 3. Save start evidence ---
+--- 4. Start attack controller in background ---
+attack_controller_pid=226605
+--- 5. Run collector ---
+E0630 10:38:35.805545  238876 websocket.go:297] Unknown stream id 1, discarding message
+{
+  "endpoint_errors": 0,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/attacks/R1/A1-R1-CPU-PILOT-1UE-10PPS-20260630T050146Z/raw_metrics.csv",
+  "profile": "ATTACK_R1_CPU_PILOT_SAFE_1UE_10PPS",
+  "resource_counter_resets": 0,
+  "rows_written": 1800,
+  "run_id": "A1-R1-CPU-PILOT-1UE-10PPS-20260630T050146Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 1800,
+  "timing_errors": 3
+}
+--- 6. Save end evidence ---
+--- 7. Build quality summary and validation ---
+{
+  "attack_timeline_file": "/home/nearric/Desktop/FYP/zt-xguard/data/attacks/R1/A1-R1-CPU-PILOT-1UE-10PPS-20260630T050146Z/attack_timeline.csv",
+  "dataset": "A1_R1",
+  "endpoint_errors": 0,
+  "expected_rows": 1800,
+  "resource_counter_resets": 0,
+  "rows": 1800,
+  "runtime_counter_resets": 0,
+  "sample_interval_seconds": {
+    "maximum": 1.602278,
+    "mean": 1.0000015461111111,
+    "p95": 1.00740825,
+    "p99": 1.02770278
+  },
+  "sample_lag_ms": {
+    "maximum": 605.672,
+    "mean": 6.296906111111111,
+    "p95": 11.2989,
+    "p99": 46.80261999999999
+  },
+  "sample_quality_counts": {
+    "memory_slope_warmup": 28,
+    "ok": 1769,
+    "timing": 3
+  },
+  "schema": "ztx-attack-quality-v1",
+  "timing_errors": 3
+}
+dataset=A1_R1
+run_id=A1-R1-CPU-PILOT-1UE-10PPS-20260630T050146Z
+role=controlled-r1-cpu-pilot-attack-evaluation
+collector_return_code=0
+primary_data_ok=0
+attack_started=1
+stress_ng_seen_during_attack=1
+stress_ng_running_at_end=0
+actuator_inactive_at_end=1
+final_acceptance=0
+scored_during_collection=0
+============================================================
+RESULT: R1 CPU PILOT ATTACK DATASET REJECTED
+/home/nearric/Desktop/FYP/zt-xguard/data/attacks/R1/A1-R1-CPU-PILOT-1UE-10PPS-20260630T050146Z
+============================================================

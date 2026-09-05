@@ -1,0 +1,4 @@
+POD=kpm-monitor-d4855ffd7-59z88
+E2MGR_IP=10.108.243.89
+RTMGR_URL=http://10.107.112.218:3800
+NEW_POD=kpm-monitor-86c9b76559-c7pjr

@@ -1,0 +1,13 @@
+{
+  "endpoint_errors": 5,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/attacks/A_MEMORY/A-MEMORY-EXHAUSTION-BLIND-20260703T181612Z/raw_metrics.csv",
+  "profile": "ATTACK_A_MEMORY_EXHAUSTION_BLIND",
+  "resource_counter_resets": 0,
+  "rows_written": 2700,
+  "run_id": "A-MEMORY-EXHAUSTION-BLIND-20260703T181612Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 2700,
+  "timing_errors": 0
+}

@@ -1,0 +1,71 @@
+{
+  "engine": "http://127.0.0.1:15000",
+  "mode": "assisted",
+  "namespace": "ricxapp",
+  "policy_engine_health": {
+    "auto_quarantine": true,
+    "component": "zt-xguard-policy-engine",
+    "namespace": "zt-xguard",
+    "revoke_spire": false,
+    "status": "ok",
+    "time": "2026-06-09T18:17:20.838917+00:00",
+    "version": "1.0.0-integrated",
+    "xapp_namespace": "ricxapp",
+    "xapps": [
+      "telemetry-monitor",
+      "qos-optimizer",
+      "traffic-analyzer",
+      "resource-optimizer",
+      "security-observer"
+    ]
+  },
+  "repeats": 1,
+  "run_id": "20260609T181720Z",
+  "scenarios": [
+    {
+      "description": "Legitimate high workload",
+      "expected_containment": false,
+      "expected_state": "OBSERVED",
+      "semi_real": false,
+      "severity": "info",
+      "sid": "A5",
+      "signal": "high_cpu",
+      "signal_source": "prometheus_orchestrator",
+      "target": "traffic-analyzer"
+    },
+    {
+      "description": "Malicious CPU exhaustion",
+      "expected_containment": false,
+      "expected_state": "SUSPICIOUS",
+      "semi_real": false,
+      "severity": "warning",
+      "sid": "A4",
+      "signal": "high_cpu",
+      "signal_source": "prometheus_orchestrator",
+      "target": "resource-optimizer"
+    },
+    {
+      "description": "Cross-xApp communication attempt",
+      "expected_containment": false,
+      "expected_state": "SUSPICIOUS",
+      "semi_real": false,
+      "severity": "warning",
+      "sid": "A7",
+      "signal": "unexpected_peer_contact",
+      "signal_source": "orchestrator_network",
+      "target": "security-observer"
+    },
+    {
+      "description": "External egress attempt",
+      "expected_containment": true,
+      "expected_state": "QUARANTINED",
+      "semi_real": false,
+      "severity": "critical",
+      "sid": "A8",
+      "signal": "external_egress",
+      "signal_source": "orchestrator_network",
+      "target": "security-observer"
+    }
+  ],
+  "timeout": 70
+}

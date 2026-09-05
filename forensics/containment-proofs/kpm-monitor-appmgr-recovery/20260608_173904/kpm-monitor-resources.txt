@@ -1,0 +1,5 @@
+deployment.apps/kpm-monitor          1/1     1            1           3h26m
+service/kpm-monitor                       ClusterIP   10.101.6.37     <none>        8092/TCP,4560/TCP   3h26m
+service/service-ricxapp-kpm-monitor-rmr   ClusterIP   10.107.17.73    <none>        8092/TCP,4560/TCP   160m
+configmap/kpm-monitor-profile          2      3h26m
+serviceaccount/kpm-monitor              0         3h26m

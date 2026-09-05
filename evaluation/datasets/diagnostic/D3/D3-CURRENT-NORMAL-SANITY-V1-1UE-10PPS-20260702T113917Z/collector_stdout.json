@@ -1,0 +1,13 @@
+{
+  "endpoint_errors": 0,
+  "fatal_error": "",
+  "output_csv": "/home/nearric/Desktop/FYP/zt-xguard/data/diagnostic/D3/D3-CURRENT-NORMAL-SANITY-V1-1UE-10PPS-20260702T113917Z/raw_metrics.csv",
+  "profile": "DIAGNOSTIC_CURRENT_NORMAL_V1_1UE_10PPS",
+  "resource_counter_resets": 0,
+  "rows_written": 600,
+  "run_id": "D3-CURRENT-NORMAL-SANITY-V1-1UE-10PPS-20260702T113917Z",
+  "runtime_counter_resets": 0,
+  "schema": "ztx-kpimon-raw-v2",
+  "target_rows": 600,
+  "timing_errors": 0
+}

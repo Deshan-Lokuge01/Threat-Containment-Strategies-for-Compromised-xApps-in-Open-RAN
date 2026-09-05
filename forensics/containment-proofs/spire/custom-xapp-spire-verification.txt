@@ -1,0 +1,20 @@
+
+[1m[0;36mZT-XGuard SPIRE/SPIFFE Verification[0m
+[0;36mNamespace: ricxapp[0m
+
+POD                                           SERVICEACCOUNT            SOCKET          EXPECTED SPIFFE ID                                                    
+--------------------------------------------- ------------------------- --------------- ----------------------------------------------------------------------
+qos-optimizer-56d96965cf-gxp9g                qos-optimizer             [0;32mMOUNTED[0m spiffe://example.org/ns/ricxapp/sa/qos-optimizer                      
+resource-optimizer-6b4996ff4b-xgdcz           resource-optimizer        [0;32mMOUNTED[0m spiffe://example.org/ns/ricxapp/sa/resource-optimizer                 
+security-observer-55674689c9-jgd26            security-observer         [0;32mMOUNTED[0m spiffe://example.org/ns/ricxapp/sa/security-observer                  
+telemetry-monitor-75bcb6d888-j2p5j            telemetry-monitor         [0;32mMOUNTED[0m spiffe://example.org/ns/ricxapp/sa/telemetry-monitor                  
+traffic-analyzer-6756f48b94-d428r             traffic-analyzer          [0;32mMOUNTED[0m spiffe://example.org/ns/ricxapp/sa/traffic-analyzer                   
+
+[1m[0;36mSPIRE registration entries for ZT-XGuard xApps:[0m
+SPIFFE ID        : spiffe://example.org/ns/ricxapp/sa/qos-optimizer
+SPIFFE ID        : spiffe://example.org/ns/ricxapp/sa/resource-optimizer
+SPIFFE ID        : spiffe://example.org/ns/ricxapp/sa/security-observer
+SPIFFE ID        : spiffe://example.org/ns/ricxapp/sa/telemetry-monitor
+SPIFFE ID        : spiffe://example.org/ns/ricxapp/sa/traffic-analyzer
+
+[0;32mVerification complete.[0m
