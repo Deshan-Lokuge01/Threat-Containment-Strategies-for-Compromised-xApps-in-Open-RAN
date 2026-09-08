@@ -1,20 +1,22 @@
-# Threat Containment Strategies for Compromised xApps in Open RAN
+# ZT-XGUARD: Threat Containment Strategies for Compromised xApps in Open RAN
 
 ## Project Overview
-This repository serves as the architectural foundation and research documentation for developing a **Zero‑Trust threat containment framework** within an Open RAN (O‑RAN) environment.
+This is an undergraduate project conducted at the **Faculty of Engineering, University of Ruhuna**. The research focuses on improving the security of xApps in Open RAN (O-RAN) environments, featuring a custom security architecture, testbed evaluations, and performance analysis.
 
 The primary objective of this project is to implement a security framework that enhances the resilience of the **Near‑Real‑Time RAN Intelligent Controller (Near‑RT RIC)** by actively authenticating workloads and isolating compromised third‑party microservices (xApps) at runtime.
 
+This repository serves as the architectural foundation and research documentation for developing a **Zero‑Trust threat containment framework** within an Open RAN (O‑RAN) environment.
+
 **Team Members:**
-- Dewmith M.K.J. (EG/2021/4474)
-- Dilshan M.D.K. (EG/2021/4485)
-- Sewinda L.L.D. (EG/2021/4807)
-- Thilohith T.K. (EG/2021/4832)
+- Dewmith M.K.J. (EG/2021/4474) - Janindu Dewmith
+- Dilshan M.D.K. (EG/2021/4485) - Kavinda Dilshan
+- Sewinda L.L.D. (EG/2021/4807) - Deshan Lokuge
+- Thilohith T.K. (EG/2021/4832) - Thilohith Thiruchelvam
 
 **Supervisors:**
-- Dr. Chatura Seneviratne
-- Prof. Dr. An Braeken
-- Mr. Pramitha Fernando
+- [Dr. Chatura Seneviratne](https://scholar.google.com/citations?user=8RmikPwAAAAJ&hl=en)
+- [Prof. Dr. An Braeken](https://scholar.google.com/citations?user=O0Gmsl4AAAAJ&hl=en)
+- [Mr. Pramitha Fernando](https://scholar.google.com/citations?user=HBmZvtwAAAAJ&hl=en)
 
 ---
 
@@ -33,7 +35,7 @@ O‑RAN is deployed in modern 5G Standalone (SA) networks, private enterprise 5G
 
 <div align="center">
   <img src="images/fig1_evolution.png" alt="Evolution of Traditional Base Station to O-RAN" width="80%">
-  <br><em>Figure 1: Evolution of the traditional base station to a virtualized, disaggregated gNB</em>
+  <br><em>Figure 1: Evolution of the traditional base station to a virtualized, disaggregated gNB [1]</em>
 </div>
 
 ---
@@ -49,11 +51,6 @@ The O‑RAN architecture is built on four key principles:
 | **Intelligent control** | Introducing RICs that use AI/ML to optimize network performance via closed‑loop automation. |
 | **Open interfaces** | Standardizing interfaces between components to allow multi‑vendor interoperability. |
 
-<div align="center">
-  <img src="images/fig3_highlevel_arch.png" alt="High-level O-RAN architecture" width="90%">
-  <br><em>Figure 2: High‑level O‑RAN architecture</em>
-</div>
-
 ---
 
 ## 3. The O‑RAN Stack: CU, DU, RU and Functional Splits
@@ -68,7 +65,7 @@ The O‑RAN specifications define the **7.2x functional split** between the O‑
 
 <div align="center">
   <img src="images/fig4_protocol_stack.png" alt="Protocol stack with 7.2x split" width="80%">
-  <br><em>Figure 3: 3GPP protocol layers mapped to O‑RAN components</em>
+  <br><em>Figure 2: 3GPP protocol layers mapped to O‑RAN components [1]</em>
 </div>
 
 ---
@@ -83,7 +80,7 @@ The O‑RAN specifications define the **7.2x functional split** between the O‑
 
 <div align="center">
   <img src="images/fig5_near_rt_ric.png" alt="Near-RT RIC internal architecture" width="80%">
-  <br><em>Figure 4: Near‑RT RIC internal architecture</em>
+  <br><em>Figure 3: Near‑RT RIC internal architecture [1]</em>
 </div>
 
 ### 4.2 Non‑RT RIC and rApps
@@ -94,7 +91,7 @@ The O‑RAN specifications define the **7.2x functional split** between the O‑
 
 <div align="center">
   <img src="images/fig6_non_rt_ric.png" alt="Non-RT RIC and SMO architecture" width="80%">
-  <br><em>Figure 5: Non‑RT RIC and SMO logical architecture</em>
+  <br><em>Figure 4: Non‑RT RIC and SMO logical architecture [2]</em>
 </div>
 
 ---
@@ -111,7 +108,7 @@ The O‑RAN specifications define the **7.2x functional split** between the O‑
 
 <div align="center">
   <img src="images/fig7_interfaces.png" alt="O-RAN interfaces diagram" width="90%">
-  <br><em>Figure 6: O‑RAN interfaces</em>
+  <br><em>Figure 5: O‑RAN interfaces</em>
 </div>
 
 ---
@@ -127,11 +124,6 @@ The openness and disaggregation of O‑RAN introduce new security challenges:
 - **AI/ML vulnerabilities** – Poisoned training data, model theft, adversarial attacks.
 
 These challenges necessitate a **Zero Trust** approach, where every component is continuously verified before being allowed to act.
-
-<div align="center">
-  <img src="images/fig8_threat_landscape.png" alt="Threat landscape in O-RAN" width="80%">
-  <br><em>Figure 7: Threat landscape in O‑RAN</em>
-</div>
 
 ---
 
@@ -161,8 +153,15 @@ Our framework combines three complementary layers:
 3. **Runtime monitoring & automated isolation** – continuously observes xApp behaviour; on anomaly detection, the xApp is automatically isolated.
 
 <div align="center">
-  <img src="images/fig_workflow.png" alt="xApp validation and isolation workflow" width="80%">
-  <br><em>Figure 8: Proposed security workflow – from deployment to runtime containment</em>
+  <img src="images/So_new.jpg" alt="xApp validation workflow" width="100%">
+  <br><em>Figure 6: Proposed security workflow – Secure Onboarding</em>
+</div>
+
+##
+
+<div align="center">
+  <img src="images/workflow_runtime.png" alt="xApp runtime monitoring and isolation workflow" width="100%">
+  <br><em>Figure 7: Proposed security workflow – Runtime Monitoring and Automated Containment</em>
 </div>
 
 ### 7.4 Remote Attestation with Keylime (TPM‑based)
@@ -174,7 +173,7 @@ Our framework combines three complementary layers:
 
 <div align="center">
   <img src="images/fig_remote_attestation.png" alt="Remote attestation with Keylime" width="70%">
-  <br><em>Figure 9: Remote attestation workflow</em>
+  <br><em>Figure 8: Remote attestation workflow</em>
 </div>
 
 ### 7.5 Workload Identity Attestation with SPIRE/SPIFFE
@@ -186,8 +185,8 @@ Our framework combines three complementary layers:
 - Access policies are based on the SPIFFE ID (e.g., `spiffe://oran.org/xapp/load-balancer`), ensuring least privilege.
 
 <div align="center">
-  <img src="images/fig_spire_workflow.png" alt="SPIRE workload attestation" width="80%">
-  <br><em>Figure 10: SPIRE attestation and SVID issuance</em>
+  <img src="images/fig_spire_workflow.png" alt="SPIRE workload attestation" width="60%">
+  <br><em>Figure 9: SPIRE attestation and SVID issuance [9]</em>
 </div>
 
 ### 7.6 CU/DU Split Testbed Setup
@@ -234,7 +233,7 @@ parallel and the workload's cryptographic identity revoked at the same time.
 
 <div align="center">
   <img src="images/dashboard/soc-dashboard-all-normal.png" alt="ZT-XGuard SOC dashboard, steady state" width="95%">
-  <br><em>ZT-XGuard SOC dashboard — the live RIC map with all xApps healthy.</em>
+  <br><em>Figure 10: ZT-XGuard SOC dashboard — the live RIC map with all xApps healthy.</em>
 </div>
 
 ## 9. How the system fits together
@@ -289,7 +288,7 @@ human operator can intervene; the countdown is shown live on the dashboard.
 
 <div align="center">
   <img src="images/dashboard/soc-dashboard-resource-attack.png" alt="A resource/DoS attack being detected and contained" width="95%">
-  <br><em>A DoS (resource-exhaustion) attack on kpimon-go: the T² channel confirms it, then the four locks isolate the xApp and the SVID is revoked.</em>
+  <br><em>Figure 11: A DoS (resource-exhaustion) attack on kpimon-go: the T² channel confirms it, then the four locks isolate the xApp and the SVID is revoked.</em>
 </div>
 
 ## 11. Detection — two independent channels
@@ -329,21 +328,35 @@ evidence and our actuator xApp.
 
 ## 15. Publications
 
-- **IEEE CCNC (6 pages)** — the conference paper drawn from this work is in [`paper/`](paper/).
+- **IEEE CCNC -2027 (Under Review)** — the conference paper drawn from this work is in [`paper/`](paper/).
 - **Final Report** — the full project report is in [`Docs/`](Docs/).
+
+## 16. Instalation Guide
+
+- 16 GB RAM (20GB Recommended), 10 vCPU (12VCPU Recommended), 100GB Storage(SSD)
+- Downlaod and install NIST ORAN Testbed Setup: https://github.com/usnistgov/O-RAN-Testbed-Automation (OPEN5GS, OCUDU, srsRAN 4G UE, ORAN SC Near-RT RIC)
+- *Take your Vm ip address and setup the Du.yml and Ue configuartion and near rt ric configuartion files for connetcivity folllow the srsRAN setup documentation: https://docs.srsran.com/projects/project/en/latest/tutorials/source/near-rt-ric/source/index.html
+- Deploy working xApps used ORAN-SC xApps : In here KPI Mon xApp was Troubleshooted. (Version mismatch -> Decoding error) Use: https://github.com/usnistgov/O-RAN-Testbed-Automation/issues/13
+- Setup SPIRE, Calico, Falco (Refer the References)
+- Deploy the policy engine (KPI Mon Stat Model Included) for detection and containtment + recovery for compromised xApps
+- Use the attack scripts for attack simulation
+- Dashbaord: Use Java script file and css file.
 
 ---
 
-## 8. References
+## 17. References
 1. M. Polese, L. Bonati, S. D'Oro, S. Basagni, and T. Melodia, “Understanding O-RAN: Architecture, Interfaces, Algorithms, Security, and Research Challenges,” *IEEE Communications Surveys & Tutorials*, vol. 25, no. 2, pp. 1376–1411, 2023.
 2. O-RAN Working Group 1, “O-RAN Architecture Description,” O-RAN ALLIANCE, Tech. Rep. TR.0-R004-v15.00, Oct. 2025.
 3. O-RAN Working Group 3, “Near-RT RIC Architecture,” O-RAN ALLIANCE, Tech. Rep. TR.0-R004-v07.00, Feb. 2025.
 4. O-RAN Working Group 11, “Study on Security for Near Real Time RIC and xApps,” Tech. Rep. TR.0-R004-v06.00.
-5. srsRAN Project Documentation: https://docs.srsran.com/
-6. Open5GS: https://open5gs.org/
-7. Keylime Project: https://keylime.dev/
-8. SPIFFE/SPIRE: https://spiffe.io/
-
+5. NIST ORAN Testbed Setup: https://github.com/usnistgov/O-RAN-Testbed-Automation
+6. srsRAN Project Documentation: https://docs.srsran.com/
+7. Open5GS: https://open5gs.org/
+8. Keylime Project: https://keylime.dev/
+9. SPIFFE/SPIRE: https://spiffe.io/
+10. The Falcosidekick Project, “Falcosidekick: A simple daemon to connect falco to your ecosystem: https://github.com/falcosecurity/falcosidekick\
+11. Sigstore Project, “Cosign: Container signing, verification and storage in an OCI registry: https://github.com/sigstore/cosign
+12. M. Polese, L. Bonati, S. D’oro, S. Basagni, and T. Melodia, “Understanding O-RAN: Architecture, Interfaces, Algorithms, Security, and Research Chal lenges,” IEEE Communications Surveys & Tutorials, vol. 25, no. 2,pp. 1376-1411, 2023.
 ---
 
 ## 📄 License
