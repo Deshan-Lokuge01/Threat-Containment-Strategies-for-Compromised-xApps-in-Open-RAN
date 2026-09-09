@@ -63,6 +63,12 @@
 
 </div>
 
+<br/>
+<div align="center">
+  <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/k9s%20.jpg" alt="Cluster pods" width="900"/><br/>
+  <br/><b>Cluster pods</b>
+</div>
+
 ---
 
 ## 🎥 Project Video and Demonstration 
@@ -225,15 +231,22 @@ Our framework combines three complementary layers:
 3. **Runtime monitoring & automated isolation** – continuously observes xApp behaviour; on anomaly detection, the xApp is automatically isolated.
 
 <div align="center">
-  <img src="images/So_new.jpg" alt="xApp validation workflow" width="100%">
-  <br><em>Figure 6: Proposed security workflow – Secure Onboarding</em>
+  <img src="images/So_new.jpg" alt="xApp validation workflow" width="80%">
+  <br><em>Figure 6: Security workflow – Secure Onboarding</em>
 </div>
 
 ##
 
 <div align="center">
-  <img src="images/workflow_runtime.png" alt="xApp runtime monitoring and isolation workflow" width="100%">
-  <br><em>Figure 7: Proposed security workflow – Runtime Monitoring and Automated Containment</em>
+  <img src="images/workflow_runtime.png" alt="xApp runtime monitoring via both resorce-based and behavior channels" width="100%">
+  <br><em>Figure 7: Security workflow – Runtime Monitoring via both resorce-based and behavior channels</em>
+</div>
+
+##
+
+<div align="center">
+  <img src="images/Containment.jpg" alt="xApp runtime monitoring and isolation workflow" width="70%">
+  <br><em>Figure 8: Security workflow – Automated 4 Lock Containment</em>
 </div>
 
 ### 7.4 Remote Attestation with Keylime (TPM‑based)
@@ -245,7 +258,7 @@ Our framework combines three complementary layers:
 
 <div align="center">
   <img src="images/fig_remote_attestation.png" alt="Remote attestation with Keylime" width="70%">
-  <br><em>Figure 8: Remote attestation workflow</em>
+  <br><em>Figure 9: Remote attestation workflow</em>
 </div>
 
 ### 7.5 Workload Identity Attestation with SPIRE/SPIFFE
@@ -258,7 +271,7 @@ Our framework combines three complementary layers:
 
 <div align="center">
   <img src="images/fig_spire_workflow.png" alt="SPIRE workload attestation" width="60%">
-  <br><em>Figure 9: SPIRE attestation and SVID issuance [9]</em>
+  <br><em>Figure 10: SPIRE attestation and SVID issuance [9]</em>
 </div>
 
 ### 7.6 CU/DU Split Testbed Setup
@@ -305,7 +318,7 @@ parallel and the workload's cryptographic identity revoked at the same time.
 
 <div align="center">
   <img src="images/dashboard/soc-dashboard-all-normal.png" alt="ZT-XGuard SOC dashboard, steady state" width="95%">
-  <br><em>Figure 10: ZT-XGuard SOC dashboard — the live RIC map with all xApps healthy.</em>
+  <br><em>Figure 11: ZT-XGuard SOC dashboard — the live RIC map with all xApps healthy.</em>
 </div>
 
 ## 9. How the system fits together
@@ -360,7 +373,7 @@ human operator can intervene; the countdown is shown live on the dashboard.
 
 <div align="center">
   <img src="images/dashboard/soc-dashboard-resource-attack.png" alt="A resource/DoS attack being detected and contained" width="95%">
-  <br><em>Figure 11: A DoS (resource-exhaustion) attack on kpimon-go: the T² channel confirms it, then the four locks isolate the xApp and the SVID is revoked.</em>
+  <br><em>Figure 12: A DoS (resource-exhaustion) attack on kpimon-go: the T² channel confirms it, then the four locks isolate the xApp and the SVID is revoked.</em>
 </div>
 
 ## 11. Detection — two independent channels
