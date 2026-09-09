@@ -302,8 +302,8 @@ This pipeline ensures that even if an xApp is compromised at runtime, the damage
 
 ### 7.8 Future Work
 - **Integration of Zero‑Knowledge Virtual Machines (zkVMs)** – to provide cryptographic proof of correct computation without revealing internal data.
-- **Machine learning‑based anomaly detection** – using network telemetry to detect subtle behavioural deviations.
-- **Cross‑RIC coordination** – enabling the Non‑RT RIC to update isolation policies based on global threat intelligence.
+- Validate and generalize the statistical detector across multiple xApps.
+- Extend detection to application-level RAN behavior, including attacks such as E2 data poisoning and malicious but well-formed control logic.
 - **Performance benchmarking** – measuring the latency overhead introduced by attestation and isolation loops to ensure 5G timing requirements are met.
 
 ---
