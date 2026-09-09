@@ -1,4 +1,70 @@
-# ZT-XGUARD: Threat Containment Strategies for Compromised xApps in Open RAN
+<h1 align="center">
+  <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/Guard_new.jpg" width="45" align="center" alt="Shield Guard" /> 
+  Threat Containment Strategies for Compromised xApps in Open RAN
+  
+</h1>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/O--RAN-Near--RT%20RIC-red" alt="O-RAN" />
+  <img src="https://img.shields.io/badge/SPIFFE%2FSPIRE-Identity%20Management-blue" alt="SPIFFE/SPIRE" />
+  <img src="https://img.shields.io/badge/Falco-Runtime%20Security-cyan" alt="Falco" />
+  <img src="https://img.shields.io/badge/Cosign-Image%20Signing-purple" alt="Cosign" />
+  <img src="https://img.shields.io/badge/Canal-Network%20Isolation-orange" alt="Canal" />
+  <img src="https://img.shields.io/badge/NIST-Security%20Testbed-success" alt="NIST" />
+</p>
+
+---
+
+<div align="center">
+
+🛡️ **xApp Security & Threat Containment Dashboard**
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss01.jpg" alt="Zero Trust Cluster Map" width="600"/><br/>
+      <br/><b>1. Zero Trust Cluster Map</b>
+    </td>
+    <td align="center">
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss02.jpg" alt="Real Time State Detection" width="600"/><br/>
+      <br/><b>2. Real Time State Detection</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss03.jpg" alt="SVID Renewal" width="450"/><br/>
+      <br/><b>3. SVID Renewal</b>
+    </td>
+    <td align="center">
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss04.jpg" alt="Threat Detection - Behavior" width="450"/><br/>
+      <br/><b>4. Threat Detection - Behavior</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss05.jpg" alt="Threat Detection - Resource (DoS)" width="450"/><br/>
+      <br/><b>5. Threat Detection - Resource (DoS)</b>
+    </td>
+    <td align="center">
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss06.jpg" alt="Isolation and Containment" width="450"/><br/>
+      <br/><b>6. Isolation and Containment</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss08.jpg" alt="Forensic Investigation" width="450"/><br/>
+      <br/><b>7. Forensic Investigation</b>
+    </td>
+    <td align="center">
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss09.jpg" alt="Recovery - Healthy xApp" width="450"/><br/>
+      <br/><b>8. Recovery - Healthy xApp</b>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+---
 
 ## Project Overview
 This is an undergraduate project conducted at the **Faculty of Engineering, University of Ruhuna**. The research focuses on improving the security of xApps in Open RAN (O-RAN) environments, featuring a custom security architecture, testbed evaluations, and performance analysis.
