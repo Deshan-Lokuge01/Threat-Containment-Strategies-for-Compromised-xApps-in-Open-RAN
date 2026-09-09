@@ -1,7 +1,6 @@
 <h1 align="center">
   <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/Guard_new.jpg" width="45" align="center" alt="Shield Guard" /> 
   Threat Containment Strategies for Compromised xApps in Open RAN
-  
 </h1>
 
 <p align="center">
@@ -17,52 +16,59 @@
 
 <div align="center">
 
-🛡️ **xApp Security & Threat Containment Dashboard**
+🛡️ **ZT - XGURAD - xApp Security & Threat Containment Dashboard**
 
 <table>
   <tr>
     <td align="center">
-      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss01.jpg" alt="Zero Trust Cluster Map" width="600"/><br/>
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss01.jpg" alt="Zero Trust Cluster Map" width="800"/><br/>
       <br/><b>1. Zero Trust Cluster Map</b>
     </td>
     <td align="center">
-      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss02.jpg" alt="Real Time State Detection" width="600"/><br/>
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss02.jpg" alt="Real Time State Detection" width="800"/><br/>
       <br/><b>2. Real Time State Detection</b>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss03.jpg" alt="SVID Renewal" width="450"/><br/>
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss03.jpg" alt="SVID Renewal" width="800"/><br/>
       <br/><b>3. SVID Renewal</b>
     </td>
     <td align="center">
-      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss04.jpg" alt="Threat Detection - Behavior" width="450"/><br/>
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss04.jpg" alt="Threat Detection - Behavior" width="800"/><br/>
       <br/><b>4. Threat Detection - Behavior</b>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss05.jpg" alt="Threat Detection - Resource (DoS)" width="450"/><br/>
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss05.jpg" alt="Threat Detection - Resource (DoS)" width="800"/><br/>
       <br/><b>5. Threat Detection - Resource (DoS)</b>
     </td>
     <td align="center">
-      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss06.jpg" alt="Isolation and Containment" width="450"/><br/>
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss06.jpg" alt="Isolation and Containment" width="800"/><br/>
       <br/><b>6. Isolation and Containment</b>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss08.jpg" alt="Forensic Investigation" width="450"/><br/>
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss08.jpg" alt="Forensic Investigation" width="800"/><br/>
       <br/><b>7. Forensic Investigation</b>
     </td>
     <td align="center">
-      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss09.jpg" alt="Recovery - Healthy xApp" width="450"/><br/>
+      <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/ss09.jpg" alt="Recovery - Healthy xApp" width="800"/><br/>
       <br/><b>8. Recovery - Healthy xApp</b>
     </td>
   </tr>
 </table>
 
 </div>
+
+---
+
+## 🎥 Project Video and Demonstration 
+
+To get a clear understanding of the project in action, you can view the full demonstration video here: 
+[Watch the Project Demonstration](https://drive.google.com/file/d/1TdamIcVQUqreW04NzNcN2KXDguAGZxeO/view?usp=drive_link)
 
 ---
 
@@ -156,7 +162,7 @@ The O‑RAN specifications define the **7.2x functional split** between the O‑
 - **Interfaces:** A1 (to Near‑RT RIC), O1 (to managed elements), O2 (to O‑Cloud).
 
 <div align="center">
-  <img src="images/fig6_non_rt_ric.png" alt="Non-RT RIC and SMO architecture" width="80%">
+  <img src="images/fig6_non_rt_ric.png" alt="Non-RT RIC and SMO architecture" width="50%">
   <br><em>Figure 4: Non‑RT RIC and SMO logical architecture [2]</em>
 </div>
 
@@ -173,7 +179,7 @@ The O‑RAN specifications define the **7.2x functional split** between the O‑
 | **Open Fronthaul** | O‑DU ↔ O‑RU | 7.2x split transport over Ethernet; includes C‑plane, U‑plane, S‑plane, M‑plane. |
 
 <div align="center">
-  <img src="images/fig7_interfaces.png" alt="O-RAN interfaces diagram" width="90%">
+  <img src="images/fig7_interfaces.png" alt="O-RAN interfaces diagram" width="60%">
   <br><em>Figure 5: O‑RAN interfaces</em>
 </div>
 
@@ -407,6 +413,7 @@ evidence and our actuator xApp.
 - Deploy the policy engine (KPI Mon Stat Model Included) for detection and containtment + recovery for compromised xApps
 - Use the attack scripts for attack simulation
 - Dashbaord: Use Java script file and css file.
+- For the RAN connectivity, [Setup](https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/blob/main/testbed/srsRAN_1_UE_AND_3_UES_KPI_MON.txt) and [Troubleshooting](https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/blob/main/testbed/Troubleshoot%20pods.txt) follow these guides.
 
 ---
 
