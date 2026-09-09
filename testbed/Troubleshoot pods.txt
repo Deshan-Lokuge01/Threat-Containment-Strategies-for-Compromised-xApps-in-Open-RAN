@@ -1,0 +1,83 @@
+restart spire agent
+==================
+
+kubectl -n spire-system rollout restart daemonset/spire-agent
+
+kubectl -n spire-system rollout status \
+  daemonset/spire-agent \
+  --timeout=180s
+
+kubectl -n spire-system get pods
+
+
+===========
+calico
+
+kubectl delete pods -n kube-system -l k8s-app=canal
+kubectl delete pods -n kube-system -l k8s-app=core-dns
+
+kubectl rollout restart daemonset canal -n kube-system
+kubectl rollout restart deployment/coredns -n kube-system
+=======================================================
+
+
+kubectl -n spire-server rollout restart daemonset/spire-spiffe-oidc-discovery-provider
+
+kubectl -n spire-server rollout status \
+  daemonset/spire-spiffe-oidc-discovery-provider \
+  --timeout=180s
+
+kubectl -n spire-server get pods
+
+==================
+
+kubectl -n falco rollout restart daemonset/falco
+
+kubectl -n falco rollout status \
+  daemonset/falco \
+  --timeout=180s
+
+kubectl -n spire-server get pods
+
+====================
+
+
+a1mediator and e2mgr
+---------------
+first restart coredns
+
+kubectl rollout restart deployment/coredns -n kube-system
+kubectl get pods -n kube-system -w | grep coredns
+
+# Restart both
+kubectl -n ricplt rollout restart deployment/deployment-ricplt-a1mediator
+kubectl -n ricplt rollout restart deployment/deployment-ricplt-e2mgr
+
+# Wait for rollout to complete
+kubectl -n ricplt rollout status deployment/deployment-ricplt-a1mediator --timeout=120s
+kubectl -n ricplt rollout status deployment/deployment-ricplt-e2mgr --timeout=120s
+
+-------------------
+dbaas server
+
+kubectl -n ricplt rollout restart statefulset/statefulset-ricplt-dbaas-server
+kubectl -n ricplt rollout status statefulset/statefulset-ricplt-dbaas-server --timeout=120s
+kubectl get pods -n ricplt -w | grep dbaas
+
+
+------------------
+
+
+kubectl -n ricplt rollout restart deployment/deployment-ricplt-e2mgr deployment/deployment-ricplt-e2term-alpha deployment/deployment-ricplt-rtmgr deployment/deployment-ricplt-submgr
+
+
+kubectl -n ricplt rollout status deployment/deployment-ricplt-e2mgr --timeout=120s
+kubectl -n ricplt rollout status deployment/deployment-ricplt-e2term-alpha --timeout=120s
+kubectl -n ricplt rollout status deployment/deployment-ricplt-rtmgr --timeout=120s
+kubectl -n ricplt rollout status deployment/deployment-ricplt-submgr --timeout=120s
+
+
+
+
+
+
