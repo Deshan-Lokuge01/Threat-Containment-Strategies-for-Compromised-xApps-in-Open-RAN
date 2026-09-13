@@ -65,8 +65,13 @@
 
 <br/>
 <div align="center">
-  <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/k9s%20.jpg" alt="Cluster pods" width="900"/><br/>
-  <br/><b>Cluster pods</b>
+  <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/k9s.png" alt="Cluster pods" width="900"/><br/>
+  <b>Cluster pods</b>
+</div>
+
+<div align="center">
+  <img src="https://github.com/Deshan-Lokuge01/Threat-Containment-Strategies-for-Compromised-xApps-in-Open-RAN/raw/main/images/grafana_1.png" alt="RAN Grafana Dashboard" width="900"/><br/>
+  <b>RAN Grafana Dashboard</b>
 </div>
 
 ---
