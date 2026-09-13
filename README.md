@@ -16,7 +16,7 @@
 
 <div align="center">
 
-🛡️ **ZT - XGURAD - xApp Security & Threat Containment Dashboard**
+🛡️ **ZT - XGUARD - xApp Security & Threat Containment Dashboard**
 
 <table>
   <tr>
